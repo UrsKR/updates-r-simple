@@ -15,6 +15,7 @@ Feature: Updates-R-Simple discovers and downloads updates
         Given the repository does not contain a new version
         When the application checks for updates
         Then the library does not indicate a new version
+        And the library reports the current version as latest
 
     Scenario: Updates-R-Simple stores each version separately
         Given the repository contains a new version

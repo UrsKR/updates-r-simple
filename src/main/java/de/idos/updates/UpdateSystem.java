@@ -2,7 +2,7 @@ package de.idos.updates;
 
 public class UpdateSystem {
     private final Repository repository;
-    private Version version;
+    private Version currentVersion;
     private Version latestVersion;
 
     public UpdateSystem(Repository repository) {
@@ -10,15 +10,18 @@ public class UpdateSystem {
     }
 
     public void checkForUpdatesSinceVersion(Version version) {
-        this.version = version;
+        this.currentVersion = version;
         this.latestVersion = repository.getLatestVersion();
     }
 
     public boolean hasUpdate() {
-        return latestVersion.isGreaterThan(version);
+        return latestVersion.isGreaterThan(currentVersion);
     }
 
     public Version getLatestVersion() {
+        if (!hasUpdate()) {
+            return currentVersion;
+        }
         return latestVersion;
     }
 }

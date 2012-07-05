@@ -22,15 +22,15 @@ import static org.junit.Assert.assertThat;
 
 public class UpdatesSteps {
 
+    private static final NumericVersion currentVersion = new NumericVersion(4, 2, 0);
     private TemporaryFolder folder = new TemporaryFolder();
-    private Repository repository;
     private UpdateSystem updateSystem;
     private NumericVersion latestVersion;
 
     @Before
     public void initializeTemporaryFolderForRepository() throws Throwable {
         folder.create();
-        this.repository = new FilesystemRepository(folder.getRoot());
+        Repository repository = new FilesystemRepository(folder.getRoot());
         this.updateSystem = new UpdateSystem(repository);
     }
 
@@ -51,8 +51,7 @@ public class UpdatesSteps {
 
     @Given("^the repository does not contain a new version$")
     public void the_repository_does_not_contain_a_new_version() throws Throwable {
-        // Express the Regexp above with the code you wish you had
-        throw new PendingException();
+        this.latestVersion = currentVersion;
     }
 
     @Given("^the application was updated$")
@@ -63,7 +62,7 @@ public class UpdatesSteps {
 
     @When("^the application checks for updates$")
     public void the_application_checks_for_updates() throws Throwable {
-        updateSystem.checkForUpdatesSinceVersion(new NumericVersion(4, 2, 0));
+        updateSystem.checkForUpdatesSinceVersion(currentVersion);
     }
 
     @When("^the application requests an update$")
@@ -95,8 +94,12 @@ public class UpdatesSteps {
 
     @Then("^the library does not indicate a new version$")
     public void the_library_does_not_indicate_a_new_version() throws Throwable {
-        // Express the Regexp above with the code you wish you had
-        throw new PendingException();
+        assertThat(updateSystem.hasUpdate(), is(false));
+    }
+
+    @Then("^the library reports the current version as latest$")
+    public void the_library_reports_the_current_version_as_latest() throws Throwable {
+        assertLatestReportedVersionIsLatestExpectedVersion();
     }
 
     @Then("^the library downloads and stores the required files$")
