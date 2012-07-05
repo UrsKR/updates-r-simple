@@ -56,6 +56,12 @@ public class UpdateSystemTest {
         verify(repository, never()).transferVersionTo(any(Version.class), any(VersionStore.class));
     }
 
+    @Test
+    public void removesOldVersionsViaStore() throws Exception {
+        updateSystem.removeOldVersions();
+        verify(versionStore).removeOldVersions();
+    }
+
     private void putVersionInRepository(Version latestVersion) {
         when(repository.getLatestVersion()).thenReturn(latestVersion);
     }

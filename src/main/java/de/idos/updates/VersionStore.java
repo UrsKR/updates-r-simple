@@ -6,4 +6,6 @@ public interface VersionStore {
     void addVersion(Version version);
 
     void addContent(Version version, File file);
+
+    void removeOldVersions();
 }

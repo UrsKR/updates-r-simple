@@ -5,7 +5,6 @@ import cucumber.annotation.Before;
 import cucumber.annotation.en.Given;
 import cucumber.annotation.en.Then;
 import cucumber.annotation.en.When;
-import cucumber.runtime.PendingException;
 import de.idos.updates.FilesystemRepository;
 import de.idos.updates.FilesystemVersionStore;
 import de.idos.updates.NumericVersion;
@@ -68,8 +67,10 @@ public class UpdatesSteps {
 
     @Given("^the application was updated$")
     public void the_application_was_updated() throws Throwable {
-        // Express the Regexp above with the code you wish you had
-        throw new PendingException();
+        File oldVersionFolder = new File(versionStoreFolder, "4.1.2");
+        File newVersionFolder = new File(versionStoreFolder, "4.2.0");
+        oldVersionFolder.mkdir();
+        newVersionFolder.mkdir();
     }
 
     @When("^the application checks for updates$")
@@ -85,8 +86,7 @@ public class UpdatesSteps {
 
     @When("^I instruct the library to clean up$")
     public void I_instruct_the_library_to_clean_up() throws Throwable {
-        // Express the Regexp above with the code you wish you had
-        throw new PendingException();
+        updateSystem.removeOldVersions();
     }
 
     @Then("^the library reports an update$")
@@ -122,8 +122,8 @@ public class UpdatesSteps {
 
     @Then("^the library deletes all version but current one$")
     public void the_library_deletes_all_version_but_current_one() throws Throwable {
-        // Express the Regexp above with the code you wish you had
-        throw new PendingException();
+        assertThat(new File(versionStoreFolder, "4.1.2").exists(), is(false));
+        assertThat(new File(versionStoreFolder, "4.2.0").exists(), is(true));
     }
 
     @After

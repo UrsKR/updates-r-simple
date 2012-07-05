@@ -3,8 +3,7 @@ package de.idos.updates;
 public class UpdateSystem {
     private VersionStore versionStore;
     private final Repository repository;
-    private Version currentVersion;
-    private Version latestVersion;
+    private UpdateCheck updateCheck;
 
     public UpdateSystem(VersionStore versionStore, Repository repository) {
         this.versionStore = versionStore;
@@ -12,24 +11,22 @@ public class UpdateSystem {
     }
 
     public void checkForUpdatesSinceVersion(Version version) {
-        this.currentVersion = version;
-        this.latestVersion = repository.getLatestVersion();
+        this.updateCheck = new UpdateCheck(version, repository.getLatestVersion());
     }
 
     public boolean hasUpdate() {
-        return latestVersion.isGreaterThan(currentVersion);
+        return updateCheck.hasUpdate();
     }
 
     public Version getLatestVersion() {
-        if (!hasUpdate()) {
-            return currentVersion;
-        }
-        return latestVersion;
+        return updateCheck.getLatestVersion();
     }
 
     public void updateToLatestVersion() {
-        if (hasUpdate()) {
-            repository.transferVersionTo(getLatestVersion(), versionStore);
-        }
+        updateCheck.performUpdate(repository, versionStore);
+    }
+
+    public void removeOldVersions() {
+        versionStore.removeOldVersions();
     }
 }

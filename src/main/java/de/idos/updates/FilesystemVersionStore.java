@@ -4,6 +4,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class FilesystemVersionStore implements VersionStore {
     private File folder;
@@ -24,7 +25,27 @@ public class FilesystemVersionStore implements VersionStore {
             File versionFolder = getVersionFolder(version);
             FileUtils.copyFileToDirectory(file, versionFolder);
         } catch (IOException e) {
-            throw new UpdateFailedException("Could not import version "+ version.asString(), e);
+            throw new UpdateFailedException("Could not import version " + version.asString(), e);
+        }
+    }
+
+    @Override
+    public void removeOldVersions() {
+        List<VersionedFile> versionedFiles = new VersionedFileFactory().createVersionedFilesFrom(folder);
+        Version latestVersion = new VersionedFileFinder().findLatestVersion(versionedFiles);
+        deleteAllButLatestVersion(versionedFiles, latestVersion);
+    }
+
+    private void deleteAllButLatestVersion(List<VersionedFile> versionedFiles, Version latestVersion) {
+        try {
+            for (VersionedFile versionedFile : versionedFiles) {
+                if (versionedFile.version.isEqualTo(latestVersion)) {
+                    continue;
+                }
+                FileUtils.deleteDirectory(versionedFile.file);
+            }
+        } catch (IOException e) {
+            throw new CleanupFailedException("Could not delete old versions.", e);
         }
     }
 

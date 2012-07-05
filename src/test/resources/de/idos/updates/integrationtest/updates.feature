@@ -1,4 +1,6 @@
 Feature: Updates-R-Simple discovers and downloads updates
+In order to provide developers with a simple mechanism to update their applications,
+the library must discover, download and install updates from a version repository.
 
     Scenario: Updates-R-Simple discovers an update
         Given the repository contains a new version

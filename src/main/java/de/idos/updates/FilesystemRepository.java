@@ -1,6 +1,7 @@
 package de.idos.updates;
 
 import java.io.File;
+import java.util.List;
 
 public class FilesystemRepository implements Repository {
     public static final String AVAILABLE_VERSIONS = "available_versions";
@@ -15,16 +16,8 @@ public class FilesystemRepository implements Repository {
 
     @Override
     public Version getLatestVersion() {
-        String[] fileList = availableVersions.list();
-        Version latestVersion = new NumericVersion(0, 0, 0);
-        for (String versionAsString : fileList) {
-            String[] versionParts = versionAsString.split("\\.");
-            NumericVersion version = new NumericVersion(Integer.valueOf(versionParts[0]), Integer.valueOf(versionParts[1]), Integer.valueOf(versionParts[2]));
-            if (version.isGreaterThan(latestVersion)) {
-                latestVersion = version;
-            }
-        }
-        return latestVersion;
+        List<VersionedFile> versionedFiles = new VersionedFileFactory().createVersionedFilesFrom(availableVersions);
+        return new VersionedFileFinder().findLatestVersion(versionedFiles);
     }
 
     @Override

@@ -38,6 +38,27 @@ public class FilesystemVersionStoreTest {
         assertThat(versionContentFile.exists(), is(true));
     }
 
+    @Test
+    public void deletesOldVersions() throws Exception {
+        NumericVersion oldVersion = new NumericVersion(0, 9, 0);
+        versionStore.addVersion(oldVersion);
+        File versionFolder = new File(folder.getRoot(), oldVersion.asString());
+        File contentFile = new File(versionFolder, "ContentFile");
+        contentFile.createNewFile();
+        versionStore.addVersion(newVersion);
+        versionStore.removeOldVersions();
+        assertThat(new File(folder.getRoot(), oldVersion.asString()).exists(), is(false));
+    }
+
+    @Test
+    public void keepsNewVersion() throws Exception {
+        NumericVersion oldVersion = new NumericVersion(0, 9, 0);
+        versionStore.addVersion(oldVersion);
+        versionStore.addVersion(newVersion);
+        versionStore.removeOldVersions();
+        assertThat(new File(folder.getRoot(), newVersion.asString()).exists(), is(true));
+    }
+
     @Test(expected = UpdateFailedException.class)
     public void throwsUpdateFailedExceptionOnError() throws Exception {
         File versionFolder = new File(folder.getRoot(), newVersion.asString());
