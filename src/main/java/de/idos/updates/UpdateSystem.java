@@ -1,21 +1,24 @@
 package de.idos.updates;
 
 public class UpdateSystem {
-    private Repository repository;
+    private final Repository repository;
+    private Version version;
+    private Version latestVersion;
 
     public UpdateSystem(Repository repository) {
         this.repository = repository;
     }
 
     public void checkForUpdatesSinceVersion(Version version) {
-        //To change body of created methods use File | Settings | File Templates.
-    }
-
-    public Version getLatestVersion() {
-        return null;  //To change body of created methods use File | Settings | File Templates.
+        this.version = version;
+        this.latestVersion = repository.getLatestVersion();
     }
 
     public boolean hasUpdate() {
-        return false;
+        return latestVersion.isGreaterThan(version);
+    }
+
+    public Version getLatestVersion() {
+        return latestVersion;
     }
 }

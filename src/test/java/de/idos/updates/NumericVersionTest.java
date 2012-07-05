@@ -54,6 +54,13 @@ public class NumericVersionTest {
         assertThat(latestVersion, is(isGreaterThan(currentVersion)));
     }
 
+    @Test
+    public void acknowledgesDirectRequests() throws Exception {
+        NumericVersion latestVersion = new NumericVersion(4, 2, 2);
+        assertThat(latestVersion.isGreaterThan(currentVersion), is(true));
+    }
+
+
     private Matcher<NumericVersion> isGreaterThan(final NumericVersion version) {
         return new TypeSafeMatcher<NumericVersion>() {
             @Override

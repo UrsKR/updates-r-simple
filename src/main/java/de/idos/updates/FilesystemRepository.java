@@ -8,4 +8,9 @@ public class FilesystemRepository implements Repository {
     public FilesystemRepository(File root) {
         this.root = root;
     }
+
+    @Override
+    public Version getLatestVersion() {
+        return new NumericVersion(0, 0, 0);
+    }
 }
