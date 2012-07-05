@@ -26,7 +26,7 @@ public class NumericVersion implements Version, Comparable<NumericVersion> {
 
     @Override
     public String toString() {
-        return "Version " + major + "." + minor + "." + micro;
+        return "Version " + asString();
     }
 
     @Override
@@ -37,5 +37,10 @@ public class NumericVersion implements Version, Comparable<NumericVersion> {
     @Override
     public boolean isEqualTo(Version version) {
         return compareTo((NumericVersion) version) == 0;
+    }
+
+    @Override
+    public String asString() {
+        return major + "." + minor + "." + micro;
     }
 }

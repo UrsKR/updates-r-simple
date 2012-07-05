@@ -7,10 +7,12 @@ import cucumber.annotation.en.Then;
 import cucumber.annotation.en.When;
 import cucumber.runtime.PendingException;
 import de.idos.updates.FilesystemRepository;
+import de.idos.updates.FilesystemVersionStore;
 import de.idos.updates.NumericVersion;
 import de.idos.updates.Repository;
 import de.idos.updates.UpdateSystem;
 import de.idos.updates.Version;
+import de.idos.updates.VersionStore;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
@@ -26,26 +28,36 @@ public class UpdatesSteps {
     private TemporaryFolder folder = new TemporaryFolder();
     private UpdateSystem updateSystem;
     private NumericVersion latestVersion;
+    private File repositoryFolder;
+    private File versionStoreFolder;
 
     @Before
-    public void initializeTemporaryFolderForRepository() throws Throwable {
+    public void initializeVersionRepository() throws Throwable {
         folder.create();
-        Repository repository = new FilesystemRepository(folder.getRoot());
-        this.updateSystem = new UpdateSystem(repository);
+        this.repositoryFolder = folder.newFolder("repository");
+        this.versionStoreFolder = folder.newFolder("versions");
+        Repository repository = new FilesystemRepository(repositoryFolder);
+        VersionStore versionStore = new FilesystemVersionStore(versionStoreFolder);
+        this.updateSystem = new UpdateSystem(versionStore, repository);
+        versionStore.addVersion(currentVersion);
+        File file = folder.newFile();
+        versionStore.addContent(currentVersion, file);
     }
 
     @Given("^the repository contains a new version$")
     public void the_repository_contains_a_more_recent_version() throws Throwable {
-        File versionsFolder = folder.newFolder(AVAILABLE_VERSIONS);
-        new File(versionsFolder, "4.2.1").createNewFile();
+        File versionsFolder = new File(repositoryFolder, AVAILABLE_VERSIONS);
+        File latestVersionFolder = new File(versionsFolder, "4.2.1");
+        latestVersionFolder.mkdir();
+        new File(latestVersionFolder, "content").createNewFile();
         this.latestVersion = new NumericVersion(4, 2, 1);
     }
 
     @Given("^the repository contains several new versions$")
     public void the_repository_contains_several_new_versions() throws Throwable {
-        File versionsFolder = folder.newFolder(AVAILABLE_VERSIONS);
-        new File(versionsFolder, "4.2.1").createNewFile();
-        new File(versionsFolder, "4.2.2").createNewFile();
+        File versionsFolder = new File(repositoryFolder, AVAILABLE_VERSIONS);
+        new File(versionsFolder, "4.2.1").mkdir();
+        new File(versionsFolder, "4.2.2").mkdir();
         this.latestVersion = new NumericVersion(4, 2, 2);
     }
 
@@ -67,8 +79,8 @@ public class UpdatesSteps {
 
     @When("^the application requests an update$")
     public void the_application_requests_an_update() throws Throwable {
-        // Express the Regexp above with the code you wish you had
-        throw new PendingException();
+        updateSystem.checkForUpdatesSinceVersion(currentVersion);
+        updateSystem.updateToLatestVersion();
     }
 
     @When("^I instruct the library to clean up$")
@@ -104,14 +116,8 @@ public class UpdatesSteps {
 
     @Then("^the library downloads and stores the required files$")
     public void the_library_downloads_and_stores_the_required_files() throws Throwable {
-        // Express the Regexp above with the code you wish you had
-        throw new PendingException();
-    }
-
-    @Then("^the library does not tamper with the current version$")
-    public void the_library_does_not_tamper_with_the_current_version() throws Throwable {
-        // Express the Regexp above with the code you wish you had
-        throw new PendingException();
+        File versionFolder = new File(versionStoreFolder, "4.2.1");
+        assertThat(new File(versionFolder, "content").exists(), is(true));
     }
 
     @Then("^the library deletes all version but current one$")

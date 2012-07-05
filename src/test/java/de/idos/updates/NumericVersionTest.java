@@ -50,4 +50,9 @@ public class NumericVersionTest {
         NumericVersion latestVersion = new NumericVersion(4, 2, 2);
         assertThat(latestVersion, is(NumericVersionMatchers.isGreaterThan(currentVersion)));
     }
+
+    @Test
+    public void hasStringRepresentationWithDots() throws Exception {
+        assertThat(currentVersion.asString(), is("4.2.1"));
+    }
 }
