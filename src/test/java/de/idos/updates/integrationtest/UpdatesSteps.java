@@ -25,6 +25,7 @@ public class UpdatesSteps {
     private TemporaryFolder folder = new TemporaryFolder();
     private Repository repository;
     private UpdateSystem updateSystem;
+    private NumericVersion latestVersion;
 
     @Before
     public void initializeTemporaryFolderForRepository() throws Throwable {
@@ -37,12 +38,15 @@ public class UpdatesSteps {
     public void the_repository_contains_a_more_recent_version() throws Throwable {
         File versionsFolder = folder.newFolder(AVAILABLE_VERSIONS);
         new File(versionsFolder, "4.2.1").createNewFile();
+        this.latestVersion = new NumericVersion(4, 2, 1);
     }
 
     @Given("^the repository contains several new versions$")
     public void the_repository_contains_several_new_versions() throws Throwable {
-        // Express the Regexp above with the code you wish you had
-        throw new PendingException();
+        File versionsFolder = folder.newFolder(AVAILABLE_VERSIONS);
+        new File(versionsFolder, "4.2.1").createNewFile();
+        new File(versionsFolder, "4.2.2").createNewFile();
+        this.latestVersion = new NumericVersion(4, 2, 2);
     }
 
     @Given("^the repository does not contain a new version$")
@@ -81,15 +85,12 @@ public class UpdatesSteps {
 
     @Then("^the library reports the new version$")
     public void the_library_reports_the_new_version() throws Throwable {
-        Version latest = updateSystem.getLatestVersion();
-        Version expectedVersion = new NumericVersion(4, 2, 1);
-        assertThat(latest, is(sameVersionAs(expectedVersion)));
+        assertLatestReportedVersionIsLatestExpectedVersion();
     }
 
     @Then("^the library reports the most recent version$")
     public void the_library_reports_the_most_recent_version() throws Throwable {
-        // Express the Regexp above with the code you wish you had
-        throw new PendingException();
+        assertLatestReportedVersionIsLatestExpectedVersion();
     }
 
     @Then("^the library does not indicate a new version$")
@@ -119,5 +120,10 @@ public class UpdatesSteps {
     @After
     public void deleteTemporaryFolder() {
         this.folder.delete();
+    }
+
+    private void assertLatestReportedVersionIsLatestExpectedVersion() {
+        Version latestReportedVersion = updateSystem.getLatestVersion();
+        assertThat(latestReportedVersion, is(sameVersionAs(latestVersion)));
     }
 }

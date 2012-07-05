@@ -6,7 +6,9 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
+import java.io.IOException;
 
+import static de.idos.updates.NumericVersionMatchers.sameVersionAs;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -14,17 +16,34 @@ public class FilesystemRepositoryTest {
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
+    private File available_versions;
 
     @Before
     public void fillRepository() throws Exception {
-        File available_versions = folder.newFolder("available_versions");
-        new File(available_versions, "4.2.1").createNewFile();
+        available_versions = folder.newFolder("available_versions");
     }
 
     @Test
     public void reportsLatestVersionFromFile() throws Exception {
+        addVersion("4.2.1");
+        Version version = getLatestVersionFromRepository();
+        assertThat(version, is(sameVersionAs(new NumericVersion(4, 2, 1))));
+    }
+
+    @Test
+    public void reportsLatestVersionFromAllRegistered() throws Exception {
+        addVersion("4.2.1");
+        addVersion("4.2.2");
+        Version version = getLatestVersionFromRepository();
+        assertThat(version, is(sameVersionAs(new NumericVersion(4, 2, 2))));
+    }
+
+    private void addVersion(String versionNumber) throws IOException {
+        new File(available_versions, versionNumber).createNewFile();
+    }
+
+    private Version getLatestVersionFromRepository() {
         FilesystemRepository repository = new FilesystemRepository(folder.getRoot());
-        Version version = repository.getLatestVersion();
-        assertThat(version.isEqualTo(new NumericVersion(4, 2, 1)), is(true));
+        return repository.getLatestVersion();
     }
 }

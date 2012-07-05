@@ -14,7 +14,14 @@ public class FilesystemRepository implements Repository {
     public Version getLatestVersion() {
         File file = new File(root, AVAILABLE_VERSIONS);
         String[] fileList = file.list();
-        String[] versionParts = fileList[0].split("\\.");
-        return new NumericVersion(Integer.valueOf(versionParts[0]), Integer.valueOf(versionParts[1]), Integer.valueOf(versionParts[2]));
+        Version latestVersion = new NumericVersion(0, 0, 0);
+        for (String versionAsString : fileList) {
+            String[] versionParts = versionAsString.split("\\.");
+            NumericVersion version = new NumericVersion(Integer.valueOf(versionParts[0]), Integer.valueOf(versionParts[1]), Integer.valueOf(versionParts[2]));
+            if (version.isGreaterThan(latestVersion)) {
+                latestVersion = version;
+            }
+        }
+        return latestVersion;
     }
 }
