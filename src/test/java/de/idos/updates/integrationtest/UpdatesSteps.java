@@ -15,6 +15,7 @@ import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 
+import static de.idos.updates.FilesystemRepository.AVAILABLE_VERSIONS;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -33,7 +34,7 @@ public class UpdatesSteps {
 
     @Given("^the repository contains a new version$")
     public void the_repository_contains_a_more_recent_version() throws Throwable {
-        File versionsFolder = folder.newFolder("available_versions");
+        File versionsFolder = folder.newFolder(AVAILABLE_VERSIONS);
         new File(versionsFolder, "4.2.1").createNewFile();
     }
 
@@ -81,7 +82,7 @@ public class UpdatesSteps {
     public void the_library_reports_the_new_version() throws Throwable {
         Version latest = updateSystem.getLatestVersion();
         Version expectedVersion = new NumericVersion(4, 2, 1);
-        assertThat(latest, is(expectedVersion));
+        assertThat(latest.isEqualTo(expectedVersion), is(true));
     }
 
     @Then("^the library reports the most recent version$")

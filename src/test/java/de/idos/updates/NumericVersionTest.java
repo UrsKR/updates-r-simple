@@ -60,6 +60,11 @@ public class NumericVersionTest {
         assertThat(latestVersion.isGreaterThan(currentVersion), is(true));
     }
 
+    @Test
+    public void checksForEqualityThroughDirectMethod() throws Exception {
+        NumericVersion latestVersion = new NumericVersion(4, 2, 1);
+        assertThat(latestVersion.isEqualTo(currentVersion), is(true));
+    }
 
     private Matcher<NumericVersion> isGreaterThan(final NumericVersion version) {
         return new TypeSafeMatcher<NumericVersion>() {
