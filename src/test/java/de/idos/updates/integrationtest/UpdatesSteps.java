@@ -16,6 +16,7 @@ import org.junit.rules.TemporaryFolder;
 import java.io.File;
 
 import static de.idos.updates.FilesystemRepository.AVAILABLE_VERSIONS;
+import static de.idos.updates.NumericVersionMatchers.sameVersionAs;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -82,7 +83,7 @@ public class UpdatesSteps {
     public void the_library_reports_the_new_version() throws Throwable {
         Version latest = updateSystem.getLatestVersion();
         Version expectedVersion = new NumericVersion(4, 2, 1);
-        assertThat(latest.isEqualTo(expectedVersion), is(true));
+        assertThat(latest, is(sameVersionAs(expectedVersion)));
     }
 
     @Then("^the library reports the most recent version$")
