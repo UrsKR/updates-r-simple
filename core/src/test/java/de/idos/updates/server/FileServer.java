@@ -1,5 +1,6 @@
 package de.idos.updates.server;
 
+import de.idos.updates.RootFolderSelector;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
@@ -7,6 +8,8 @@ import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
+
+import java.io.File;
 
 public class FileServer {
     Server server = new Server(8080);
@@ -26,7 +29,8 @@ public class FileServer {
     private ContextHandler createUpdateContext() {
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);
-        resource_handler.setResourceBase("./core/src/test/resources/httpUpdateServerBase");
+        File rootFolder = new RootFolderSelector().getRootFolder();
+        resource_handler.setResourceBase(new File(rootFolder, "src/test/resources/httpUpdateServerBase").getAbsolutePath());
         ContextHandler contextHandler = new ContextHandler();
         contextHandler.setHandler(resource_handler);
         contextHandler.setContextPath("/updates");
