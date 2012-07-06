@@ -26,7 +26,7 @@ public class FileServer {
     private ContextHandler createUpdateContext() {
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);
-        resource_handler.setResourceBase("./src/test/resources/httpUpdateServerBase");
+        resource_handler.setResourceBase("./core/src/test/resources/httpUpdateServerBase");
         ContextHandler contextHandler = new ContextHandler();
         contextHandler.setHandler(resource_handler);
         contextHandler.setContextPath("/updates");

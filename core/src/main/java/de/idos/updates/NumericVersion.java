@@ -31,11 +31,17 @@ public class NumericVersion implements Version, Comparable<NumericVersion> {
 
     @Override
     public boolean isGreaterThan(Version version) {
+        if (version instanceof NullVersion) {
+            return true;
+        }
         return compareTo((NumericVersion) version) > 0;
     }
 
     @Override
     public boolean isEqualTo(Version version) {
+        if (version instanceof NullVersion) {
+            return false;
+        }
         return compareTo((NumericVersion) version) == 0;
     }
 

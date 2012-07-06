@@ -4,7 +4,7 @@ import java.util.List;
 
 public class VersionFinder {
 
-    public static final Version BASE_VERSION = new NumericVersion(0, 0, 0);
+    public static final Version BASE_VERSION = new NullVersion();
 
     public Version findLatestVersion(List<Version> allVersions) {
         Version latestVersion = BASE_VERSION;
