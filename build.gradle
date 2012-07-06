@@ -1,9 +1,13 @@
 apply plugin: 'idea'
 apply plugin: 'java'
+apply plugin: 'maven'
 
 repositories {
     mavenCentral()
 }
+
+group = 'de.idos'
+version = '1.0.0-SNAPSHOT'
 
 dependencies {
     compile 'commons-io:commons-io:2+'
