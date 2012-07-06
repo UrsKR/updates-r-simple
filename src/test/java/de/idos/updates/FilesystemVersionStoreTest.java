@@ -1,5 +1,6 @@
 package de.idos.updates;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -39,6 +40,18 @@ public class FilesystemVersionStoreTest {
     }
 
     @Test
+    public void addsContentToVersionFolderFromURL() throws Exception {
+        File contentFile = folder.newFile("ContentFile");
+        FileUtils.writeStringToFile(contentFile, "XXX");
+        versionStore.addVersion(newVersion);
+        versionStore.addContent(newVersion, "TheContent", contentFile.toURI().toURL());
+        File versionFolder = new File(folder.getRoot(), newVersion.asString());
+        File versionContentFile = new File(versionFolder, "TheContent");
+        assertThat(FileUtils.readFileToString(versionContentFile), is("XXX"));
+    }
+
+
+    @Test
     public void deletesOldVersions() throws Exception {
         NumericVersion oldVersion = new NumericVersion(0, 9, 0);
         versionStore.addVersion(oldVersion);
@@ -69,5 +82,14 @@ public class FilesystemVersionStoreTest {
         File newFile = folder.newFile("ContentFile");
         versionStore.addVersion(newVersion);
         versionStore.addContent(newVersion, newFile);
+    }
+
+
+    @Test(expected = UpdateFailedException.class)
+    public void throwsUpdateFailedExceptionWhenURLCannotBeResolved() throws Exception {
+        File contentFile = folder.newFile("ContentFile");
+        versionStore.addVersion(newVersion);
+        contentFile.delete();
+        versionStore.addContent(newVersion, "TheContent", contentFile.toURI().toURL());
     }
 }

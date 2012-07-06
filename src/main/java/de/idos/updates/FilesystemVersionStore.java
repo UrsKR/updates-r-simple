@@ -4,6 +4,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 
 public class FilesystemVersionStore implements VersionStore {
@@ -24,6 +25,16 @@ public class FilesystemVersionStore implements VersionStore {
         try {
             File versionFolder = getVersionFolder(version);
             FileUtils.copyFileToDirectory(file, versionFolder);
+        } catch (IOException e) {
+            throw new UpdateFailedException("Could not import version " + version.asString(), e);
+        }
+    }
+
+    @Override
+    public void addContent(Version version, String fileName, URL fileUrl) {
+        try {
+            File versionFolder = getVersionFolder(version);
+            FileUtils.copyURLToFile(fileUrl, new File(versionFolder, fileName));
         } catch (IOException e) {
             throw new UpdateFailedException("Could not import version " + version.asString(), e);
         }

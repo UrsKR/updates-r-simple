@@ -29,12 +29,23 @@ public class HttpRepository implements Repository {
 
     @Override
     public void transferVersionTo(Version version, VersionStore store) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        store.addVersion(version);
+        try {
+            URL contentList = new URL(baseUrl, "updates/" + version.asString() + "/content");
+            InputStream input = contentList.openStream();
+            List<String> filesToLoad = IOUtils.readLines(input);
+            for (String file : filesToLoad) {
+                URL fileUrl = new URL(baseUrl, "updates/" + version.asString() + "/" + file);
+                store.addContent(version, file, fileUrl);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
     }
 
     private Version readVersionsFromRepository() throws IOException {
-        URL contentUrl = new URL(baseUrl, "updates/availableVersions");
-        InputStream input = contentUrl.openStream();
+        URL versionList = new URL(baseUrl, "updates/availableVersions");
+        InputStream input = versionList.openStream();
         List<String> strings = IOUtils.readLines(input);
         List<Version> versions = new VersionFactory().createVersionsFromStrings(strings);
         return new VersionFinder().findLatestVersion(versions);
