@@ -12,7 +12,7 @@ public class DemoBootLoader {
         String mainMethod = "startDemo";
         String applicationName = "updatedemo";
         FilesystemVersionStore store = FilesystemVersionStore.inUserHomeForApplication(applicationName);
-        UpdateSystem updateSystem = new UpdateSystem(store, new FilesystemRepository(new File("./demo/src/main/resources")));
+        UpdateSystem updateSystem = new UpdateSystem(store, new FilesystemRepository(new File("./src/main/resources")));
         updateSystem.updateToLatestVersion();
         File versionFolder = store.getFolderForLatestVersion();
         new ApplicationLauncher(versionFolder).launch(mainClass, mainMethod);

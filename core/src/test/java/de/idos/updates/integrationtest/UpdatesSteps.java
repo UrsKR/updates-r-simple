@@ -5,14 +5,7 @@ import cucumber.annotation.Before;
 import cucumber.annotation.en.Given;
 import cucumber.annotation.en.Then;
 import cucumber.annotation.en.When;
-import de.idos.updates.FilesystemRepository;
-import de.idos.updates.FilesystemVersionStore;
-import de.idos.updates.HttpRepository;
-import de.idos.updates.NumericVersion;
-import de.idos.updates.Repository;
-import de.idos.updates.UpdateSystem;
-import de.idos.updates.Version;
-import de.idos.updates.VersionStore;
+import de.idos.updates.*;
 import de.idos.updates.server.FileServer;
 import org.junit.rules.TemporaryFolder;
 
@@ -106,7 +99,7 @@ public class UpdatesSteps {
 
     @Then("^the library reports an update$")
     public void the_library_reports_an_update() throws Throwable {
-        assertThat(getUpdateSystem().hasUpdate(), is(true));
+        assertThat(getUpdateSystem().hasUpdate(), is(UpdateAvailability.Available));
     }
 
     @Then("^the library reports the new version$")
@@ -121,7 +114,7 @@ public class UpdatesSteps {
 
     @Then("^the library does not indicate a new version$")
     public void the_library_does_not_indicate_a_new_version() throws Throwable {
-        assertThat(getUpdateSystem().hasUpdate(), is(false));
+        assertThat(getUpdateSystem().hasUpdate(), is(UpdateAvailability.NotAvailable));
     }
 
     @Then("^the library reports the current version as latest$")

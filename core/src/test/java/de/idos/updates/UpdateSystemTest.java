@@ -19,14 +19,14 @@ public class UpdateSystemTest {
     public void hasNoUpdateIfThereIsNoNewVersion() throws Exception {
         installCurrentVersion();
         putVersionInRepository(currentVersion);
-        assertThat(updateSystem.hasUpdate(), is(false));
+        assertThat(updateSystem.hasUpdate(), is(UpdateAvailability.NotAvailable));
     }
 
     @Test
     public void hasUpdateIfRepositoryContainsGreaterVersion() throws Exception {
         installCurrentVersion();
         putVersionInRepository(latestVersion);
-        assertThat(updateSystem.hasUpdate(), is(true));
+        assertThat(updateSystem.hasUpdate(), is(UpdateAvailability.Available));
     }
 
     @Test

@@ -14,7 +14,7 @@ public class UpdateSystem {
         checkForUpdatesSinceVersion(versionStore.getLatestVersion());
     }
 
-    public boolean hasUpdate() {
+    public UpdateAvailability hasUpdate() {
         checkForUpdatesIfItHasNotYetHappened();
         return updateCheck.hasUpdate();
     }
@@ -38,7 +38,7 @@ public class UpdateSystem {
     }
 
     private void checkForUpdatesIfItHasNotYetHappened() {
-        if (updateCheck == null){
+        if (updateCheck == null) {
             checkForUpdates();
         }
     }
