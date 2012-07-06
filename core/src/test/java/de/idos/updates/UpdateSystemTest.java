@@ -30,6 +30,13 @@ public class UpdateSystemTest {
     }
 
     @Test
+    public void handsOutUpdaterForLaterUse() throws Exception {
+        installCurrentVersion();
+        putVersionInRepository(latestVersion);
+        assertThat(updateSystem.checkForUpdates().hasUpdate(), is(UpdateAvailability.Available));
+    }
+
+    @Test
     public void providesInfoAboutLatestVersion() throws Exception {
         installCurrentVersion();
         putVersionInRepository(latestVersion);

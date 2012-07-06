@@ -9,7 +9,7 @@ public class UpdateSystem implements Updater {
         this.repository = repository;
     }
 
-    public UpdateCheck checkForUpdates() {
+    public Updater checkForUpdates() {
         return new UpdateCheck(versionStore, repository);
     }
 
