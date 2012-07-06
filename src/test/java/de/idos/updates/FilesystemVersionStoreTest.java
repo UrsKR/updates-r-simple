@@ -50,7 +50,6 @@ public class FilesystemVersionStoreTest {
         assertThat(FileUtils.readFileToString(versionContentFile), is("XXX"));
     }
 
-
     @Test
     public void deletesOldVersions() throws Exception {
         NumericVersion oldVersion = new NumericVersion(0, 9, 0);
