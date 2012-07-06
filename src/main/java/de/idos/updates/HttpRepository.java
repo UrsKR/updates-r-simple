@@ -39,7 +39,7 @@ public class HttpRepository implements Repository {
                 store.addContent(version, file, fileUrl);
             }
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            store.removeVersion(version);
         }
     }
 

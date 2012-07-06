@@ -47,6 +47,11 @@ public class FilesystemVersionStore implements VersionStore {
         deleteAllButLatestVersion(versionedFiles, latestVersion);
     }
 
+    @Override
+    public void removeVersion(Version version) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     private void deleteAllButLatestVersion(List<VersionedFile> versionedFiles, Version latestVersion) {
         try {
             for (VersionedFile versionedFile : versionedFiles) {

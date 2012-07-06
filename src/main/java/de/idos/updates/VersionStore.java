@@ -11,4 +11,6 @@ public interface VersionStore {
     void addContent(Version version, String fileName, URL fileUrl);
 
     void removeOldVersions();
+
+    void removeVersion(Version version);
 }

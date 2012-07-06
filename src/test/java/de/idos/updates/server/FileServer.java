@@ -9,9 +9,9 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
 
 public class FileServer {
+    Server server = new Server(8080);
 
     public void start() throws Exception {
-        Server server = new Server(8080);
         SelectChannelConnector connector = new SelectChannelConnector();
         connector.setPort(8080);
         server.addConnector(connector);
@@ -37,5 +37,9 @@ public class FileServer {
         ContextHandler rootContext = new ContextHandler("/");
         rootContext.setHandler(new DefaultHandler());
         return rootContext;
+    }
+
+    public void stop() throws Exception {
+        server.stop();
     }
 }
