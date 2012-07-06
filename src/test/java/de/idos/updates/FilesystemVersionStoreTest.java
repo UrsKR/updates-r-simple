@@ -64,6 +64,14 @@ public class FilesystemVersionStoreTest {
     }
 
     @Test
+    public void deletesSpecificVersion() throws Exception {
+        NumericVersion oldVersion = new NumericVersion(0, 9, 0);
+        versionStore.addVersion(oldVersion);
+        versionStore.removeVersion(oldVersion);
+        assertThat(new File(folder.getRoot(), oldVersion.asString()).exists(), is(false));
+    }
+
+    @Test
     public void keepsNewVersion() throws Exception {
         NumericVersion oldVersion = new NumericVersion(0, 9, 0);
         versionStore.addVersion(oldVersion);
@@ -83,7 +91,6 @@ public class FilesystemVersionStoreTest {
         versionStore.addVersion(newVersion);
         versionStore.addContent(newVersion, newFile);
     }
-
 
     @Test(expected = UpdateFailedException.class)
     public void throwsUpdateFailedExceptionWhenURLCannotBeResolved() throws Exception {

@@ -49,7 +49,12 @@ public class FilesystemVersionStore implements VersionStore {
 
     @Override
     public void removeVersion(Version version) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        try {
+            File versionFolder = getVersionFolder(version);
+            FileUtils.deleteDirectory(versionFolder);
+        } catch (IOException e) {
+            throw new CleanupFailedException("Could not delete old versions.", e);
+        }
     }
 
     private void deleteAllButLatestVersion(List<VersionedFile> versionedFiles, Version latestVersion) {
