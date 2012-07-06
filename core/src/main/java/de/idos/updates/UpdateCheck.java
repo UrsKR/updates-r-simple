@@ -3,15 +3,20 @@ package de.idos.updates;
 import static de.idos.updates.UpdateAvailability.Available;
 import static de.idos.updates.UpdateAvailability.NotAvailable;
 
-public class UpdateCheck {
-    private Version currentVersion;
-    private Version latestVersion;
+public class UpdateCheck implements Updater {
+    private final Version currentVersion;
+    private final Version latestVersion;
+    private final VersionStore versionStore;
+    private final Repository versionRepository;
 
-    public UpdateCheck(Version currentVersion, Version latestVersion) {
-        this.currentVersion = currentVersion;
-        this.latestVersion = latestVersion;
+    public UpdateCheck(VersionStore versionStore, Repository versionRepository) {
+        this.versionStore = versionStore;
+        this.versionRepository = versionRepository;
+        this.currentVersion = versionStore.getLatestVersion();
+        this.latestVersion = versionRepository.getLatestVersion();
     }
 
+    @Override
     public UpdateAvailability hasUpdate() {
         if (latestVersion.isGreaterThan(currentVersion)) {
             return Available;
@@ -19,6 +24,7 @@ public class UpdateCheck {
         return NotAvailable;
     }
 
+    @Override
     public Version getLatestVersion() {
         if (hasUpdate() != Available) {
             return currentVersion;
@@ -26,9 +32,10 @@ public class UpdateCheck {
         return latestVersion;
     }
 
-    public void performUpdate(Repository repository, VersionStore store) {
+    @Override
+    public void updateToLatestVersion() {
         if (hasUpdate() == Available) {
-            repository.transferVersionTo(latestVersion, store);
+            versionRepository.transferVersionTo(latestVersion, versionStore);
         }
     }
 }

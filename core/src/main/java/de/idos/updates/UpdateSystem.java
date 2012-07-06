@@ -1,45 +1,34 @@
 package de.idos.updates;
 
-public class UpdateSystem {
-    private VersionStore versionStore;
+public class UpdateSystem implements Updater {
+    private final VersionStore versionStore;
     private final Repository repository;
-    private UpdateCheck updateCheck;
 
     public UpdateSystem(VersionStore versionStore, Repository repository) {
         this.versionStore = versionStore;
         this.repository = repository;
     }
 
-    public void checkForUpdates() {
-        checkForUpdatesSinceVersion(versionStore.getLatestVersion());
+    public UpdateCheck checkForUpdates() {
+        return new UpdateCheck(versionStore, repository);
     }
 
+    @Override
     public UpdateAvailability hasUpdate() {
-        checkForUpdatesIfItHasNotYetHappened();
-        return updateCheck.hasUpdate();
+        return checkForUpdates().hasUpdate();
     }
 
+    @Override
     public Version getLatestVersion() {
-        checkForUpdatesIfItHasNotYetHappened();
-        return updateCheck.getLatestVersion();
+        return checkForUpdates().getLatestVersion();
     }
 
+    @Override
     public void updateToLatestVersion() {
-        checkForUpdatesIfItHasNotYetHappened();
-        updateCheck.performUpdate(repository, versionStore);
+        checkForUpdates().updateToLatestVersion();
     }
 
     public void removeOldVersions() {
         versionStore.removeOldVersions();
-    }
-
-    private void checkForUpdatesSinceVersion(Version version) {
-        this.updateCheck = new UpdateCheck(version, repository.getLatestVersion());
-    }
-
-    private void checkForUpdatesIfItHasNotYetHappened() {
-        if (updateCheck == null) {
-            checkForUpdates();
-        }
     }
 }
