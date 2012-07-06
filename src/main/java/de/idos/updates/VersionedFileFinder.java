@@ -1,16 +1,14 @@
 package de.idos.updates;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class VersionedFileFinder {
     public Version findLatestVersion(List<VersionedFile> versionedFiles) {
-        Version latestVersion = new NumericVersion(0, 0, 0);
+        List<Version> allVersions = new ArrayList<Version>();
         for (VersionedFile versionedFile : versionedFiles) {
-            Version version = versionedFile.version;
-            if (version.isGreaterThan(latestVersion)) {
-                latestVersion = version;
-            }
+            allVersions.add(versionedFile.version);
         }
-        return latestVersion;
+        return new VersionFinder().findLatestVersion(allVersions);
     }
 }

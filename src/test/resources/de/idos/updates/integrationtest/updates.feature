@@ -28,3 +28,9 @@ Feature: Updates-R-Simple discovers and downloads updates
         Given the application was updated
         When I instruct the library to clean up
         Then the library deletes all version but current one
+
+    Scenario: Updates-R-Simple supports HTTP-Repositories
+        Given an HTTP-server with new versions
+        And a repository for that server
+        When the application checks for updates
+        Then the library reports an update

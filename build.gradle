@@ -13,6 +13,8 @@ dependencies {
     testCompile 'org.mockito:mockito-core:1.9.0'
     testCompile 'info.cukes:cucumber-java:1.0.10'
     testCompile 'info.cukes:cucumber-junit:1.0.10'
+    testCompile 'org.eclipse.jetty:jetty-server:8+'
+    testCompile 'javax.servlet:javax.servlet-api:3+'
 }
 
 task wrapper(type: Wrapper) {

@@ -7,11 +7,13 @@ import cucumber.annotation.en.Then;
 import cucumber.annotation.en.When;
 import de.idos.updates.FilesystemRepository;
 import de.idos.updates.FilesystemVersionStore;
+import de.idos.updates.HttpRepository;
 import de.idos.updates.NumericVersion;
 import de.idos.updates.Repository;
 import de.idos.updates.UpdateSystem;
 import de.idos.updates.Version;
 import de.idos.updates.VersionStore;
+import de.idos.updates.server.FileServer;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
@@ -21,6 +23,7 @@ import static de.idos.updates.NumericVersionMatchers.sameVersionAs;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+@SuppressWarnings("UnusedDeclaration")
 public class UpdatesSteps {
 
     private static final NumericVersion currentVersion = new NumericVersion(4, 2, 0);
@@ -29,6 +32,7 @@ public class UpdatesSteps {
     private NumericVersion latestVersion;
     private File repositoryFolder;
     private File versionStoreFolder;
+    private final UpdateSystemBuilder updateSystemBuilder = new UpdateSystemBuilder();
 
     @Before
     public void initializeVersionRepository() throws Throwable {
@@ -37,7 +41,8 @@ public class UpdatesSteps {
         this.versionStoreFolder = folder.newFolder("versions");
         Repository repository = new FilesystemRepository(repositoryFolder);
         VersionStore versionStore = new FilesystemVersionStore(versionStoreFolder);
-        this.updateSystem = new UpdateSystem(versionStore, repository);
+        updateSystemBuilder.useStore(versionStore);
+        updateSystemBuilder.useRepository(repository);
         versionStore.addVersion(currentVersion);
         File file = folder.newFile();
         versionStore.addContent(currentVersion, file);
@@ -73,25 +78,36 @@ public class UpdatesSteps {
         newVersionFolder.mkdir();
     }
 
+    @Given("^an HTTP-server with new versions$")
+    public void an_HTTP_Server_with_new_versions() throws Throwable {
+        new FileServer().start();
+    }
+
+    @Given("^a repository for that server$")
+    public void an_HTTP_Repository_for_that_server() throws Throwable {
+        Repository repository = new HttpRepository("http://localhost:8080/updates");
+        updateSystemBuilder.useRepository(repository);
+    }
+
     @When("^the application checks for updates$")
     public void the_application_checks_for_updates() throws Throwable {
-        updateSystem.checkForUpdatesSinceVersion(currentVersion);
+        getUpdateSystem().checkForUpdatesSinceVersion(currentVersion);
     }
 
     @When("^the application requests an update$")
     public void the_application_requests_an_update() throws Throwable {
-        updateSystem.checkForUpdatesSinceVersion(currentVersion);
-        updateSystem.updateToLatestVersion();
+        getUpdateSystem().checkForUpdatesSinceVersion(currentVersion);
+        getUpdateSystem().updateToLatestVersion();
     }
 
     @When("^I instruct the library to clean up$")
     public void I_instruct_the_library_to_clean_up() throws Throwable {
-        updateSystem.removeOldVersions();
+        getUpdateSystem().removeOldVersions();
     }
 
     @Then("^the library reports an update$")
     public void the_library_reports_an_update() throws Throwable {
-        assertThat(updateSystem.hasUpdate(), is(true));
+        assertThat(getUpdateSystem().hasUpdate(), is(true));
     }
 
     @Then("^the library reports the new version$")
@@ -106,7 +122,7 @@ public class UpdatesSteps {
 
     @Then("^the library does not indicate a new version$")
     public void the_library_does_not_indicate_a_new_version() throws Throwable {
-        assertThat(updateSystem.hasUpdate(), is(false));
+        assertThat(getUpdateSystem().hasUpdate(), is(false));
     }
 
     @Then("^the library reports the current version as latest$")
@@ -132,7 +148,14 @@ public class UpdatesSteps {
     }
 
     private void assertLatestReportedVersionIsLatestExpectedVersion() {
-        Version latestReportedVersion = updateSystem.getLatestVersion();
+        Version latestReportedVersion = getUpdateSystem().getLatestVersion();
         assertThat(latestReportedVersion, is(sameVersionAs(latestVersion)));
+    }
+
+    private UpdateSystem getUpdateSystem() {
+        if (updateSystem == null) {
+            this.updateSystem = updateSystemBuilder.create();
+        }
+        return updateSystem;
     }
 }

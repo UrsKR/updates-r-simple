@@ -9,8 +9,7 @@ public class VersionedFileFactory {
         List<VersionedFile> versionedFiles = new ArrayList<VersionedFile>();
         for (File file : parent.listFiles()) {
             String versionAsString = file.getName();
-            String[] versionParts = versionAsString.split("\\.");
-            NumericVersion version = new NumericVersion(Integer.valueOf(versionParts[0]), Integer.valueOf(versionParts[1]), Integer.valueOf(versionParts[2]));
+            Version version = new VersionFactory().createVersionFromString(versionAsString);
             versionedFiles.add(new VersionedFile(version, file));
         }
         return versionedFiles;
