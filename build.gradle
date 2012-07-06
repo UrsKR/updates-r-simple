@@ -3,6 +3,9 @@ allprojects {
     apply plugin: 'maven'
     apply plugin: 'idea'
 
+    group = 'de.idos.updates'
+    version = '1.0.0-SNAPSHOT'
+
     repositories {
         mavenLocal()
         mavenCentral()
