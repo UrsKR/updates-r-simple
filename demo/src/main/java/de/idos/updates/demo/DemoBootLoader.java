@@ -11,18 +11,10 @@ public class DemoBootLoader {
         String mainClass = "de.idos.updates.Demo";
         String mainMethod = "startDemo";
         String applicationName = "updatedemo";
-
-        File userHome = new File(System.getProperty("user.home"));
-        File applicationHome = new File(userHome, "." + applicationName);
-        File versionStore = new File(applicationHome, "versions");
-        VersionStore store = new FilesystemVersionStore(versionStore);
-
-        UpdateSystem updateSystem = new UpdateSystem(store, new FilesystemRepository(new File("./src/main/resources")));
+        FilesystemVersionStore store = FilesystemVersionStore.inUserHomeForApplication(applicationName);
+        UpdateSystem updateSystem = new UpdateSystem(store, new FilesystemRepository(new File("./demo/src/main/resources")));
         updateSystem.updateToLatestVersion();
-        Version latestVersion = updateSystem.getLatestVersion();
-
-        File versionFolder = new File(versionStore, latestVersion.asString());
-
+        File versionFolder = store.getFolderForLatestVersion();
         new ApplicationLauncher(versionFolder).launch(mainClass, mainMethod);
     }
 }

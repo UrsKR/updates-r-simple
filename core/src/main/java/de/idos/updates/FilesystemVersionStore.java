@@ -8,6 +8,14 @@ import java.net.URL;
 import java.util.List;
 
 public class FilesystemVersionStore implements VersionStore {
+
+    public static FilesystemVersionStore inUserHomeForApplication(String applicationName) {
+        File userHome = new File(System.getProperty("user.home"));
+        File applicationHome = new File(userHome, "." + applicationName);
+        File versionStore = new File(applicationHome, "versions");
+        return new FilesystemVersionStore(versionStore);
+    }
+
     private File folder;
 
     public FilesystemVersionStore(File folder) {
@@ -17,7 +25,7 @@ public class FilesystemVersionStore implements VersionStore {
     @Override
     public void addVersion(Version version) {
         File file = getVersionFolder(version);
-        file.mkdir();
+        file.mkdirs();
     }
 
     @Override
@@ -61,6 +69,10 @@ public class FilesystemVersionStore implements VersionStore {
     public Version getLatestVersion() {
         List<VersionedFile> versionedFiles = new VersionedFileFactory().createVersionedFilesFrom(folder);
         return new VersionedFileFinder().findLatestVersion(versionedFiles);
+    }
+
+    public File getFolderForLatestVersion() {
+        return getVersionFolder(getLatestVersion());
     }
 
     private void deleteAllButLatestVersion(List<VersionedFile> versionedFiles, Version latestVersion) {
