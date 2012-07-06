@@ -8,6 +8,7 @@ import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 
+import static de.idos.updates.NumericVersionMatchers.sameVersionAs;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -97,5 +98,13 @@ public class FilesystemVersionStoreTest {
         versionStore.addVersion(newVersion);
         contentFile.delete();
         versionStore.addContent(newVersion, "TheContent", contentFile.toURI().toURL());
+    }
+
+    @Test
+    public void identifiesLatestVersion() throws Exception {
+        NumericVersion version = new NumericVersion(0, 2, 0);
+        versionStore.addVersion(new NumericVersion(0, 0, 8));
+        versionStore.addVersion(version);
+        assertThat(versionStore.getLatestVersion(), is(sameVersionAs(version)));
     }
 }

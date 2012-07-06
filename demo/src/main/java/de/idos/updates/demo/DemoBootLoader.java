@@ -18,7 +18,6 @@ public class DemoBootLoader {
         VersionStore store = new FilesystemVersionStore(versionStore);
 
         UpdateSystem updateSystem = new UpdateSystem(store, new FilesystemRepository(new File("./src/main/resources")));
-        updateSystem.checkForUpdatesSinceVersion(VersionFinder.BASE_VERSION);
         updateSystem.updateToLatestVersion();
         Version latestVersion = updateSystem.getLatestVersion();
 

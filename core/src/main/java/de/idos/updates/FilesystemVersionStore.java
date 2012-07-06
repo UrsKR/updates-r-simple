@@ -57,6 +57,12 @@ public class FilesystemVersionStore implements VersionStore {
         }
     }
 
+    @Override
+    public Version getLatestVersion() {
+        List<VersionedFile> versionedFiles = new VersionedFileFactory().createVersionedFilesFrom(folder);
+        return new VersionedFileFinder().findLatestVersion(versionedFiles);
+    }
+
     private void deleteAllButLatestVersion(List<VersionedFile> versionedFiles, Version latestVersion) {
         try {
             for (VersionedFile versionedFile : versionedFiles) {

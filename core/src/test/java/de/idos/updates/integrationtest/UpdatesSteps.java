@@ -91,12 +91,11 @@ public class UpdatesSteps {
 
     @When("^the application checks for updates$")
     public void the_application_checks_for_updates() throws Throwable {
-        getUpdateSystem().checkForUpdatesSinceVersion(currentVersion);
+        getUpdateSystem().checkForUpdates();
     }
 
     @When("^the application requests an update$")
     public void the_application_requests_an_update() throws Throwable {
-        getUpdateSystem().checkForUpdatesSinceVersion(currentVersion);
         getUpdateSystem().updateToLatestVersion();
     }
 

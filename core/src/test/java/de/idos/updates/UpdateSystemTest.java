@@ -5,53 +5,49 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class UpdateSystemTest {
 
-    NumericVersion currentVersion = new NumericVersion(5, 0, 0);
+    Version currentVersion = new NumericVersion(5, 0, 0);
+    Version latestVersion = new NumericVersion(5, 3, 2);
     Repository repository = mock(Repository.class);
     VersionStore versionStore = mock(VersionStore.class);
     UpdateSystem updateSystem = new UpdateSystem(versionStore, repository);
 
     @Test
-    public void hasUpdateIfRepositoryContainsGreaterVersion() throws Exception {
-        putVersionInRepository(new NumericVersion(5, 3, 2));
-        updateSystem.checkForUpdatesSinceVersion(currentVersion);
-        assertThat(updateSystem.hasUpdate(), is(true));
-    }
-
-    @Test
-    public void hasNoUpdateIfRepositoryHasNoNewVersion() throws Exception {
+    public void hasNoUpdateIfThereIsNoNewVersion() throws Exception {
+        installCurrentVersion();
         putVersionInRepository(currentVersion);
-        updateSystem.checkForUpdatesSinceVersion(currentVersion);
         assertThat(updateSystem.hasUpdate(), is(false));
     }
 
     @Test
-    public void providesInfoAboutLatestVersion() throws Exception {
-        Version latestVersion = new NumericVersion(5, 3, 2);
+    public void hasUpdateIfRepositoryContainsGreaterVersion() throws Exception {
+        installCurrentVersion();
         putVersionInRepository(latestVersion);
-        updateSystem.checkForUpdatesSinceVersion(currentVersion);
+        assertThat(updateSystem.hasUpdate(), is(true));
+    }
+
+    @Test
+    public void providesInfoAboutLatestVersion() throws Exception {
+        installCurrentVersion();
+        putVersionInRepository(latestVersion);
         assertThat(updateSystem.getLatestVersion(), is(latestVersion));
     }
 
     @Test
     public void triggersTransferOnRequest() throws Exception {
-        Version latestVersion = new NumericVersion(5, 3, 2);
+        installCurrentVersion();
         putVersionInRepository(latestVersion);
-        updateSystem.checkForUpdatesSinceVersion(currentVersion);
         updateSystem.updateToLatestVersion();
         verify(repository).transferVersionTo(latestVersion, versionStore);
     }
 
     @Test
     public void doesNotTriggerTransferIfNoUpdateAvailable() throws Exception {
+        installCurrentVersion();
         putVersionInRepository(currentVersion);
-        updateSystem.checkForUpdatesSinceVersion(currentVersion);
         updateSystem.updateToLatestVersion();
         verify(repository, never()).transferVersionTo(any(Version.class), any(VersionStore.class));
     }
@@ -60,6 +56,10 @@ public class UpdateSystemTest {
     public void removesOldVersionsViaStore() throws Exception {
         updateSystem.removeOldVersions();
         verify(versionStore).removeOldVersions();
+    }
+
+    private void installCurrentVersion() {
+        when(versionStore.getLatestVersion()).thenReturn(currentVersion);
     }
 
     private void putVersionInRepository(Version latestVersion) {
