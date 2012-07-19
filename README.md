@@ -2,7 +2,7 @@ This is an auto-update system for Java that hopes to be simple to integrate and 
 
 It is licensed under the Apache License v2.0.
 
-Initial work was sponsored by **[IDOS AE GmbH](http://www.idos.de)**.
+Work so far was sponsored by **[IDOS AE GmbH](http://www.idos.de)**.
 When setting out, my goal was to create an auto-updater that did not not force me to depend on a major framework, or required my dependencies to be signed.
 
 ## To Build
