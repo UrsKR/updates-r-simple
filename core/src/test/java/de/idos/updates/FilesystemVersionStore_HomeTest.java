@@ -1,6 +1,5 @@
 package de.idos.updates;
 
-import de.idos.updates.store.FilesystemVersionStore;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -26,7 +25,7 @@ public class FilesystemVersionStore_HomeTest {
     @Test
     public void createsFoldersInUserHome() throws Exception {
         System.setProperty("user.home", folder.getRoot().getAbsolutePath());
-        VersionStore store = FilesystemVersionStore.inUserHomeForApplication("Demo");
+        VersionStore store = VersionStoreBuilder.inUserHomeForApplication("Demo").create();
         store.addVersion(new NumericVersion(1, 1, 1));
         File file = new File(folder.getRoot(), ".Demo/versions/1.1.1");
         System.out.println(file);

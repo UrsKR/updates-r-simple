@@ -15,4 +15,6 @@ public interface VersionStore {
     void removeVersion(Version version);
 
     Version getLatestVersion();
+
+    File getFolderForLatestVersion();
 }

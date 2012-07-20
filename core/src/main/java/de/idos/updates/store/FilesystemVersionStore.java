@@ -10,13 +10,6 @@ import java.util.List;
 
 public class FilesystemVersionStore implements VersionStore {
 
-    public static FilesystemVersionStore inUserHomeForApplication(String applicationName) {
-        File userHome = new File(System.getProperty("user.home"));
-        File applicationHome = new File(userHome, "." + applicationName);
-        File versionStore = new File(applicationHome, "versions");
-        return new FilesystemVersionStore(versionStore);
-    }
-
     private File folder;
 
     public FilesystemVersionStore(File folder) {
@@ -33,15 +26,13 @@ public class FilesystemVersionStore implements VersionStore {
     public void addContent(Version version, File file) {
         InputStreamFactory factory = new FileStreamFactory(file);
         String fileName = file.getName();
-        DataInVersion dataInVersion = new DataInVersion(factory);
-        dataInVersion.storeIn(getVersionFolder(version), fileName);
+        importStreamIntoVersion(version, fileName, factory);
     }
 
     @Override
     public void addContent(Version version, String fileName, URL urlToFile) {
         InputStreamFactory factory = new UrlStreamFactory(urlToFile);
-        DataInVersion dataInVersion = new DataInVersion(factory);
-        dataInVersion.storeIn(getVersionFolder(version), fileName);
+        importStreamIntoVersion(version, fileName, factory);
     }
 
     @Override
@@ -82,6 +73,11 @@ public class FilesystemVersionStore implements VersionStore {
         } catch (IOException e) {
             throw new CleanupFailedException("Could not delete old versions.", e);
         }
+    }
+
+    private void importStreamIntoVersion(Version version, String fileName, InputStreamFactory factory) {
+        DataInVersion dataInVersion = new DataInVersion(factory);
+        dataInVersion.storeIn(getVersionFolder(version), fileName);
     }
 
     private File getVersionFolder(Version version) {

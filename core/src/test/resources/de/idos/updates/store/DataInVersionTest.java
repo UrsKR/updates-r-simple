@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
 
 import static org.mockito.Mockito.*;
 

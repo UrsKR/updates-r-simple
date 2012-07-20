@@ -12,7 +12,7 @@ public class DemoBootLoader {
         String mainClass = "de.idos.updates.Demo";
         String mainMethod = "startDemo";
         String applicationName = "updatedemo";
-        FilesystemVersionStore store = FilesystemVersionStore.inUserHomeForApplication(applicationName);
+        VersionStore store = VersionStoreBuilder.inUserHomeForApplication(applicationName).create();
         UpdateSystem updateSystem = new UpdateSystem(store, new FilesystemRepository(new File("./src/main/resources")));
         updateSystem.updateToLatestVersion();
         File versionFolder = store.getFolderForLatestVersion();
