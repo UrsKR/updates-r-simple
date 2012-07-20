@@ -3,7 +3,9 @@ package de.idos.updates;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
@@ -31,18 +33,19 @@ public class FilesystemVersionStore implements VersionStore {
     @Override
     public void addContent(Version version, File file) {
         try {
-            File versionFolder = getVersionFolder(version);
-            FileUtils.copyFileToDirectory(file, versionFolder);
+            String fileName = file.getName();
+            FileInputStream source = new FileInputStream(file);
+            copyStreamToFileInVersion(version, fileName, source);
         } catch (IOException e) {
             throw new UpdateFailedException("Could not import version " + version.asString(), e);
         }
     }
 
     @Override
-    public void addContent(Version version, String fileName, URL fileUrl) {
+    public void addContent(Version version, String fileName, URL urlToFile) {
         try {
-            File versionFolder = getVersionFolder(version);
-            FileUtils.copyURLToFile(fileUrl, new File(versionFolder, fileName));
+            InputStream source = urlToFile.openStream();
+            copyStreamToFileInVersion(version, fileName, source);
         } catch (IOException e) {
             throw new UpdateFailedException("Could not import version " + version.asString(), e);
         }
@@ -86,6 +89,16 @@ public class FilesystemVersionStore implements VersionStore {
         } catch (IOException e) {
             throw new CleanupFailedException("Could not delete old versions.", e);
         }
+    }
+
+    private void copyStreamToFileInVersion(Version version, String fileName, InputStream source) throws IOException {
+        File targetFile = getTargetFile(version, fileName);
+        FileUtils.copyInputStreamToFile(source, targetFile);
+    }
+
+    private File getTargetFile(Version version, String fileName) {
+        File versionFolder = getVersionFolder(version);
+        return new File(versionFolder, fileName);
     }
 
     private File getVersionFolder(Version version) {
