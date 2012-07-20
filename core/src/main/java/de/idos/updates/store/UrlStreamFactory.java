@@ -15,4 +15,9 @@ public class UrlStreamFactory implements InputStreamFactory{
     public InputStream openStream() throws IOException {
         return url.openStream();
     }
+
+    @Override
+    public long getExpectedSize() throws IOException {
+        return url.openConnection().getContentLengthLong();
+    }
 }

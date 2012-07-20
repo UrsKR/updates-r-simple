@@ -3,8 +3,6 @@ package de.idos.updates.store;
 import java.io.File;
 import java.net.URL;
 
-import static de.idos.updates.store.GenericDataInVersion.storeDataFromFactoryIn;
-
 public class UrlDataInVersion implements DataInVersion{
 
     private URL url;
@@ -18,6 +16,6 @@ public class UrlDataInVersion implements DataInVersion{
     @Override
     public void storeIn(File versionFolder) {
         InputStreamFactory factory = new UrlStreamFactory(url);
-        storeDataFromFactoryIn(factory, versionFolder, filename);
+        DataImport.takeDataFromFactory(factory).andStoreThemIn(versionFolder, filename);
     }
 }

@@ -16,4 +16,9 @@ public class FileStreamFactory implements InputStreamFactory {
     public InputStream openStream() throws IOException {
         return new FileInputStream(file);
     }
+
+    @Override
+    public long getExpectedSize() {
+        return file.length();
+    }
 }

@@ -2,8 +2,6 @@ package de.idos.updates.store;
 
 import java.io.File;
 
-import static de.idos.updates.store.GenericDataInVersion.storeDataFromFactoryIn;
-
 public class FileDataInVersion implements DataInVersion {
     private File file;
 
@@ -15,7 +13,7 @@ public class FileDataInVersion implements DataInVersion {
     public void storeIn(File versionFolder) {
         InputStreamFactory factory = new FileStreamFactory(file);
         String fileName = file.getName();
-        storeDataFromFactoryIn(factory, versionFolder, fileName);
+        DataImport.takeDataFromFactory(factory).andStoreThemIn(versionFolder, fileName);
     }
 
     @Override

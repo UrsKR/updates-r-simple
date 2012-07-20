@@ -8,20 +8,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
 
-public class GenericDataInVersion {
-
-    public static void storeDataFromFactoryIn(InputStreamFactory factory, File versionFolder, String fileName) {
-        GenericDataInVersion dataInVersion = new GenericDataInVersion(factory);
-        dataInVersion.storeIn(versionFolder, fileName);
-    }
+public class DataImporter {
 
     private final InputStreamFactory factory;
 
-    public GenericDataInVersion(InputStreamFactory factory) {
+    public DataImporter(InputStreamFactory factory) {
         this.factory = factory;
     }
 
-    public void storeIn(File folder, String fileName) {
+    public void importTo(File folder, String fileName) {
         try {
             InputStream source = factory.openStream();
             copyStreamToFileInFolder(folder, fileName, source);
