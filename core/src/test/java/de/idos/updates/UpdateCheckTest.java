@@ -9,16 +9,15 @@ import static org.mockito.Mockito.when;
 
 public class UpdateCheckTest {
 
-    VersionStore versionStore = mock(VersionStore.class);
-    Repository versionRepository = mock(Repository.class);
+    UpdateConnection connection = mock(UpdateConnection.class);
 
     @Test
     public void returnsCurrentVersionIfNoNewerIsAvailable() throws Exception {
         Version currentVersion = new NumericVersion(1, 0, 0);
-        when(versionStore.getLatestVersion()).thenReturn(currentVersion);
+        when(connection.getLatestInstalledVersion()).thenReturn(currentVersion);
         Version latestVersion = new NumericVersion(0, 0, 0);
-        when(versionRepository.getLatestVersion()).thenReturn(latestVersion);
-        UpdateCheck updateCheck = new UpdateCheck(versionStore, versionRepository);
+        when(connection.getLatestAvailableVersion()).thenReturn(latestVersion);
+        UpdateCheck updateCheck = new UpdateCheck(connection);
         Version version = updateCheck.getLatestVersion();
         assertThat(version, is(currentVersion));
     }

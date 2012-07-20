@@ -6,14 +6,12 @@ import static de.idos.updates.UpdateAvailability.NotAvailable;
 public class UpdateCheck implements Updater {
     private final Version currentVersion;
     private final Version latestVersion;
-    private final VersionStore versionStore;
-    private final Repository versionRepository;
+    private final UpdateConnection updateConnection;
 
-    public UpdateCheck(VersionStore versionStore, Repository versionRepository) {
-        this.versionStore = versionStore;
-        this.versionRepository = versionRepository;
-        this.currentVersion = versionStore.getLatestVersion();
-        this.latestVersion = versionRepository.getLatestVersion();
+    public UpdateCheck(UpdateConnection updateConnection) {
+        this.updateConnection = updateConnection;
+        this.currentVersion = updateConnection.getLatestInstalledVersion();
+        this.latestVersion = updateConnection.getLatestAvailableVersion();
     }
 
     @Override
@@ -35,7 +33,7 @@ public class UpdateCheck implements Updater {
     @Override
     public void updateToLatestVersion() {
         if (hasUpdate() == Available) {
-            versionRepository.transferVersionTo(latestVersion, versionStore);
+            updateConnection.install(latestVersion);
         }
     }
 }

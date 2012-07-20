@@ -10,7 +10,7 @@ public class UpdateSystem implements Updater {
     }
 
     public Updater checkForUpdates() {
-        return new UpdateCheck(versionStore, repository);
+        return new UpdateCheck(new UpdateConnection(versionStore, repository));
     }
 
     @Override
