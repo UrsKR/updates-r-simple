@@ -7,6 +7,7 @@ import cucumber.annotation.en.Then;
 import cucumber.annotation.en.When;
 import de.idos.updates.*;
 import de.idos.updates.server.FileServer;
+import de.idos.updates.store.FilesystemVersionStore;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;

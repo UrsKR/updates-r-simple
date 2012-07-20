@@ -1,5 +1,6 @@
 package de.idos.updates;
 
+import de.idos.updates.store.FilesystemVersionStore;
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Rule;

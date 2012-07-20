@@ -1,9 +1,9 @@
-package de.idos.updates;
+package de.idos.updates.store;
 
+import de.idos.updates.*;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -32,23 +32,15 @@ public class FilesystemVersionStore implements VersionStore {
 
     @Override
     public void addContent(Version version, File file) {
-        try {
-            String fileName = file.getName();
-            FileInputStream source = new FileInputStream(file);
-            copyStreamToFileInVersion(version, fileName, source);
-        } catch (IOException e) {
-            throw new UpdateFailedException("Could not import version " + version.asString(), e);
-        }
+        InputStreamFactory factory = new FileStreamFactory(file);
+        String fileName = file.getName();
+        addFileToVersion(version, fileName, factory);
     }
 
     @Override
     public void addContent(Version version, String fileName, URL urlToFile) {
-        try {
-            InputStream source = urlToFile.openStream();
-            copyStreamToFileInVersion(version, fileName, source);
-        } catch (IOException e) {
-            throw new UpdateFailedException("Could not import version " + version.asString(), e);
-        }
+        InputStreamFactory factory = new UrlStreamFactory(urlToFile);
+        addFileToVersion(version, fileName, factory);
     }
 
     @Override
@@ -88,6 +80,15 @@ public class FilesystemVersionStore implements VersionStore {
             }
         } catch (IOException e) {
             throw new CleanupFailedException("Could not delete old versions.", e);
+        }
+    }
+
+    private void addFileToVersion(Version version, String fileName, InputStreamFactory factory) {
+        try {
+            InputStream source = factory.openStream();
+            copyStreamToFileInVersion(version, fileName, source);
+        } catch (IOException e) {
+            throw new UpdateFailedException("Could not import version " + version.asString(), e);
         }
     }
 

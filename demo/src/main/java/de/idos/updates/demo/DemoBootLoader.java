@@ -1,6 +1,7 @@
 package de.idos.updates.demo;
 
 import de.idos.updates.*;
+import de.idos.updates.store.FilesystemVersionStore;
 import net.sf.anathema.ApplicationLauncher;
 
 import java.io.File;
