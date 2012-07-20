@@ -10,6 +10,11 @@ import java.text.MessageFormat;
 
 public class GenericDataInVersion {
 
+    public static void storeDataFromFactoryIn(InputStreamFactory factory, File versionFolder, String fileName) {
+        GenericDataInVersion dataInVersion = new GenericDataInVersion(factory);
+        dataInVersion.storeIn(versionFolder, fileName);
+    }
+
     private final InputStreamFactory factory;
 
     public GenericDataInVersion(InputStreamFactory factory) {
