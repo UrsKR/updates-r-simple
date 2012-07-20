@@ -1,5 +1,7 @@
 package de.idos.updates;
 
+import de.idos.updates.store.FileDataInVersion;
+
 import java.io.File;
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class FilesystemRepository implements Repository {
         store.addVersion(version);
         File versionFolder = new File(availableVersions, version.asString());
         for (File file : versionFolder.listFiles()) {
-            store.addContent(version, file);
+            store.addContent(version, new FileDataInVersion(file));
         }
     }
 }

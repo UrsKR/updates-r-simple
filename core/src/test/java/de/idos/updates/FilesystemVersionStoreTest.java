@@ -1,6 +1,8 @@
 package de.idos.updates;
 
+import de.idos.updates.store.FileDataInVersion;
 import de.idos.updates.store.FilesystemVersionStore;
+import de.idos.updates.store.UrlDataInVersion;
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Rule;
@@ -35,7 +37,7 @@ public class FilesystemVersionStoreTest {
     public void addsContentToVersionFolder() throws Exception {
         File contentFile = folder.newFile("ContentFile");
         versionStore.addVersion(newVersion);
-        versionStore.addContent(newVersion, contentFile);
+        versionStore.addContent(newVersion, new FileDataInVersion(contentFile));
         File versionFolder = new File(folder.getRoot(), newVersion.asString());
         File versionContentFile = new File(versionFolder, contentFile.getName());
         assertThat(versionContentFile.exists(), is(true));
@@ -46,7 +48,7 @@ public class FilesystemVersionStoreTest {
         File contentFile = folder.newFile("ContentFile");
         FileUtils.writeStringToFile(contentFile, "XXX");
         versionStore.addVersion(newVersion);
-        versionStore.addContent(newVersion, "TheContent", contentFile.toURI().toURL());
+        versionStore.addContent(newVersion, new UrlDataInVersion(contentFile.toURI().toURL(), "TheContent"));
         File versionFolder = new File(folder.getRoot(), newVersion.asString());
         File versionContentFile = new File(versionFolder, "TheContent");
         assertThat(FileUtils.readFileToString(versionContentFile), is("XXX"));
@@ -90,7 +92,7 @@ public class FilesystemVersionStoreTest {
         contentFile.setReadOnly();
         File newFile = folder.newFile("ContentFile");
         versionStore.addVersion(newVersion);
-        versionStore.addContent(newVersion, newFile);
+        versionStore.addContent(newVersion, new FileDataInVersion(newFile));
     }
 
     @Test(expected = UpdateFailedException.class)
@@ -98,7 +100,7 @@ public class FilesystemVersionStoreTest {
         File contentFile = folder.newFile("ContentFile");
         versionStore.addVersion(newVersion);
         contentFile.delete();
-        versionStore.addContent(newVersion, "TheContent", contentFile.toURI().toURL());
+        versionStore.addContent(newVersion, new UrlDataInVersion(contentFile.toURI().toURL(), "TheContent"));
     }
 
     @Test

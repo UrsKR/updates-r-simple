@@ -5,7 +5,6 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 
 public class FilesystemVersionStore implements VersionStore {
@@ -23,16 +22,8 @@ public class FilesystemVersionStore implements VersionStore {
     }
 
     @Override
-    public void addContent(Version version, File file) {
-        InputStreamFactory factory = new FileStreamFactory(file);
-        String fileName = file.getName();
-        importStreamIntoVersion(version, fileName, factory);
-    }
-
-    @Override
-    public void addContent(Version version, String fileName, URL urlToFile) {
-        InputStreamFactory factory = new UrlStreamFactory(urlToFile);
-        importStreamIntoVersion(version, fileName, factory);
+    public void addContent(Version version, DataInVersion dataInVersion) {
+        addDataToVersion(version, dataInVersion);
     }
 
     @Override
@@ -75,9 +66,8 @@ public class FilesystemVersionStore implements VersionStore {
         }
     }
 
-    private void importStreamIntoVersion(Version version, String fileName, InputStreamFactory factory) {
-        DataInVersion dataInVersion = new DataInVersion(factory);
-        dataInVersion.storeIn(getVersionFolder(version), fileName);
+    private void addDataToVersion(Version version, DataInVersion dataInVersion) {
+        dataInVersion.storeIn(getVersionFolder(version));
     }
 
     private File getVersionFolder(Version version) {

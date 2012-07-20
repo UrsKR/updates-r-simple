@@ -7,6 +7,7 @@ import cucumber.annotation.en.Then;
 import cucumber.annotation.en.When;
 import de.idos.updates.*;
 import de.idos.updates.server.FileServer;
+import de.idos.updates.store.FileDataInVersion;
 import de.idos.updates.store.FilesystemVersionStore;
 import org.junit.rules.TemporaryFolder;
 
@@ -39,7 +40,7 @@ public class UpdatesSteps {
         updateSystemBuilder.useRepository(repository);
         versionStore.addVersion(currentVersion);
         File file = folder.newFile();
-        versionStore.addContent(currentVersion, file);
+        versionStore.addContent(currentVersion, new FileDataInVersion(file));
     }
 
     @Given("^the repository contains a new version$")

@@ -1,5 +1,6 @@
 package de.idos.updates;
 
+import de.idos.updates.store.FileDataInVersion;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -50,7 +51,7 @@ public class FilesystemRepositoryTest {
         new FilesystemRepository(folder.getRoot()).transferVersionTo(version, store);
         InOrder inOrder = inOrder(store);
         inOrder.verify(store).addVersion(version);
-        inOrder.verify(store).addContent(version, content);
+        inOrder.verify(store).addContent(version, new FileDataInVersion(content));
     }
 
     private File addContentToVersion(String versionNumber, String fileName) throws IOException {

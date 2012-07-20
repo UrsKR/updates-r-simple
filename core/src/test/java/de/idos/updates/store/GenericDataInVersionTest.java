@@ -8,7 +8,7 @@ import java.io.ByteArrayInputStream;
 
 import static org.mockito.Mockito.*;
 
-public class DataInVersionTest {
+public class GenericDataInVersionTest {
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
 
@@ -17,7 +17,7 @@ public class DataInVersionTest {
         ByteArrayInputStream stream = spy(new ByteArrayInputStream("Hallo".getBytes()));
         InputStreamFactory factory = mock(InputStreamFactory.class);
         when(factory.openStream()).thenReturn(stream);
-        new DataInVersion(factory).storeIn(folder.getRoot(), "Test");
+        new GenericDataInVersion(factory).storeIn(folder.getRoot(), "Test");
         verify(stream).close();
     }
 }

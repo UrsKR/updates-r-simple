@@ -1,5 +1,6 @@
 package de.idos.updates;
 
+import de.idos.updates.store.UrlDataInVersion;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -36,7 +37,7 @@ public class HttpRepository implements Repository {
             List<String> filesToLoad = IOUtils.readLines(input);
             for (String file : filesToLoad) {
                 URL fileUrl = new URL(baseUrl, "updates/" + version.asString() + "/" + file);
-                store.addContent(version, file, fileUrl);
+                store.addContent(version, new UrlDataInVersion(fileUrl, file));
             }
         } catch (IOException e) {
             store.removeVersion(version);

@@ -1,6 +1,7 @@
 package de.idos.updates;
 
 import de.idos.updates.server.FileServer;
+import de.idos.updates.store.UrlDataInVersion;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,7 +60,7 @@ public class HttpRepositoryTest {
         repository.transferVersionTo(version, store);
         InOrder inOrder = inOrder(store);
         inOrder.verify(store).addVersion(version);
-        inOrder.verify(store, times(2)).addContent(eq(version), isA(String.class), Matchers.isA(URL.class));
+        inOrder.verify(store, times(2)).addContent(eq(version), Matchers.isA(UrlDataInVersion.class));
     }
 
     @Test
