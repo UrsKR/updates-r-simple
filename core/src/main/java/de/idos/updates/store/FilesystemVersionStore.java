@@ -5,7 +5,6 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
@@ -34,13 +33,15 @@ public class FilesystemVersionStore implements VersionStore {
     public void addContent(Version version, File file) {
         InputStreamFactory factory = new FileStreamFactory(file);
         String fileName = file.getName();
-        addFileToVersion(version, fileName, factory);
+        DataInVersion dataInVersion = new DataInVersion(factory);
+        dataInVersion.storeIn(getVersionFolder(version), fileName);
     }
 
     @Override
     public void addContent(Version version, String fileName, URL urlToFile) {
         InputStreamFactory factory = new UrlStreamFactory(urlToFile);
-        addFileToVersion(version, fileName, factory);
+        DataInVersion dataInVersion = new DataInVersion(factory);
+        dataInVersion.storeIn(getVersionFolder(version), fileName);
     }
 
     @Override
@@ -81,25 +82,6 @@ public class FilesystemVersionStore implements VersionStore {
         } catch (IOException e) {
             throw new CleanupFailedException("Could not delete old versions.", e);
         }
-    }
-
-    private void addFileToVersion(Version version, String fileName, InputStreamFactory factory) {
-        try {
-            InputStream source = factory.openStream();
-            copyStreamToFileInVersion(version, fileName, source);
-        } catch (IOException e) {
-            throw new UpdateFailedException("Could not import version " + version.asString(), e);
-        }
-    }
-
-    private void copyStreamToFileInVersion(Version version, String fileName, InputStream source) throws IOException {
-        File targetFile = getTargetFile(version, fileName);
-        FileUtils.copyInputStreamToFile(source, targetFile);
-    }
-
-    private File getTargetFile(Version version, String fileName) {
-        File versionFolder = getVersionFolder(version);
-        return new File(versionFolder, fileName);
     }
 
     private File getVersionFolder(Version version) {
