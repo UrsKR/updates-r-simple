@@ -24,7 +24,7 @@ public class UpdateCheck implements Updater {
 
     @Override
     public Version getLatestVersion() {
-        if (hasUpdate() != Available) {
+        if (!latestVersionIsNewerThanInstalledVersion()) {
             return currentVersion;
         }
         return latestVersion;
@@ -32,8 +32,12 @@ public class UpdateCheck implements Updater {
 
     @Override
     public void updateToLatestVersion() {
-        if (hasUpdate() == Available) {
+        if (latestVersionIsNewerThanInstalledVersion()) {
             updateConnection.install(latestVersion);
         }
+    }
+
+    private boolean latestVersionIsNewerThanInstalledVersion() {
+        return hasUpdate() == Available;
     }
 }
