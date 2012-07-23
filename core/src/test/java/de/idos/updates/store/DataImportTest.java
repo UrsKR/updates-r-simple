@@ -19,7 +19,7 @@ public class DataImportTest {
 
     @Test
     public void storesInputInDesignatedFile() throws Exception {
-        DataImport.takeDataFromFactory(factory).andStoreThemIn(folder.getRoot(), "Test");
+        new DataImport().takeDataFromFactory(factory).andStoreThemIn(folder.getRoot(), "Test");
         File resultFile = new File(folder.getRoot(), "Test");
         assertThat(resultFile.length(), is(3000L));
     }
@@ -27,7 +27,7 @@ public class DataImportTest {
     @Test
     public void reportsProgressToMonitor() throws Exception {
         ProgressReport report = mock(ProgressReport.class);
-        DataImport.takeDataFromFactory(factory).reportProgressTo(report).andStoreThemIn(folder.getRoot(), "Test");
+        new DataImport().takeDataFromFactory(factory).reportProgressTo(report).andStoreThemIn(folder.getRoot(), "Test");
         InOrder inOrder = inOrder(report);
         inOrder.verify(report).expectedSize(3000);
         inOrder.verify(report, atLeastOnce()).progress(isA(Long.class));

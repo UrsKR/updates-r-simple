@@ -13,6 +13,7 @@ public class FilesystemVersionStore implements VersionStore {
 
     public FilesystemVersionStore(File folder) {
         this.folder = folder;
+        folder.mkdirs();
     }
 
     @Override

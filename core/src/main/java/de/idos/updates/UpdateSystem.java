@@ -1,5 +1,7 @@
 package de.idos.updates;
 
+import de.idos.updates.store.ProgressReport;
+
 public class UpdateSystem implements Updater {
     private final VersionStore versionStore;
     private final Repository repository;
@@ -30,5 +32,9 @@ public class UpdateSystem implements Updater {
 
     public void removeOldVersions() {
         versionStore.removeOldVersions();
+    }
+
+    public void reportAllProgressTo(ProgressReport report) {
+        repository.reportAllProgressTo(report);
     }
 }

@@ -4,4 +4,6 @@ public interface ProgressReport {
     void expectedSize(long size);
 
     void progress(long progress);
+
+    void done();
 }

@@ -1,5 +1,7 @@
 package de.idos.updates;
 
+import de.idos.updates.store.DataImport;
+import de.idos.updates.store.ProgressReport;
 import de.idos.updates.store.UrlDataInVersion;
 import org.apache.commons.io.IOUtils;
 
@@ -10,6 +12,7 @@ import java.util.List;
 
 public class HttpRepository implements Repository {
     private URL baseUrl;
+    private ProgressReport report;
 
     public HttpRepository(String url) {
         try {
@@ -37,11 +40,16 @@ public class HttpRepository implements Repository {
             List<String> filesToLoad = IOUtils.readLines(input);
             for (String file : filesToLoad) {
                 URL fileUrl = new URL(baseUrl, "updates/" + version.asString() + "/" + file);
-                store.addContent(version, new UrlDataInVersion(fileUrl, file));
+                store.addContent(version, new UrlDataInVersion(fileUrl, file, new DataImport().reportProgressTo(report)));
             }
         } catch (IOException e) {
             store.removeVersion(version);
         }
+    }
+
+    @Override
+    public void reportAllProgressTo(ProgressReport report) {
+        this.report = report;
     }
 
     private Version readVersionsFromRepository() throws IOException {

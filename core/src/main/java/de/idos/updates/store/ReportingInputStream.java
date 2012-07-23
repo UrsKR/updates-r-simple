@@ -22,7 +22,9 @@ public class ReportingInputStream extends ProxyInputStream {
 
     @Override
     protected synchronized void afterRead(int bytes) {
-        if (bytes != -1) {
+        if (bytes == -1) {
+            report.done();
+        } else {
             report.progress(bytes);
         }
     }

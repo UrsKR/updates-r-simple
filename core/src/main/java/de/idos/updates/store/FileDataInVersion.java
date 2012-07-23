@@ -4,16 +4,22 @@ import java.io.File;
 
 public class FileDataInVersion implements DataInVersion {
     private File file;
+    private DataImport dataImport;
 
     public FileDataInVersion(File file) {
+        this(file, new DataImport());
+    }
+
+    public FileDataInVersion(File file, DataImport dataImport) {
         this.file = file;
+        this.dataImport = dataImport;
     }
 
     @Override
     public void storeIn(File versionFolder) {
         InputStreamFactory factory = new FileStreamFactory(file);
         String fileName = file.getName();
-        DataImport.takeDataFromFactory(factory).andStoreThemIn(versionFolder, fileName);
+        dataImport.takeDataFromFactory(factory).andStoreThemIn(versionFolder, fileName);
     }
 
     @Override

@@ -1,5 +1,8 @@
-package de.idos.updates;
+package de.idos.updates.store;
 
+import de.idos.updates.NumericVersion;
+import de.idos.updates.VersionStore;
+import de.idos.updates.VersionStoreBuilder;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;

@@ -1,5 +1,7 @@
-package de.idos.updates;
+package de.idos.updates.store;
 
+import de.idos.updates.NumericVersion;
+import de.idos.updates.UpdateFailedException;
 import de.idos.updates.store.FileDataInVersion;
 import de.idos.updates.store.FilesystemVersionStore;
 import de.idos.updates.store.UrlDataInVersion;

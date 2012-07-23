@@ -14,6 +14,7 @@ public class DemoBootLoader {
         String applicationName = "updatedemo";
         VersionStore store = VersionStoreBuilder.inUserHomeForApplication(applicationName).create();
         UpdateSystem updateSystem = new UpdateSystem(store, new FilesystemRepository(new File("./src/main/resources")));
+        updateSystem.reportAllProgressTo(new ConsoleReport());
         updateSystem.updateToLatestVersion();
         File versionFolder = store.getFolderForLatestVersion();
         new ApplicationLauncher(versionFolder).launch(mainClass, mainMethod);
