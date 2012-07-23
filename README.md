@@ -6,7 +6,7 @@ Work so far was sponsored by **[IDOS AE GmbH](http://www.idos.de)**.
 When setting out, my goal was to create an auto-updater that did not not force me to depend on a major framework, or required my dependencies to be signed.
 
 #### Current Topic of Interest
-The system must report download progress to the user, so the User Interface can show it is still alive.
+I want to enable clients to come either with everything in or rely on the auto-updater.
 
 ## To Build
 * You need JDK 6

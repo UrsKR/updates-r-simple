@@ -3,6 +3,7 @@ package de.idos.updates.integrationtest;
 import de.idos.updates.Repository;
 import de.idos.updates.UpdateSystem;
 import de.idos.updates.VersionStore;
+import de.idos.updates.store.NullReport;
 import de.idos.updates.store.ProgressReport;
 
 public class UpdateSystemBuilder {

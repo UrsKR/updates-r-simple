@@ -1,4 +1,4 @@
-package de.idos.updates.integrationtest;
+package de.idos.updates.store;
 
 import de.idos.updates.store.ProgressReport;
 

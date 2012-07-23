@@ -5,7 +5,6 @@ import cucumber.annotation.Before;
 import cucumber.annotation.en.Given;
 import cucumber.annotation.en.Then;
 import cucumber.annotation.en.When;
-import cucumber.runtime.PendingException;
 import de.idos.updates.*;
 import de.idos.updates.server.FileServer;
 import de.idos.updates.store.FileDataInVersion;

@@ -5,7 +5,7 @@ import java.io.File;
 public class DataImport {
 
     private InputStreamFactory factory;
-    private ProgressReport report;
+    private ProgressReport report = new NullReport();
 
     public DataImport takeDataFromFactory(InputStreamFactory factory) {
         this.factory = factory;
@@ -18,9 +18,7 @@ public class DataImport {
     }
 
     public void andStoreThemIn(File versionFolder, String fileName) {
-        if (report != null) {
-            this.factory = new ReportingFactory(factory, report);
-        }
+        this.factory = new ReportingFactory(factory, report);
         DataImporter dataImporter = new DataImporter(factory);
         dataImporter.importTo(versionFolder, fileName);
     }
