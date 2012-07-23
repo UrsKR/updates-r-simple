@@ -2,6 +2,8 @@ package de.idos.updates;
 
 import org.junit.Test;
 
+import java.io.File;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
@@ -63,6 +65,13 @@ public class UpdateSystemTest {
     public void removesOldVersionsViaStore() throws Exception {
         updateSystem.removeOldVersions();
         verify(versionStore).removeOldVersions();
+    }
+
+    @Test
+    public void findsFolderForLatestVersionViaStore() throws Exception {
+        File value = new File(".");
+        when(versionStore.getFolderForLatestVersion()).thenReturn(value);
+        assertThat(updateSystem.getFolderForLatestVersion(), is(value));
     }
 
     private void installCurrentVersion() {

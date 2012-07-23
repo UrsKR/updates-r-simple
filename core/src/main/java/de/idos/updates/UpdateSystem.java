@@ -2,6 +2,8 @@ package de.idos.updates;
 
 import de.idos.updates.store.ProgressReport;
 
+import java.io.File;
+
 public class UpdateSystem implements Updater {
     private final VersionStore versionStore;
     private final Repository repository;
@@ -36,5 +38,9 @@ public class UpdateSystem implements Updater {
 
     public void reportAllProgressTo(ProgressReport report) {
         repository.reportAllProgressTo(report);
+    }
+
+    public File getFolderForLatestVersion() {
+        return versionStore.getFolderForLatestVersion();
     }
 }
