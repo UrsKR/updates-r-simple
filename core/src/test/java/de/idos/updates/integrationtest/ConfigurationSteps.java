@@ -4,7 +4,6 @@ import cucumber.annotation.After;
 import cucumber.annotation.en.Given;
 import cucumber.annotation.en.Then;
 import cucumber.annotation.en.When;
-import cucumber.runtime.PendingException;
 import de.idos.updates.FilesystemRepository;
 import de.idos.updates.NumericVersion;
 import de.idos.updates.UpdateSystem;
@@ -28,16 +27,13 @@ public class ConfigurationSteps {
     public static final String Repo_From_WorkingDir = "./src/main/resources/repository_from_workingdir";
     public static final String Repo_From_Classpath = "./src/main/resources/repository_from_classpath";
     public static final String Fixed_Version_Location = "./src/main/resources/FixedVersion";
-    private File classPathConfig;
-    private File workingDirConfig;
+    private File classPathConfig = new File("./src/test/resources/update.properties");
+    private File workingDirConfig = new File("./update.properties");
     private UpdateSystem updateSystem;
 
     @Given("^a file called 'update.properties' on the classpath$")
     public void a_file_called_update_properties_on_the_classpath() throws Throwable {
-        Properties properties = createBaseProperties();
-        properties.put("update.LatestVersion.repository.location", Repo_From_Classpath);
-        classPathConfig = new File("./src/test/resources/update.properties");
-        writeProperties(properties, classPathConfig);
+        deleteQuietly(workingDirConfig);
         File repository = new File(Repo_From_Classpath, FilesystemRepository.AVAILABLE_VERSIONS);
         repository.mkdirs();
         new File(repository, "1.0.1").mkdir();
@@ -47,20 +43,19 @@ public class ConfigurationSteps {
     public void a_file_called_update_properties_in_the_working_directory() throws Throwable {
         Properties properties = createBaseProperties();
         properties.put("update.LatestVersion.repository.location", Repo_From_WorkingDir);
-        workingDirConfig = new File("./update.properties");
         writeProperties(properties, workingDirConfig);
         File repository = new File(Repo_From_WorkingDir, FilesystemRepository.AVAILABLE_VERSIONS);
         repository.mkdirs();
         new File(repository, "1.0.2").mkdir();
     }
 
-    @When("^the file specifies a fixed version to be loaded$")
+    @Given("^the file specifies a fixed version to be loaded$")
     public void the_file_specifies_a_fixed_version_to_be_loaded() throws Throwable {
         Properties properties = new Properties();
-        properties.load(new FileInputStream(classPathConfig));
+        properties.load(new FileInputStream(workingDirConfig));
         properties.put("update.strategy", "FixedVersion");
         properties.put("update.FixedVersion.location", Fixed_Version_Location);
-        properties.store(new FileOutputStream(classPathConfig), "");
+        properties.store(new FileOutputStream(workingDirConfig), "");
     }
 
     @When("^I start the update system$")

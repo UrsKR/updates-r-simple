@@ -10,10 +10,17 @@ public class ConfiguredUpdateSystemFactory {
     public UpdateSystem create() {
         Properties properties = new PropertiesLoader().load("update.properties");
         UpdateConfiguration configuration = new UpdateConfiguration(properties);
-        String applicationName = configuration.getApplicationName();
-        VersionStore store = VersionStoreBuilder.inUserHomeForApplication(applicationName).create();
+        VersionStore store = createVersionStore(configuration);
         Repository repository = createRepository(configuration);
         return new UpdateSystem(store, repository);
+    }
+
+    private VersionStore createVersionStore(UpdateConfiguration configuration) {
+        if (configuration.getStrategy() == UpdateStrategy.LatestVersion) {
+            return VersionStoreBuilder.inUserHomeForApplication(configuration.getApplicationName()).create();
+        } else {
+            return new FixedVersionStore(new File(configuration.getLocationForFixedVersion()));
+        }
     }
 
     private Repository createRepository(UpdateConfiguration configuration) {

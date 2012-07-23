@@ -15,6 +15,7 @@ Feature: Updates-R-Simple is easily configured
         Then the system uses the file in the working directory to configure itself
 
     Scenario: Updates-R-Simple can use a fixed store for its version
-        Given a file called 'update.properties' on the classpath
-        When the file specifies a fixed version to be loaded
+        Given a file called 'update.properties' in the working directory
+        And the file specifies a fixed version to be loaded
+        When I start the update system
         Then the system points to that version to load
