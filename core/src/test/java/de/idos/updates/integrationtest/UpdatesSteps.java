@@ -5,6 +5,7 @@ import cucumber.annotation.Before;
 import cucumber.annotation.en.Given;
 import cucumber.annotation.en.Then;
 import cucumber.annotation.en.When;
+import cucumber.runtime.PendingException;
 import de.idos.updates.*;
 import de.idos.updates.server.FileServer;
 import de.idos.updates.store.FileDataInVersion;
@@ -28,6 +29,7 @@ public class UpdatesSteps {
     private File repositoryFolder;
     private File versionStoreFolder;
     private final UpdateSystemBuilder updateSystemBuilder = new UpdateSystemBuilder();
+    private final VerifiableReport verifiableReport = new VerifiableReport();
 
     @Before
     public void initializeVersionRepository() throws Throwable {
@@ -84,6 +86,11 @@ public class UpdatesSteps {
         updateSystemBuilder.useRepository(repository);
     }
 
+    @Given("^I have registered a client to receive status updates$")
+    public void I_have_registered_a_client_to_receive_status_updates() throws Throwable {
+        updateSystemBuilder.addReporter(verifiableReport);
+    }
+
     @When("^the application checks for updates$")
     public void the_application_checks_for_updates() throws Throwable {
         getUpdateSystem().checkForUpdates();
@@ -134,6 +141,11 @@ public class UpdatesSteps {
     public void the_library_deletes_all_version_but_current_one() throws Throwable {
         assertThat(new File(versionStoreFolder, "4.1.2").exists(), is(false));
         assertThat(new File(versionStoreFolder, "4.2.0").exists(), is(true));
+    }
+
+    @Then("^the library reports the download's progress to the client$")
+    public void the_library_reports_the_download_s_progress_to_the_client() throws Throwable {
+        verifiableReport.assertThatSomethingWasReported();
     }
 
     @After
