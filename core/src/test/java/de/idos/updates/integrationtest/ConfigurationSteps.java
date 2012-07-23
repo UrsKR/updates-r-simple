@@ -82,8 +82,7 @@ public class ConfigurationSteps {
 
     @Then("^the system points to that version to load$")
     public void the_system_points_to_that_version_to_load() throws Throwable {
-        throw new PendingException();
-        //assertThat(updateSystem.getFolderForLatestVersion(), is(new File("./src/main/resources/FixedVersion")));
+        assertThat(updateSystem.getFolderForLatestVersion(), is(new File("./src/main/resources/FixedVersion")));
     }
 
     @After

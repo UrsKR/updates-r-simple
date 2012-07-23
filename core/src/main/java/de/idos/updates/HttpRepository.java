@@ -1,6 +1,7 @@
 package de.idos.updates;
 
 import de.idos.updates.store.DataImport;
+import de.idos.updates.store.NullReport;
 import de.idos.updates.store.ProgressReport;
 import de.idos.updates.store.UrlDataInVersion;
 import org.apache.commons.io.IOUtils;
@@ -11,8 +12,8 @@ import java.net.URL;
 import java.util.List;
 
 public class HttpRepository implements Repository {
-    private URL baseUrl;
-    private ProgressReport report;
+    private final URL baseUrl;
+    private ProgressReport report = new NullReport();
 
     public HttpRepository(String url) {
         try {

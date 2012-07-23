@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class ReportingFactory implements InputStreamFactory {
-    private InputStreamFactory factory;
-    private ProgressReport report;
+    private final InputStreamFactory factory;
+    private final ProgressReport report;
 
     public ReportingFactory(InputStreamFactory factory, ProgressReport report) {
         this.factory = factory;
