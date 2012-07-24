@@ -70,8 +70,8 @@ public class UpdateSystemTest {
     @Test
     public void findsFolderForLatestVersionViaStore() throws Exception {
         File value = new File(".");
-        when(versionStore.getFolderForLatestVersion()).thenReturn(value);
-        assertThat(updateSystem.getFolderForLatestVersion(), is(value));
+        when(versionStore.getFolderForVersionToRun()).thenReturn(value);
+        assertThat(updateSystem.getFolderForVersionToRun(), is(value));
     }
 
     private void installCurrentVersion() {

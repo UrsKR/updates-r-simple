@@ -16,10 +16,11 @@ public class ConfiguredUpdateSystemFactory {
     }
 
     private VersionStore createVersionStore(UpdateConfiguration configuration) {
+        VersionStore versionStore = VersionStoreBuilder.inUserHomeForApplication(configuration.getApplicationName()).create();
         if (configuration.getStrategy() == UpdateStrategy.LatestVersion) {
-            return VersionStoreBuilder.inUserHomeForApplication(configuration.getApplicationName()).create();
+            return versionStore;
         } else {
-            return new FixedVersionStore(new File(configuration.getLocationForFixedVersion()));
+            return new FixedVersionStore(new File(configuration.getLocationForFixedVersion()), versionStore);
         }
     }
 

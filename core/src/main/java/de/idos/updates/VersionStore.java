@@ -17,5 +17,5 @@ public interface VersionStore {
 
     Version getLatestVersion();
 
-    File getFolderForLatestVersion();
+    File getFolderForVersionToRun();
 }

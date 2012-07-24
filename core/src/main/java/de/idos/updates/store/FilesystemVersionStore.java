@@ -50,7 +50,7 @@ public class FilesystemVersionStore implements VersionStore {
         return new VersionedFileFinder().findLatestVersion(versionedFiles);
     }
 
-    public File getFolderForLatestVersion() {
+    public File getFolderForVersionToRun() {
         return getVersionFolder(getLatestVersion());
     }
 

@@ -14,7 +14,7 @@ public class DemoBootLoader {
         UpdateSystem updateSystem = new ConfiguredUpdateSystemFactory().create();
         updateSystem.reportAllProgressTo(new ConsoleReport());
         updateSystem.updateToLatestVersion();
-        File versionFolder = updateSystem.getFolderForLatestVersion();
+        File versionFolder = updateSystem.getFolderForVersionToRun();
         new ApplicationLauncher(versionFolder).launch(mainClass, mainMethod);
     }
 }

@@ -40,7 +40,7 @@ public class UpdateSystem implements Updater {
         repository.reportAllProgressTo(report);
     }
 
-    public File getFolderForLatestVersion() {
-        return versionStore.getFolderForLatestVersion();
+    public File getFolderForVersionToRun() {
+        return versionStore.getFolderForVersionToRun();
     }
 }
