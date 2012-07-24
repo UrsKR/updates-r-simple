@@ -2,11 +2,12 @@ package de.idos.updates;
 
 import de.idos.updates.install.FileInstaller;
 import de.idos.updates.install.Installer;
+import de.idos.updates.lookup.FileLookup;
+import de.idos.updates.lookup.VersionLookup;
 import de.idos.updates.store.NullReport;
 import de.idos.updates.store.ProgressReport;
 
 import java.io.File;
-import java.util.List;
 
 public class FilesystemRepository implements Repository {
     public static final String AVAILABLE_VERSIONS = "available_versions";
@@ -22,8 +23,7 @@ public class FilesystemRepository implements Repository {
 
     @Override
     public Version getLatestVersion() {
-        List<VersionedFile> versionedFiles = new VersionedFileFactory().createVersionedFilesFrom(availableVersions);
-        return new VersionedFileFinder().findLatestVersion(versionedFiles);
+        return new VersionLookup(new FileLookup(availableVersions), report).lookUpLatestVersion();
     }
 
     @Override

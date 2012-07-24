@@ -26,8 +26,9 @@ public class Installer<T> {
                 strategy.installElement(element, version);
             }
             report.finishedInstallation();
-        } catch (IOException e) {
+        } catch (Exception e) {
             strategy.handleException(e, version);
+            report.installationFailed(e);
         }
     }
 }

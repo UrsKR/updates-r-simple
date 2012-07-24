@@ -10,5 +10,5 @@ public interface InstallationStrategy<T> {
 
     void installElement(T element, Version version) throws IOException;
 
-    void handleException(IOException e, Version version);
+    void handleException(Exception e, Version version);
 }

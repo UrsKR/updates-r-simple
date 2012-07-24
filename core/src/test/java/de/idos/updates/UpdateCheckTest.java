@@ -16,8 +16,7 @@ public class UpdateCheckTest {
     public void returnsCurrentVersionIfNoNewerIsAvailable() throws Exception {
         when(connection.getLatestInstalledVersion()).thenReturn(currentVersion);
         when(connection.getLatestAvailableVersion()).thenReturn(latestVersion);
-        UpdateCheck updateCheck = new UpdateCheck(connection);
-        Version version = updateCheck.getLatestVersion();
+        Version version = getLatestVersion();
         assertThat(version, is(currentVersion));
     }
 
@@ -25,8 +24,16 @@ public class UpdateCheckTest {
     public void doesNotChangeStateIfNewerVersionBecomesAvailableLater() throws Exception {
         when(connection.getLatestInstalledVersion()).thenReturn(currentVersion);
         when(connection.getLatestAvailableVersion()).thenReturn(latestVersion, new NumericVersion(1,1,0));
-        UpdateCheck updateCheck = new UpdateCheck(connection);
-        Version version = updateCheck.getLatestVersion();
+        Version version = getLatestVersion();
         assertThat(version, is(currentVersion));
+    }
+
+    private Version getLatestVersion() {
+        UpdateCheck updateCheck = createUpdateCheck();
+        return updateCheck.getLatestVersion();
+    }
+
+    private UpdateCheck createUpdateCheck() {
+        return new UpdateCheck(connection);
     }
 }

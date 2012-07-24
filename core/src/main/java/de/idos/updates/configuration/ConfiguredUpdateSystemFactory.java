@@ -1,6 +1,7 @@
 package de.idos.updates.configuration;
 
 import de.idos.updates.*;
+import de.idos.updates.VersionStore;
 
 import java.io.File;
 import java.util.Properties;

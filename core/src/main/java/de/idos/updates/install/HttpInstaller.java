@@ -41,7 +41,7 @@ public class HttpInstaller implements InstallationStrategy<String> {
     }
 
     @Override
-    public void handleException(IOException e, Version version) {
+    public void handleException(Exception e, Version version) {
         store.removeVersion(version);
     }
 }

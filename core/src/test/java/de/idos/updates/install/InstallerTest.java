@@ -39,4 +39,12 @@ public class InstallerTest {
         installer.install(version);
         verify(report).finishedInstallation();
     }
+
+    @Test
+    public void reportsErrorDuringInstallation() throws Exception {
+        RuntimeException runtimeException = new RuntimeException();
+        when(strategy.findAllElementsToInstall(version)).thenThrow(runtimeException);
+        installer.install(version);
+        verify(report).installationFailed(runtimeException);
+    }
 }

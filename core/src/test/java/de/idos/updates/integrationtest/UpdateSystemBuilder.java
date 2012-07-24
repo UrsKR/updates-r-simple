@@ -25,7 +25,7 @@ public class UpdateSystemBuilder {
         return updateSystem;
     }
 
-    public void addReporter(VerifiableReport report) {
+    public void addReporter(ProgressReport report) {
         this.report = report;
     }
 }

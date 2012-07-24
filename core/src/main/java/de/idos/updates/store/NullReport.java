@@ -4,6 +4,21 @@ import de.idos.updates.Version;
 
 public class NullReport implements ProgressReport {
     @Override
+    public void lookingUpLatestAvailableVersion() {
+        //nothing to do
+    }
+
+    @Override
+    public void latestAvailableVersionIs(Version value) {
+        //nothing to do
+    }
+
+    @Override
+    public void versionLookupFailed(Exception e) {
+        //nothing to do
+    }
+
+    @Override
     public void startingInstallationOf(Version version) {
         //nothing to do
     }
@@ -40,6 +55,11 @@ public class NullReport implements ProgressReport {
 
     @Override
     public void finishedInstallation() {
+        //nothing to do
+    }
+
+    @Override
+    public void installationFailed(Exception e) {
         //nothing to do
     }
 }

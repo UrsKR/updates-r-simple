@@ -44,4 +44,9 @@ public class ConsoleReport implements ProgressReport {
     public void finishedInstallation() {
         System.out.println("Finished installation.");
     }
+
+    @Override
+    public void installationFailed(Exception e) {
+        System.out.println("Installation failed: "+ e.getMessage());
+    }
 }

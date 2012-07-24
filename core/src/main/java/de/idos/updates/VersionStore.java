@@ -1,5 +1,6 @@
 package de.idos.updates;
 
+import de.idos.updates.Version;
 import de.idos.updates.store.DataInVersion;
 import de.idos.updates.store.UrlDataInVersion;
 

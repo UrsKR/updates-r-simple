@@ -38,7 +38,7 @@ public class FileInstaller implements InstallationStrategy<File> {
     }
 
     @Override
-    public void handleException(IOException e, Version version) {
+    public void handleException(Exception e, Version version) {
         //nothing to do
     }
 }

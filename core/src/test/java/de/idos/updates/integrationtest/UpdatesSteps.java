@@ -9,6 +9,8 @@ import de.idos.updates.*;
 import de.idos.updates.server.FileServer;
 import de.idos.updates.store.FileDataInVersion;
 import de.idos.updates.store.FilesystemVersionStore;
+import de.idos.updates.VersionStore;
+import de.idos.updates.store.ProgressReport;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
@@ -17,6 +19,9 @@ import static de.idos.updates.FilesystemRepository.AVAILABLE_VERSIONS;
 import static de.idos.updates.NumericVersionMatchers.sameVersionAs;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 @SuppressWarnings("UnusedDeclaration")
 public class UpdatesSteps {
@@ -28,7 +33,7 @@ public class UpdatesSteps {
     private File repositoryFolder;
     private File versionStoreFolder;
     private final UpdateSystemBuilder updateSystemBuilder = new UpdateSystemBuilder();
-    private final VerifiableReport verifiableReport = new VerifiableReport();
+    private final ProgressReport verifiableReport = mock(ProgressReport.class);
 
     @Before
     public void initializeVersionRepository() throws Throwable {
@@ -144,7 +149,7 @@ public class UpdatesSteps {
 
     @Then("^the library reports the download's progress to the client$")
     public void the_library_reports_the_download_s_progress_to_the_client() throws Throwable {
-        verifiableReport.assertThatSomethingWasReported();
+        verify(verifiableReport).expectedSize(anyInt());
     }
 
     @After
