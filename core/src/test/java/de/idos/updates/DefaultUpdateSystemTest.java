@@ -1,5 +1,6 @@
 package de.idos.updates;
 
+import de.idos.updates.store.ProgressReport;
 import org.junit.Test;
 
 import java.io.File;
@@ -72,6 +73,13 @@ public class DefaultUpdateSystemTest {
         File value = new File(".");
         when(versionStore.getFolderForVersionToRun()).thenReturn(value);
         assertThat(updateSystem.getFolderForVersionToRun(), is(value));
+    }
+
+    @Test
+    public void installsReportOnRepository() throws Exception {
+        ProgressReport report = mock(ProgressReport.class);
+        updateSystem.reportAllProgressTo(report);
+        verify(repository).reportAllProgressTo(report);
     }
 
     private void installCurrentVersion() {

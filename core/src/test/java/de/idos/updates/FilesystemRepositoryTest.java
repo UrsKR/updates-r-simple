@@ -54,6 +54,13 @@ public class FilesystemRepositoryTest {
         inOrder.verify(store).addContent(version, new FileDataInVersion(content));
     }
 
+    @Test
+    public void createsRepositoryFolderIfItDoesNotExist() throws Exception {
+        available_versions.delete();
+        new FilesystemRepository(folder.getRoot());
+        assertThat(available_versions.exists(), is(true));
+    }
+
     private File addContentToVersion(String versionNumber, String fileName) throws IOException {
         File versionFolder = new File(available_versions, versionNumber);
         File file = new File(versionFolder, fileName);

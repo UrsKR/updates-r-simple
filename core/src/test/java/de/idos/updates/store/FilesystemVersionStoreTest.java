@@ -112,4 +112,10 @@ public class FilesystemVersionStoreTest {
         versionStore.addVersion(version);
         assertThat(versionStore.getLatestVersion(), is(sameVersionAs(version)));
     }
+
+    @Test
+    public void publishesLatestVersionFolder() throws Exception {
+        versionStore.addVersion(newVersion);
+        assertThat(versionStore.getFolderForVersionToRun(), is(new File(folder.getRoot(), newVersion.asString())));
+    }
 }
