@@ -13,7 +13,7 @@ public class DemoBootLoader {
         String mainMethod = "startDemo";
         UpdateSystem updateSystem = new ConfiguredUpdateSystemFactory().create();
         updateSystem.reportAllProgressTo(new ConsoleReport());
-        updateSystem.updateToLatestVersion();
+        updateSystem.checkForUpdates().updateToLatestVersion();
         File versionFolder = updateSystem.getFolderForVersionToRun();
         new ApplicationLauncher(versionFolder).launch(mainClass, mainMethod);
     }

@@ -1,7 +1,7 @@
 package de.idos.updates.integrationtest;
 
 import de.idos.updates.Repository;
-import de.idos.updates.UpdateSystem;
+import de.idos.updates.DefaultUpdateSystem;
 import de.idos.updates.VersionStore;
 import de.idos.updates.store.NullReport;
 import de.idos.updates.store.ProgressReport;
@@ -19,8 +19,8 @@ public class UpdateSystemBuilder {
         this.repository = repository;
     }
 
-    public UpdateSystem create() {
-        UpdateSystem updateSystem = new UpdateSystem(versionStore, repository);
+    public DefaultUpdateSystem create() {
+        DefaultUpdateSystem updateSystem = new DefaultUpdateSystem(versionStore, repository);
         updateSystem.reportAllProgressTo(report);
         return updateSystem;
     }

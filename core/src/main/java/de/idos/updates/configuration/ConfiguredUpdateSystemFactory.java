@@ -12,7 +12,7 @@ public class ConfiguredUpdateSystemFactory {
         UpdateConfiguration configuration = new UpdateConfiguration(properties);
         VersionStore store = createVersionStore(configuration);
         Repository repository = createRepository(configuration);
-        return new UpdateSystem(store, repository);
+        return new DefaultUpdateSystem(store, repository);
     }
 
     private VersionStore createVersionStore(UpdateConfiguration configuration) {

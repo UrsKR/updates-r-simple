@@ -50,8 +50,8 @@ public class ConfiguredUpdateSystemFactory_FixedVersionTest {
     @Test
     public void canInstallUpdatesEvenWhenTheActualVersionIsFixed() throws Exception {
         UpdateSystem updateSystem = new ConfiguredUpdateSystemFactory().create();
-        updateSystem.updateToLatestVersion();
-        assertThat(updateSystem.hasUpdate(), is(UpdateAvailability.NotAvailable));
+        updateSystem.checkForUpdates().updateToLatestVersion();
+        assertThat(updateSystem.checkForUpdates().hasUpdate(), is(UpdateAvailability.NotAvailable));
     }
 
     @After

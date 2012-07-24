@@ -39,7 +39,7 @@ public class ConfiguredUpdateSystemFactory_FileTest {
     @Test
     public void usesConfiguredFileRepository() throws Exception {
         UpdateSystem updateSystem = new ConfiguredUpdateSystemFactory().create();
-        Version latestVersion = updateSystem.getLatestVersion();
+        Version latestVersion = updateSystem.checkForUpdates().getLatestVersion();
         assertThat(latestVersion, is(sameVersionAs(new NumericVersion(4, 2, 1))));
     }
 

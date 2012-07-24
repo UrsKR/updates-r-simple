@@ -23,7 +23,7 @@ public class UpdatesSteps {
 
     private static final NumericVersion currentVersion = new NumericVersion(4, 2, 0);
     private TemporaryFolder folder = new TemporaryFolder();
-    private UpdateSystem updateSystem;
+    private DefaultUpdateSystem updateSystem;
     private NumericVersion latestVersion;
     private File repositoryFolder;
     private File versionStoreFolder;
@@ -97,7 +97,7 @@ public class UpdatesSteps {
 
     @When("^the application requests an update$")
     public void the_application_requests_an_update() throws Throwable {
-        getUpdateSystem().updateToLatestVersion();
+        getUpdateSystem().checkForUpdates().updateToLatestVersion();
     }
 
     @When("^I instruct the library to clean up$")
@@ -107,7 +107,7 @@ public class UpdatesSteps {
 
     @Then("^the library reports an update$")
     public void the_library_reports_an_update() throws Throwable {
-        assertThat(getUpdateSystem().hasUpdate(), is(UpdateAvailability.Available));
+        assertThat(getUpdateSystem().checkForUpdates().hasUpdate(), is(UpdateAvailability.Available));
     }
 
     @Then("^the library reports the new version$")
@@ -122,7 +122,7 @@ public class UpdatesSteps {
 
     @Then("^the library does not indicate a new version$")
     public void the_library_does_not_indicate_a_new_version() throws Throwable {
-        assertThat(getUpdateSystem().hasUpdate(), is(UpdateAvailability.NotAvailable));
+        assertThat(getUpdateSystem().checkForUpdates().hasUpdate(), is(UpdateAvailability.NotAvailable));
     }
 
     @Then("^the library reports the current version as latest$")
@@ -153,11 +153,11 @@ public class UpdatesSteps {
     }
 
     private void assertLatestReportedVersionIsLatestExpectedVersion() {
-        Version latestReportedVersion = getUpdateSystem().getLatestVersion();
+        Version latestReportedVersion = getUpdateSystem().checkForUpdates().getLatestVersion();
         assertThat(latestReportedVersion, is(sameVersionAs(latestVersion)));
     }
 
-    private UpdateSystem getUpdateSystem() {
+    private DefaultUpdateSystem getUpdateSystem() {
         if (updateSystem == null) {
             this.updateSystem = updateSystemBuilder.create();
         }
