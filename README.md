@@ -14,7 +14,10 @@ Reporting should enable clients to detail every step of the update process.
 
 ## Example
 
-To pull the latest update and then launch the main method ``Demo.startDemo()``, configure your system with ``update.properties``[[doc](https://github.com/UrsKR/updates-r-simple/blob/master/core/src/test/resources/sample.properties)] on either the classpath or the working directory and then use code like this:
+#### To configure
+1. Instantiate a ``Configurator`` and use its API to create a configuration file.
+2. Put the resulting file on the classpath or into your working directory.
+3. Pull the latest update and then launch the main method (e.g. ``Demo.startDemo()``):
 
 ```
     String mainClass = "de.idos.updates.Demo";
@@ -25,5 +28,3 @@ To pull the latest update and then launch the main method ``Demo.startDemo()``, 
     File versionFolder = updateSystem.getFolderForVersionToRun();
     new ApplicationLauncher(versionFolder).launch(mainClass, mainMethod);
 ```
-
-A working sample resides in the "demo" subproject.
