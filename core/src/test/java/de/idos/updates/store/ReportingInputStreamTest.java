@@ -15,6 +15,6 @@ public class ReportingInputStreamTest {
         InputStream wrapped = mock(InputStream.class);
         ReportingInputStream stream = new ReportingInputStream(wrapped, report);
         stream.afterRead(-1);
-        verify(report).done();
+        verify(report).finishedFile();
     }
 }

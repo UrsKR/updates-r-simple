@@ -1,9 +1,9 @@
 package de.idos.updates;
 
-import de.idos.updates.store.DataImport;
+import de.idos.updates.install.HttpInstaller;
+import de.idos.updates.install.Installer;
 import de.idos.updates.store.NullReport;
 import de.idos.updates.store.ProgressReport;
-import de.idos.updates.store.UrlDataInVersion;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -35,17 +35,8 @@ public class HttpRepository implements Repository {
     @Override
     public void transferVersionTo(Version version, VersionStore store) {
         store.addVersion(version);
-        try {
-            URL contentList = new URL(baseUrl, "updates/" + version.asString() + "/content");
-            InputStream input = contentList.openStream();
-            List<String> filesToLoad = IOUtils.readLines(input);
-            for (String file : filesToLoad) {
-                URL fileUrl = new URL(baseUrl, "updates/" + version.asString() + "/" + file);
-                store.addContent(version, new UrlDataInVersion(fileUrl, file, new DataImport().reportProgressTo(report)));
-            }
-        } catch (IOException e) {
-            store.removeVersion(version);
-        }
+        HttpInstaller httpInstaller = new HttpInstaller(store, report, baseUrl);
+        new Installer<String>(httpInstaller, report).install(version);
     }
 
     @Override
