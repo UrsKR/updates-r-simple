@@ -8,7 +8,7 @@ import java.util.Properties;
 public class ConfiguredUpdateSystemFactory {
 
     public UpdateSystem create() {
-        Properties properties = new PropertiesLoader().load("update.properties");
+        Properties properties = new PropertiesLoader("update.properties").load();
         UpdateConfiguration configuration = new UpdateConfiguration(properties);
         VersionStore store = createVersionStore(configuration);
         Repository repository = createRepository(configuration);

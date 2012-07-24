@@ -16,35 +16,35 @@ public class PropertiesLoaderTest {
 
     @Test
     public void loadsPropertiesFromClassPath() throws Exception {
-        Properties properties = new PropertiesLoader().load("unittestclasspath.properties");
+        Properties properties = new PropertiesLoader("unittestclasspath.properties").load();
         assertThat(properties.getProperty("X"), is("Y"));
     }
 
     @Test
     public void prefersPropertiesFromFileSystem() throws Exception {
         FileUtils.writeStringToFile(fileInWorkingDirectory, "X=X");
-        Properties properties = new PropertiesLoader().load("unittestcombination.properties");
+        Properties properties = new PropertiesLoader("unittestcombination.properties").load();
         assertThat(properties.getProperty("X"), is("X"));
     }
 
     @Test
     public void addsPropertiesTogether() throws Exception {
         FileUtils.writeStringToFile(fileInWorkingDirectory, "X=X");
-        Properties properties = new PropertiesLoader().load("unittestcombination.properties");
+        Properties properties = new PropertiesLoader("unittestcombination.properties").load();
         assertThat(properties.getProperty("A"), is("B"));
     }
 
     @Test
     public void closesStreamOnFileSystemFile() throws Exception {
         fileInWorkingDirectory.createNewFile();
-        new PropertiesLoader().load("unittestcombination.properties");
+        new PropertiesLoader("unittestcombination.properties").load();
         fileInWorkingDirectory.delete();
         assertThat(fileInWorkingDirectory.exists(), is(false));
     }
 
     @Test(expected = ConfigurationFailedException.class)
     public void throwsExceptionIfNeitherFileExists() throws Exception {
-        new PropertiesLoader().load("missing.properties");
+        new PropertiesLoader("missing.properties").load();
     }
 
     @After

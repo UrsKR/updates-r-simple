@@ -11,8 +11,6 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.util.Properties;
 
 import static de.idos.updates.NumericVersionMatchers.sameVersionAs;
 import static org.hamcrest.CoreMatchers.is;
@@ -21,8 +19,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class ConfiguredUpdateSystemFactory_FileTest {
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
-    private File configuration;
-    Properties properties = new Properties();
 
     @Before
     public void fillRepository() throws Exception {
@@ -32,12 +28,12 @@ public class ConfiguredUpdateSystemFactory_FileTest {
 
     @Before
     public void createConfiguration() throws Exception {
-        configuration = new File(".", "update.properties");
-        properties.put("update.applicationName", "updateunittest");
-        properties.put("update.LatestVersion.repository.type", "File");
-        properties.put("update.LatestVersion.repository.location", folder.getRoot().getAbsolutePath());
-        properties.put("update.strategy", "LatestVersion");
-        properties.store(new FileOutputStream(configuration), "");
+        Configurator configurator = new Configurator();
+        configurator.setApplicationNameTo("updateunittest");
+        configurator.toggleLatestVersion();
+        configurator.toggleFileRepositoryForLatestVersion();
+        configurator.setRepositoryLocationForLatestVersionTo(folder.getRoot().getAbsolutePath());
+        configurator.saveConfiguration();
     }
 
     @Test
@@ -49,7 +45,8 @@ public class ConfiguredUpdateSystemFactory_FileTest {
 
     @After
     public void deleteConfiguration() throws Exception {
-        FileUtils.deleteQuietly(configuration);
+        File configurationFile = new File(".", "update.properties");
+        FileUtils.deleteQuietly(configurationFile);
     }
 
     @After

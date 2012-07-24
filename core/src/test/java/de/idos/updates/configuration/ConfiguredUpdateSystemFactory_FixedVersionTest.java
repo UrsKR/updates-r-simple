@@ -1,7 +1,6 @@
 package de.idos.updates.configuration;
 
 import de.idos.updates.FilesystemRepository;
-import de.idos.updates.NumericVersion;
 import de.idos.updates.UpdateAvailability;
 import de.idos.updates.UpdateSystem;
 import org.apache.commons.io.FileUtils;
@@ -15,7 +14,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Properties;
 
-import static de.idos.updates.NumericVersionMatchers.sameVersionAs;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -23,14 +21,13 @@ public class ConfiguredUpdateSystemFactory_FixedVersionTest {
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
+    private final Properties properties = new Properties();
     private File configuration;
-    Properties properties = new Properties();
     private File fixedVersionFolder;
-    private File repository;
 
     @Before
     public void configureFileRepository() throws Exception {
-        repository = folder.newFolder("repository");
+        File repository = folder.newFolder("repository");
         File available_versions = new File(repository, FilesystemRepository.AVAILABLE_VERSIONS);
         new File(available_versions, "4.2.1").mkdirs();
         fixedVersionFolder = folder.newFile("fixedVersion");

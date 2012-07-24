@@ -8,8 +8,8 @@ import de.idos.updates.FilesystemRepository;
 import de.idos.updates.NumericVersion;
 import de.idos.updates.UpdateSystem;
 import de.idos.updates.Version;
+import de.idos.updates.configuration.Configurator;
 import de.idos.updates.configuration.ConfiguredUpdateSystemFactory;
-import de.idos.updates.configuration.RepositoryType;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,9 +41,9 @@ public class ConfigurationSteps {
 
     @Given("^a file called 'update.properties' in the working directory$")
     public void a_file_called_update_properties_in_the_working_directory() throws Throwable {
-        Properties properties = createBaseProperties();
-        properties.put("update.LatestVersion.repository.location", Repo_From_WorkingDir);
-        writeProperties(properties, workingDirConfig);
+        Configurator configurator = createBaseProperties();
+        configurator.setRepositoryLocationForLatestVersionTo(Repo_From_WorkingDir);
+        configurator.saveConfiguration();
         File repository = new File(Repo_From_WorkingDir, FilesystemRepository.AVAILABLE_VERSIONS);
         repository.mkdirs();
         new File(repository, "1.0.2").mkdir();
@@ -53,9 +53,10 @@ public class ConfigurationSteps {
     public void the_file_specifies_a_fixed_version_to_be_loaded() throws Throwable {
         Properties properties = new Properties();
         properties.load(new FileInputStream(workingDirConfig));
-        properties.put("update.strategy", "FixedVersion");
-        properties.put("update.FixedVersion.location", Fixed_Version_Location);
-        properties.store(new FileOutputStream(workingDirConfig), "");
+        Configurator configurator = new Configurator(properties);
+        configurator.toggleFixedVersion();
+        configurator.changeFixedVersionLocationTo(Fixed_Version_Location);
+        configurator.saveConfiguration();
     }
 
     @When("^I start the update system$")
@@ -88,12 +89,12 @@ public class ConfigurationSteps {
         deleteQuietly(new File(Fixed_Version_Location));
     }
 
-    private Properties createBaseProperties() {
-        Properties properties = new Properties();
-        properties.put("update.applicationName", "integrationtest");
-        properties.put("update.strategy", "LatestVersion");
-        properties.put("update.LatestVersion.repository.type", RepositoryType.File.toString());
-        return properties;
+    private Configurator createBaseProperties() {
+        Configurator configurator = new Configurator();
+        configurator.setApplicationNameTo("integrationtest");
+        configurator.toggleLatestVersion();
+        configurator.toggleFileRepositoryForLatestVersion();
+        return configurator;
     }
 
     private void writeProperties(Properties properties, File file) throws IOException {
