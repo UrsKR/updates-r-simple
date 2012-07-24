@@ -12,9 +12,7 @@ Reporting should enable clients to detail every step of the update process.
 * You need JDK 6
 * Run ``gradlew build``
 
-## Example
-
-#### To configure
+## To Use
 1. Instantiate a ``Configurator`` and use its API to create a configuration file.
 2. Put the resulting file on the classpath or into your working directory.
 3. Pull the latest update and then launch the main method (e.g. ``Demo.startDemo()``):
