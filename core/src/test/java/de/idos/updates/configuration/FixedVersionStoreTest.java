@@ -4,6 +4,7 @@ import de.idos.updates.NumericVersion;
 import de.idos.updates.Version;
 import de.idos.updates.VersionStore;
 import de.idos.updates.store.DataInVersion;
+import de.idos.updates.store.Installation;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -29,27 +30,10 @@ public class FixedVersionStoreTest {
 
     @Test
     public void forwardsAdditionToWrappedStore() throws Exception {
-        store.addVersion(version);
-        verify(wrapped).addVersion(version);
-    }
-
-    @Test
-    public void forwardsContentToWrappedStore() throws Exception {
-        DataInVersion dataInVersion = mock(DataInVersion.class);
-        store.addContent(version, dataInVersion);
-        verify(wrapped).addContent(version, dataInVersion);
-    }
-
-    @Test
-    public void removesOldVersionsViaWrappedStore() throws Exception {
-        store.removeOldVersions();
-        verify(wrapped).removeOldVersions();
-    }
-
-    @Test
-    public void removesGivenVersionsViaWrappedStore() throws Exception {
-        store.removeVersion(version);
-        verify(wrapped).removeVersion(version);
+        Installation installation = mock(Installation.class);
+        when(wrapped.beginInstallation(version)).thenReturn(installation);
+        Installation actualInstallation = store.beginInstallation(version);
+        assertThat(actualInstallation, is(installation));
     }
 
     @Test

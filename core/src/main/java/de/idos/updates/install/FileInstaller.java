@@ -4,6 +4,7 @@ import de.idos.updates.Version;
 import de.idos.updates.VersionStore;
 import de.idos.updates.store.DataImport;
 import de.idos.updates.store.FileDataInVersion;
+import de.idos.updates.store.Installation;
 import de.idos.updates.store.ProgressReport;
 
 import java.io.File;
@@ -13,14 +14,14 @@ import java.util.List;
 
 public class FileInstaller implements InstallationStrategy<File> {
 
-    private VersionStore store;
     private ProgressReport report;
     private File availableVersions;
+    private Installation installation;
 
-    public FileInstaller(VersionStore store, ProgressReport report, File availableVersions) {
-        this.store = store;
+    public FileInstaller(ProgressReport report, File availableVersions, Installation installation) {
         this.report = report;
         this.availableVersions = availableVersions;
+        this.installation = installation;
     }
 
     @Override
@@ -34,7 +35,7 @@ public class FileInstaller implements InstallationStrategy<File> {
         report.installingFile(file.getName());
         DataImport dataImport = new DataImport().reportProgressTo(report);
         FileDataInVersion dataInVersion = new FileDataInVersion(file, dataImport);
-        store.addContent(version, dataInVersion);
+        installation.addContent(dataInVersion);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package de.idos.updates;
 
+import de.idos.updates.store.Installation;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -8,6 +9,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class HttpRepository_OfflineTest {
 
@@ -26,7 +28,9 @@ public class HttpRepository_OfflineTest {
     @Test
     public void deletesVersionIfErrorsOccurDuringTransfer() throws Exception {
         NumericVersion version = new NumericVersion(5, 0, 4);
+        Installation installation = mock(Installation.class);
+        when(store.beginInstallation(version)).thenReturn(installation);
         repository.transferVersionTo(version, store);
-        verify(store).removeVersion(version);
+        verify(installation).abort();
     }
 }

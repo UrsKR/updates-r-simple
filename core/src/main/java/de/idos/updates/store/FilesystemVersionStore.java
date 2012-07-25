@@ -17,14 +17,10 @@ public class FilesystemVersionStore implements VersionStore {
     }
 
     @Override
-    public void addVersion(Version version) {
+    public Installation beginInstallation(final Version version) {
         File file = getVersionFolder(version);
         file.mkdirs();
-    }
-
-    @Override
-    public void addContent(Version version, DataInVersion dataInVersion) {
-        addDataToVersion(version, dataInVersion);
+        return new FilesystemInstallation(file);
     }
 
     @Override
@@ -32,16 +28,6 @@ public class FilesystemVersionStore implements VersionStore {
         List<VersionedFile> versionedFiles = new VersionedFileFactory().createVersionedFilesFrom(folder);
         Version latestVersion = new VersionedFileFinder().findLatestVersion(versionedFiles);
         deleteAllButLatestVersion(versionedFiles, latestVersion);
-    }
-
-    @Override
-    public void removeVersion(Version version) {
-        try {
-            File versionFolder = getVersionFolder(version);
-            FileUtils.deleteDirectory(versionFolder);
-        } catch (IOException e) {
-            throw new CleanupFailedException("Could not delete old versions.", e);
-        }
     }
 
     @Override
@@ -67,11 +53,8 @@ public class FilesystemVersionStore implements VersionStore {
         }
     }
 
-    private void addDataToVersion(Version version, DataInVersion dataInVersion) {
-        dataInVersion.storeIn(getVersionFolder(version));
-    }
-
     private File getVersionFolder(Version version) {
         return new File(folder, version.asString());
     }
+
 }

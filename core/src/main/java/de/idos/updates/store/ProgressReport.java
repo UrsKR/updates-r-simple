@@ -26,4 +26,6 @@ public interface ProgressReport {
     void finishedInstallation();
 
     void installationFailed(Exception e);
+
+    void updateAlreadyInProgress();
 }

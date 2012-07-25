@@ -34,3 +34,10 @@ Feature: Updates-R-Simple discovers and downloads updates
         And a repository for that server
         When the application checks for updates
         Then the library reports an update
+
+    Scenario: Updates-R-Simple is thread-safe
+        Given an HTTP-server with new versions
+        And a repository for that server
+        When the application requests an update that takes a while to complete
+        And the application concurrently request a second update
+        Then the second update does not interfere

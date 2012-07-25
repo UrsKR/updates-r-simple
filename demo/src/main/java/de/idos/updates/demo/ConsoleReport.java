@@ -5,6 +5,21 @@ import de.idos.updates.store.ProgressReport;
 
 public class ConsoleReport implements ProgressReport {
     @Override
+    public void lookingUpLatestAvailableVersion() {
+        System.out.println("Looking for latest available version");
+    }
+
+    @Override
+    public void latestAvailableVersionIs(Version value) {
+        System.out.println("Found version: " + value);
+    }
+
+    @Override
+    public void versionLookupFailed(Exception e) {
+        System.out.println("Could not determine latest version: " + e.getMessage());
+    }
+
+    @Override
     public void startingInstallationOf(Version version) {
         System.out.println();
         System.out.println("Starting installation of " + version.asString());
@@ -47,6 +62,11 @@ public class ConsoleReport implements ProgressReport {
 
     @Override
     public void installationFailed(Exception e) {
-        System.out.println("Installation failed: "+ e.getMessage());
+        System.out.println("Installation failed: " + e.getMessage());
+    }
+
+    @Override
+    public void updateAlreadyInProgress() {
+        System.out.println("Installation failed: An installation is already in progress.");
     }
 }

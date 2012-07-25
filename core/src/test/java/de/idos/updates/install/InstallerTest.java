@@ -3,6 +3,7 @@ package de.idos.updates.install;
 import de.idos.updates.Version;
 import de.idos.updates.store.ProgressReport;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.util.Collections;
 
@@ -10,10 +11,11 @@ import static org.mockito.Mockito.*;
 
 public class InstallerTest {
 
-    InstallationStrategy strategy = mock(InstallationStrategy.class);
+    @SuppressWarnings("unchecked")
+    InstallationStrategy<Object> strategy = Mockito.mock(InstallationStrategy.class);
     ProgressReport report = mock(ProgressReport.class);
     Version version = mock(Version.class);
-    Installer installer = new Installer(strategy, report);
+    Installer<Object> installer = new Installer<Object>(strategy, report);
 
     @Test
     public void reportsStartOfInstallation() throws Exception {

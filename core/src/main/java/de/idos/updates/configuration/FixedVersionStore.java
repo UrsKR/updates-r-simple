@@ -2,7 +2,7 @@ package de.idos.updates.configuration;
 
 import de.idos.updates.Version;
 import de.idos.updates.VersionStore;
-import de.idos.updates.store.DataInVersion;
+import de.idos.updates.store.Installation;
 
 import java.io.File;
 
@@ -16,23 +16,13 @@ public class FixedVersionStore implements VersionStore {
     }
 
     @Override
-    public void addVersion(Version version) {
-        wrapped.addVersion(version);
-    }
-
-    @Override
-    public void addContent(Version version, DataInVersion dataInVersion) {
-        wrapped.addContent(version, dataInVersion);
+    public Installation beginInstallation(Version version) {
+        return wrapped.beginInstallation(version);
     }
 
     @Override
     public void removeOldVersions() {
         wrapped.removeOldVersions();
-    }
-
-    @Override
-    public void removeVersion(Version version) {
-        wrapped.removeVersion(version);
     }
 
     @Override

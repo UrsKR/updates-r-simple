@@ -1,6 +1,7 @@
 package de.idos.updates;
 
 import de.idos.updates.store.FileDataInVersion;
+import de.idos.updates.store.Installation;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -13,8 +14,7 @@ import java.io.IOException;
 import static de.idos.updates.NumericVersionMatchers.sameVersionAs;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 public class FilesystemRepositoryTest {
 
@@ -48,10 +48,10 @@ public class FilesystemRepositoryTest {
         addVersion("4.2.1");
         File content = addContentToVersion("4.2.1", "content");
         NumericVersion version = new NumericVersion(4, 2, 1);
+        Installation installation = mock(Installation.class);
+        when(store.beginInstallation(version)).thenReturn(installation);
         new FilesystemRepository(folder.getRoot()).transferVersionTo(version, store);
-        InOrder inOrder = inOrder(store);
-        inOrder.verify(store).addVersion(version);
-        inOrder.verify(store).addContent(version, new FileDataInVersion(content));
+        verify(installation).addContent(new FileDataInVersion(content));
     }
 
     @Test

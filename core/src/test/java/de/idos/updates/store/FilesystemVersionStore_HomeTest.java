@@ -29,7 +29,7 @@ public class FilesystemVersionStore_HomeTest {
     public void createsFoldersInUserHome() throws Exception {
         System.setProperty("user.home", folder.getRoot().getAbsolutePath());
         VersionStore store = VersionStoreBuilder.inUserHomeForApplication("Demo").create();
-        store.addVersion(new NumericVersion(1, 1, 1));
+        store.beginInstallation(new NumericVersion(1, 1, 1));
         File file = new File(folder.getRoot(), ".Demo/versions/1.1.1");
         System.out.println(file);
         assertThat(file.exists(), is(true));

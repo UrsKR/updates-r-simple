@@ -2,14 +2,13 @@ package de.idos.updates;
 
 import de.idos.updates.server.FileServer;
 import de.idos.updates.store.FilesystemVersionStore;
-import de.idos.updates.store.ProgressReport;
+import de.idos.updates.store.Installation;
 import de.idos.updates.store.UrlDataInVersion;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.mockito.InOrder;
 import org.mockito.Matchers;
 
 import java.io.File;
@@ -17,7 +16,6 @@ import java.io.File;
 import static de.idos.updates.NumericVersionMatchers.sameVersionAs;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 public class HttpRepositoryTest {
@@ -53,11 +51,11 @@ public class HttpRepositoryTest {
 
     @Test
     public void transfersVersionToStore() throws Exception {
+        Installation installation = mock(Installation.class);
         NumericVersion version = new NumericVersion(5, 0, 4);
+        when(store.beginInstallation(version)).thenReturn(installation);
         repository.transferVersionTo(version, store);
-        InOrder inOrder = inOrder(store);
-        inOrder.verify(store).addVersion(version);
-        inOrder.verify(store, times(2)).addContent(eq(version), Matchers.isA(UrlDataInVersion.class));
+        verify(installation, times(2)).addContent(Matchers.isA(UrlDataInVersion.class));
     }
 
     @Test

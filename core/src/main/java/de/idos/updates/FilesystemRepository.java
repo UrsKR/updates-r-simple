@@ -4,6 +4,7 @@ import de.idos.updates.install.FileInstaller;
 import de.idos.updates.install.Installer;
 import de.idos.updates.lookup.FileLookup;
 import de.idos.updates.lookup.VersionLookup;
+import de.idos.updates.store.Installation;
 import de.idos.updates.store.NullReport;
 import de.idos.updates.store.ProgressReport;
 
@@ -28,8 +29,8 @@ public class FilesystemRepository implements Repository {
 
     @Override
     public void transferVersionTo(Version version, VersionStore store) {
-        store.addVersion(version);
-        FileInstaller fileInstaller = new FileInstaller(store, report, availableVersions);
+        Installation installation = store.beginInstallation(version);
+        FileInstaller fileInstaller = new FileInstaller(report, availableVersions, installation);
         new Installer<File>(fileInstaller, report).install(version);
     }
 

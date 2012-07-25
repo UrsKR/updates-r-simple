@@ -4,6 +4,7 @@ import de.idos.updates.install.HttpInstaller;
 import de.idos.updates.install.Installer;
 import de.idos.updates.lookup.HttpLookup;
 import de.idos.updates.lookup.VersionLookup;
+import de.idos.updates.store.Installation;
 import de.idos.updates.store.NullReport;
 import de.idos.updates.store.ProgressReport;
 
@@ -29,8 +30,8 @@ public class HttpRepository implements Repository {
 
     @Override
     public void transferVersionTo(Version version, VersionStore store) {
-        store.addVersion(version);
-        HttpInstaller httpInstaller = new HttpInstaller(store, report, baseUrl);
+        Installation installation = store.beginInstallation(version);
+        HttpInstaller httpInstaller = new HttpInstaller(report, baseUrl, installation);
         new Installer<String>(httpInstaller, report).install(version);
     }
 

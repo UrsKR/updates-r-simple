@@ -62,4 +62,9 @@ public class NullReport implements ProgressReport {
     public void installationFailed(Exception e) {
         //nothing to do
     }
+
+    @Override
+    public void updateAlreadyInProgress() {
+        //nothing to do
+    }
 }

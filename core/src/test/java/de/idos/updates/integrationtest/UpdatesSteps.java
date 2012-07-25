@@ -9,7 +9,7 @@ import de.idos.updates.*;
 import de.idos.updates.server.FileServer;
 import de.idos.updates.store.FileDataInVersion;
 import de.idos.updates.store.FilesystemVersionStore;
-import de.idos.updates.VersionStore;
+import de.idos.updates.store.Installation;
 import de.idos.updates.store.ProgressReport;
 import org.junit.rules.TemporaryFolder;
 
@@ -34,6 +34,7 @@ public class UpdatesSteps {
     private File versionStoreFolder;
     private final UpdateSystemBuilder updateSystemBuilder = new UpdateSystemBuilder();
     private final ProgressReport verifiableReport = mock(ProgressReport.class);
+    private VersionStore versionStore;
 
     @Before
     public void initializeVersionRepository() throws Throwable {
@@ -41,12 +42,12 @@ public class UpdatesSteps {
         this.repositoryFolder = folder.newFolder("repository");
         this.versionStoreFolder = folder.newFolder("versions");
         Repository repository = new FilesystemRepository(repositoryFolder);
-        VersionStore versionStore = new FilesystemVersionStore(versionStoreFolder);
+        versionStore = new FilesystemVersionStore(versionStoreFolder);
         updateSystemBuilder.useStore(versionStore);
         updateSystemBuilder.useRepository(repository);
-        versionStore.addVersion(currentVersion);
+        Installation installation = versionStore.beginInstallation(currentVersion);
         File file = folder.newFile();
-        versionStore.addContent(currentVersion, new FileDataInVersion(file));
+        installation.addContent(new FileDataInVersion(file));
     }
 
     @Given("^the repository contains a new version$")
@@ -110,6 +111,23 @@ public class UpdatesSteps {
         getUpdateSystem().removeOldVersions();
     }
 
+    @When("^the application requests an update that takes a while to complete$")
+    public void the_application_requests_an_update_that_takes_a_while_to_complete() throws Throwable {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                updateSystemBuilder.useStore(new SlowVersionStore(versionStore));
+                DefaultUpdateSystem slowUpdateSystem = updateSystemBuilder.create();
+                slowUpdateSystem.checkForUpdates().updateToLatestVersion();
+            }
+        }).start();
+    }
+
+    @When("^the application concurrently request a second update$")
+    public void the_application_concurrently_request_a_second_update() throws Throwable {
+        the_application_requests_an_update();
+    }
+
     @Then("^the library reports an update$")
     public void the_library_reports_an_update() throws Throwable {
         assertThat(getUpdateSystem().checkForUpdates().hasUpdate(), is(UpdateAvailability.Available));
@@ -150,6 +168,11 @@ public class UpdatesSteps {
     @Then("^the library reports the download's progress to the client$")
     public void the_library_reports_the_download_s_progress_to_the_client() throws Throwable {
         verify(verifiableReport).expectedSize(anyInt());
+    }
+
+    @Then("^the second update does not interfere$")
+    public void the_second_update_does_not_interfere() throws Throwable {
+        verify(verifiableReport).updateAlreadyInProgress();
     }
 
     @After
