@@ -1,10 +1,8 @@
 package de.idos.updates.store;
 
-import de.idos.updates.NumericVersion;
 import de.idos.updates.UpdateFailedException;
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -19,7 +17,6 @@ public class FilesystemInstallationTest {
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
     private FilesystemInstallation installation;
-    private NumericVersion newVersion = new NumericVersion(1, 0, 0);
 
     @Before
     public void setUp() throws Exception {
@@ -60,9 +57,14 @@ public class FilesystemInstallationTest {
         assertThat(folder.getRoot().exists(), is(false));
     }
 
-    @Ignore
     @Test
     public void marksInstallationInProgressInNewVersion() throws Exception {
         assertThat(new File(folder.getRoot(), "installation.running").exists(), is(true));
+    }
+
+    @Test
+    public void removesProgressMarkerWhenDone() throws Exception {
+        installation.finish();
+        assertThat(new File(folder.getRoot(), "installation.running").exists(), is(false));
     }
 }

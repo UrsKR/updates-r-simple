@@ -17,10 +17,9 @@ public class FilesystemVersionStore implements VersionStore {
     }
 
     @Override
-    public Installation beginInstallation(final Version version) {
+    public Installation beginInstallation(Version version) {
         File file = getVersionFolder(version);
-        file.mkdirs();
-        return new FilesystemInstallation(file);
+        return FilesystemInstallation.create(file);
     }
 
     @Override

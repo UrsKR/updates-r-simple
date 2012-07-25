@@ -3,7 +3,6 @@ package de.idos.updates.install;
 import de.idos.updates.Version;
 import de.idos.updates.store.ProgressReport;
 
-import java.io.IOException;
 import java.util.List;
 
 public class Installer<T> {
@@ -25,9 +24,10 @@ public class Installer<T> {
             for (T element : elements) {
                 strategy.installElement(element, version);
             }
+            strategy.finalizeInstallation();
             report.finishedInstallation();
         } catch (Exception e) {
-            strategy.handleException(e, version);
+            strategy.handleException();
             report.installationFailed(e);
         }
     }

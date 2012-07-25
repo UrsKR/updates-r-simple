@@ -1,7 +1,6 @@
 package de.idos.updates.install;
 
 import de.idos.updates.Version;
-import de.idos.updates.VersionStore;
 import de.idos.updates.store.DataImport;
 import de.idos.updates.store.Installation;
 import de.idos.updates.store.ProgressReport;
@@ -36,13 +35,18 @@ public class HttpInstaller implements InstallationStrategy<String> {
     public void installElement(String file, Version version) throws IOException {
         report.installingFile(file);
         URL fileUrl = new URL(baseUrl, "updates/" + version.asString() + "/" + file);
-        DataImport dataImport = new DataImport();
-        UrlDataInVersion dataInVersion = new UrlDataInVersion(fileUrl, file, dataImport.reportProgressTo(report));
+        DataImport dataImport = new DataImport().reportProgressTo(report);
+        UrlDataInVersion dataInVersion = new UrlDataInVersion(fileUrl, file, dataImport);
         installation.addContent(dataInVersion);
     }
 
     @Override
-    public void handleException(Exception e, Version version) {
+    public void handleException() {
         installation.abort();
+    }
+
+    @Override
+    public void finalizeInstallation() {
+        installation.finish();
     }
 }

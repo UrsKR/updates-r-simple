@@ -49,4 +49,10 @@ public class InstallerTest {
         installer.install(version);
         verify(report).installationFailed(runtimeException);
     }
+
+    @Test
+    public void finalizesInstallationWhenAllIsDone() throws Exception {
+        installer.install(version);
+        verify(strategy).finalizeInstallation();
+    }
 }

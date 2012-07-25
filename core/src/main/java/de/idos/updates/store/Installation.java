@@ -4,4 +4,6 @@ public interface Installation {
     void addContent(DataInVersion dataInVersion);
 
     void abort();
+
+    void finish();
 }

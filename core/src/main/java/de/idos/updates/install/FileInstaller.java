@@ -1,7 +1,6 @@
 package de.idos.updates.install;
 
 import de.idos.updates.Version;
-import de.idos.updates.VersionStore;
 import de.idos.updates.store.DataImport;
 import de.idos.updates.store.FileDataInVersion;
 import de.idos.updates.store.Installation;
@@ -39,7 +38,12 @@ public class FileInstaller implements InstallationStrategy<File> {
     }
 
     @Override
-    public void handleException(Exception e, Version version) {
-        //nothing to do
+    public void handleException() {
+        installation.abort();
+    }
+
+    @Override
+    public void finalizeInstallation() {
+        installation.finish();
     }
 }
