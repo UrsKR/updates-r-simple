@@ -3,6 +3,7 @@ package de.idos.updates.configuration;
 import de.idos.updates.Version;
 import de.idos.updates.VersionStore;
 import de.idos.updates.store.Installation;
+import de.idos.updates.store.ProgressReport;
 
 import java.io.File;
 
@@ -33,5 +34,10 @@ public class FixedVersionStore implements VersionStore {
     @Override
     public File getFolderForVersionToRun() {
         return rootFolder;
+    }
+
+    @Override
+    public void reportAllProgressTo(ProgressReport report) {
+        wrapped.reportAllProgressTo(report);
     }
 }

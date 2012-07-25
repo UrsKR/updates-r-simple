@@ -9,18 +9,21 @@ import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 
+import static de.idos.updates.store.InstallationUtil.hasMarkerFile;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.mock;
 
 public class FilesystemInstallationTest {
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
-    private FilesystemInstallation installation;
+    private Installation installation;
+    private ProgressReport report = mock(ProgressReport.class);
 
     @Before
     public void setUp() throws Exception {
-        installation = new FilesystemInstallation(folder.getRoot());
+        installation = FilesystemInstallation.create(folder.getRoot(), report);
     }
 
     @Test(expected = UpdateFailedException.class)
@@ -59,12 +62,12 @@ public class FilesystemInstallationTest {
 
     @Test
     public void marksInstallationInProgressInNewVersion() throws Exception {
-        assertThat(new File(folder.getRoot(), "installation.running").exists(), is(true));
+        assertThat(hasMarkerFile(folder.getRoot()), is(true));
     }
 
     @Test
     public void removesProgressMarkerWhenDone() throws Exception {
         installation.finish();
-        assertThat(new File(folder.getRoot(), "installation.running").exists(), is(false));
+        assertThat(hasMarkerFile(folder.getRoot()), is(false));
     }
 }

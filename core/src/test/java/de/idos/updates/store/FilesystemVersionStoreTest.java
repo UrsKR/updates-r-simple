@@ -1,10 +1,7 @@
 package de.idos.updates.store;
 
 import de.idos.updates.NumericVersion;
-import de.idos.updates.UpdateFailedException;
-import org.apache.commons.io.FileUtils;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -46,11 +43,11 @@ public class FilesystemVersionStoreTest {
     @Test
     public void deletesOldVersions() throws Exception {
         NumericVersion oldVersion = new NumericVersion(0, 9, 0);
-        versionStore.beginInstallation(oldVersion);
+        versionStore.beginInstallation(oldVersion).finish();
         File versionFolder = new File(folder.getRoot(), oldVersion.asString());
         File contentFile = new File(versionFolder, "ContentFile");
         contentFile.createNewFile();
-        versionStore.beginInstallation(newVersion);
+        versionStore.beginInstallation(newVersion).finish();
         versionStore.removeOldVersions();
         assertThat(new File(folder.getRoot(), oldVersion.asString()).exists(), is(false));
     }
@@ -66,15 +63,16 @@ public class FilesystemVersionStoreTest {
 
     @Test
     public void identifiesLatestVersion() throws Exception {
-        NumericVersion version = new NumericVersion(0, 2, 0);
-        versionStore.beginInstallation(new NumericVersion(0, 0, 8));
-        versionStore.beginInstallation(version);
-        assertThat(versionStore.getLatestVersion(), is(sameVersionAs(version)));
+        NumericVersion newVersion = new NumericVersion(0, 2, 0);
+        NumericVersion oldVersion = new NumericVersion(0, 0, 8);
+        versionStore.beginInstallation(oldVersion).finish();
+        versionStore.beginInstallation(newVersion).finish();
+        assertThat(versionStore.getLatestVersion(), is(sameVersionAs(newVersion)));
     }
 
     @Test
     public void publishesLatestVersionFolder() throws Exception {
-        versionStore.beginInstallation(newVersion);
+        versionStore.beginInstallation(newVersion).finish();
         assertThat(versionStore.getFolderForVersionToRun(), is(getVersionFolder()));
     }
 

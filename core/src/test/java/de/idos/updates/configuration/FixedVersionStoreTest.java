@@ -3,8 +3,8 @@ package de.idos.updates.configuration;
 import de.idos.updates.NumericVersion;
 import de.idos.updates.Version;
 import de.idos.updates.VersionStore;
-import de.idos.updates.store.DataInVersion;
 import de.idos.updates.store.Installation;
+import de.idos.updates.store.ProgressReport;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -40,5 +40,12 @@ public class FixedVersionStoreTest {
     public void statesLatestVersionFromWrappedStore() throws Exception {
         when(wrapped.getLatestVersion()).thenReturn(version);
         assertThat(store.getLatestVersion(), is(version));
+    }
+
+    @Test
+    public void forwardsReportingToWrappedStore() throws Exception {
+        ProgressReport report = mock(ProgressReport.class);
+        store.reportAllProgressTo(report);
+        verify(wrapped).reportAllProgressTo(report);
     }
 }

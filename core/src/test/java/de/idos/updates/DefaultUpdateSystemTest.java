@@ -82,6 +82,14 @@ public class DefaultUpdateSystemTest {
         verify(repository).reportAllProgressTo(report);
     }
 
+    @Test
+    public void installsReportOnStore() throws Exception {
+        ProgressReport report = mock(ProgressReport.class);
+        updateSystem.reportAllProgressTo(report);
+        verify(versionStore).reportAllProgressTo(report);
+
+    }
+
     private void installCurrentVersion() {
         when(versionStore.getLatestVersion()).thenReturn(currentVersion);
     }

@@ -14,6 +14,7 @@ import de.idos.updates.store.ProgressReport;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
+import java.util.concurrent.CountDownLatch;
 
 import static de.idos.updates.FilesystemRepository.AVAILABLE_VERSIONS;
 import static de.idos.updates.NumericVersionMatchers.sameVersionAs;
@@ -35,6 +36,7 @@ public class UpdatesSteps {
     private final UpdateSystemBuilder updateSystemBuilder = new UpdateSystemBuilder();
     private final ProgressReport verifiableReport = mock(ProgressReport.class);
     private VersionStore versionStore;
+    private CountDownLatch slowThreadStartSignal;
 
     @Before
     public void initializeVersionRepository() throws Throwable {
@@ -48,6 +50,7 @@ public class UpdatesSteps {
         Installation installation = versionStore.beginInstallation(currentVersion);
         File file = folder.newFile();
         installation.addContent(new FileDataInVersion(file));
+        installation.finish();
     }
 
     @Given("^the repository contains a new version$")
@@ -113,10 +116,11 @@ public class UpdatesSteps {
 
     @When("^the application requests an update that takes a while to complete$")
     public void the_application_requests_an_update_that_takes_a_while_to_complete() throws Throwable {
+        this.slowThreadStartSignal = new CountDownLatch(1);
         new Thread(new Runnable() {
             @Override
             public void run() {
-                updateSystemBuilder.useStore(new SlowVersionStore(versionStore));
+                updateSystemBuilder.useStore(new SlowVersionStore(versionStore, slowThreadStartSignal));
                 DefaultUpdateSystem slowUpdateSystem = updateSystemBuilder.create();
                 slowUpdateSystem.checkForUpdates().updateToLatestVersion();
             }
@@ -125,7 +129,10 @@ public class UpdatesSteps {
 
     @When("^the application concurrently request a second update$")
     public void the_application_concurrently_request_a_second_update() throws Throwable {
+        I_have_registered_a_client_to_receive_status_updates();
+        updateSystemBuilder.useStore(versionStore);
         the_application_requests_an_update();
+        slowThreadStartSignal.countDown();
     }
 
     @Then("^the library reports an update$")

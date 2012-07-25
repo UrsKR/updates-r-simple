@@ -26,6 +26,7 @@ public class DefaultUpdateSystem implements UpdateSystem {
     @Override
     public void reportAllProgressTo(ProgressReport report) {
         repository.reportAllProgressTo(report);
+        versionStore.reportAllProgressTo(report);
     }
 
     @Override

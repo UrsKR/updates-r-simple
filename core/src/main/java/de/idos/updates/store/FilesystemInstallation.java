@@ -5,21 +5,31 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 
+import static de.idos.updates.store.InstallationUtil.createMarkerFile;
+
 public class FilesystemInstallation implements Installation {
-    public static Installation create(File file) {
+    public static Installation create(File versionFolder, ProgressReport report) {
         try {
-            return new FilesystemInstallation(file);
+            versionFolder.mkdirs();
+            boolean lockCreatedSuccessFully = createMarkerFile(versionFolder);
+            if (!lockCreatedSuccessFully) {
+                return createNullInstallation(report);
+            }
+            return new FilesystemInstallation(versionFolder);
         } catch (IOException e) {
-            return new NullInstallation();
+            return createNullInstallation(report);
         }
+    }
+
+    private static Installation createNullInstallation(ProgressReport report) {
+        report.updateAlreadyInProgress();
+        return new NullInstallation();
     }
 
     private File versionFolder;
 
-    public FilesystemInstallation(File versionFolder) throws IOException {
+    private FilesystemInstallation(File versionFolder) throws IOException {
         this.versionFolder = versionFolder;
-        versionFolder.mkdirs();
-        new File(versionFolder, "installation.running").createNewFile();
     }
 
     @Override
@@ -34,6 +44,6 @@ public class FilesystemInstallation implements Installation {
 
     @Override
     public void finish() {
-        new File(versionFolder, "installation.running").delete();
+        InstallationUtil.deleteMarkerFile(versionFolder);
     }
 }

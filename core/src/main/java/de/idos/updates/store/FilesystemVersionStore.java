@@ -10,6 +10,7 @@ import java.util.List;
 public class FilesystemVersionStore implements VersionStore {
 
     private File folder;
+    private ProgressReport report;
 
     public FilesystemVersionStore(File folder) {
         this.folder = folder;
@@ -19,7 +20,7 @@ public class FilesystemVersionStore implements VersionStore {
     @Override
     public Installation beginInstallation(Version version) {
         File file = getVersionFolder(version);
-        return FilesystemInstallation.create(file);
+        return FilesystemInstallation.create(file, report);
     }
 
     @Override
@@ -39,6 +40,11 @@ public class FilesystemVersionStore implements VersionStore {
         return getVersionFolder(getLatestVersion());
     }
 
+    @Override
+    public void reportAllProgressTo(ProgressReport report) {
+        this.report = report;
+    }
+
     private void deleteAllButLatestVersion(List<VersionedFile> versionedFiles, Version latestVersion) {
         try {
             for (VersionedFile versionedFile : versionedFiles) {
@@ -55,5 +61,4 @@ public class FilesystemVersionStore implements VersionStore {
     private File getVersionFolder(Version version) {
         return new File(folder, version.asString());
     }
-
 }
