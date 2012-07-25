@@ -6,4 +6,6 @@ public interface Updater {
     Version getLatestVersion();
 
     void updateToLatestVersion();
+
+    Version getInstalledVersion();
 }

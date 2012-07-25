@@ -33,4 +33,9 @@ public class DefaultUpdateSystem implements UpdateSystem {
     public File getFolderForVersionToRun() {
         return versionStore.getFolderForVersionToRun();
     }
+
+    @Override
+    public Version getInstalledVersion() {
+        return versionStore.getLatestVersion();
+    }
 }

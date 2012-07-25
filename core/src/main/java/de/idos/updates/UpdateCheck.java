@@ -23,6 +23,11 @@ public class UpdateCheck implements Updater {
     }
 
     @Override
+    public Version getInstalledVersion() {
+        return currentVersion;
+    }
+
+    @Override
     public Version getLatestVersion() {
         if (!latestVersionIsNewerThanInstalledVersion()) {
             return currentVersion;

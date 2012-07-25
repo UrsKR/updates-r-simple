@@ -87,7 +87,12 @@ public class DefaultUpdateSystemTest {
         ProgressReport report = mock(ProgressReport.class);
         updateSystem.reportAllProgressTo(report);
         verify(versionStore).reportAllProgressTo(report);
+    }
 
+    @Test
+    public void publishesCurrentlyInstalledVersion() throws Exception {
+        installCurrentVersion();
+        assertThat(updateSystem.getInstalledVersion(), is(currentVersion));
     }
 
     private void installCurrentVersion() {
