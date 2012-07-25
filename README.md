@@ -7,7 +7,7 @@ When setting out, my goal was to create an auto-updater that did not not force m
 The library is designed to be thread-safe and should even handle multiple VMs updating simultaneously.
 
 #### Current Topic of Interest
-Reporting should enable clients to detail every step of the update process.
+Integrating the library into a suitable application to see it in action.
 
 ## To Build
 * You need JDK 6
