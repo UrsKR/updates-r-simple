@@ -4,6 +4,7 @@ It is licensed under the Apache License v2.0.
 
 Work so far was sponsored by **[IDOS AE GmbH](http://www.idos.de)**.
 When setting out, my goal was to create an auto-updater that did not not force me to depend on a major framework, or required my dependencies to be signed.
+
 The library is designed to be thread-safe and should even handle multiple VMs updating simultaneously.
 
 #### Current Topic of Interest
