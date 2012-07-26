@@ -14,4 +14,6 @@ public interface UpdateSystem {
     File getFolderForVersionToRun();
 
     Version getInstalledVersion();
+
+    void stopReportingTo(ProgressReport report);
 }

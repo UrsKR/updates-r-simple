@@ -2,10 +2,12 @@ package de.idos.updates;
 
 import de.idos.updates.store.ProgressReport;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.io.File;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.isA;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -73,20 +75,6 @@ public class DefaultUpdateSystemTest {
         File value = new File(".");
         when(versionStore.getFolderForVersionToRun()).thenReturn(value);
         assertThat(updateSystem.getFolderForVersionToRun(), is(value));
-    }
-
-    @Test
-    public void installsReportOnRepository() throws Exception {
-        ProgressReport report = mock(ProgressReport.class);
-        updateSystem.reportAllProgressTo(report);
-        verify(repository).reportAllProgressTo(report);
-    }
-
-    @Test
-    public void installsReportOnStore() throws Exception {
-        ProgressReport report = mock(ProgressReport.class);
-        updateSystem.reportAllProgressTo(report);
-        verify(versionStore).reportAllProgressTo(report);
     }
 
     @Test

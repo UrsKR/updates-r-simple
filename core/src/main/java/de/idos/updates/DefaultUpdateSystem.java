@@ -1,16 +1,21 @@
 package de.idos.updates;
 
 import de.idos.updates.store.ProgressReport;
+import de.idos.updates.util.Announcer;
 
 import java.io.File;
 
 public class DefaultUpdateSystem implements UpdateSystem {
     private final VersionStore versionStore;
     private final Repository repository;
+    private final Announcer<ProgressReport> progressAnnouncer = Announcer.to(ProgressReport.class);
 
     public DefaultUpdateSystem(VersionStore versionStore, Repository repository) {
         this.versionStore = versionStore;
         this.repository = repository;
+        ProgressReport announcingReport = progressAnnouncer.announce();
+        versionStore.reportAllProgressTo(announcingReport);
+        repository.reportAllProgressTo(announcingReport);
     }
 
     @Override
@@ -25,8 +30,7 @@ public class DefaultUpdateSystem implements UpdateSystem {
 
     @Override
     public void reportAllProgressTo(ProgressReport report) {
-        repository.reportAllProgressTo(report);
-        versionStore.reportAllProgressTo(report);
+        progressAnnouncer.addListener(report);
     }
 
     @Override
@@ -37,5 +41,10 @@ public class DefaultUpdateSystem implements UpdateSystem {
     @Override
     public Version getInstalledVersion() {
         return versionStore.getLatestVersion();
+    }
+
+    @Override
+    public void stopReportingTo(ProgressReport report) {
+        progressAnnouncer.removeListener(report);
     }
 }
