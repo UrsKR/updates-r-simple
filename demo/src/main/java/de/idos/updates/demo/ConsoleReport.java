@@ -15,6 +15,11 @@ public class ConsoleReport implements ProgressReport {
     }
 
     @Override
+    public void versionLookupFailed() {
+        System.out.println("Could not determine latest version.");
+    }
+
+    @Override
     public void versionLookupFailed(Exception e) {
         System.out.println("Could not determine latest version: " + e.getMessage());
     }

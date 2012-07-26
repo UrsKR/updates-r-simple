@@ -7,6 +7,8 @@ public interface ProgressReport {
 
     void latestAvailableVersionIs(Version value);
 
+    void versionLookupFailed();
+
     void versionLookupFailed(Exception e);
 
     void startingInstallationOf(Version version);
