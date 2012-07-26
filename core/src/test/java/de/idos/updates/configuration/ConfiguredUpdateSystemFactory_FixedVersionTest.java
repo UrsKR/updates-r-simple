@@ -42,14 +42,14 @@ public class ConfiguredUpdateSystemFactory_FixedVersionTest {
 
     @Test
     public void statesConfiguredFolderAsVersionFolder() throws Exception {
-        UpdateSystem updateSystem = new ConfiguredUpdateSystemFactory().create();
+        UpdateSystem updateSystem = ConfiguredUpdateSystem.loadProperties().create();
         File folder = updateSystem.getFolderForVersionToRun();
         assertThat(folder, is(fixedVersionFolder));
     }
 
     @Test
     public void canInstallUpdatesEvenWhenTheActualVersionIsFixed() throws Exception {
-        UpdateSystem updateSystem = new ConfiguredUpdateSystemFactory().create();
+        UpdateSystem updateSystem = ConfiguredUpdateSystem.loadProperties().create();
         updateSystem.checkForUpdates().updateToLatestVersion();
         assertThat(updateSystem.checkForUpdates().hasUpdate(), is(UpdateAvailability.NotAvailable));
     }

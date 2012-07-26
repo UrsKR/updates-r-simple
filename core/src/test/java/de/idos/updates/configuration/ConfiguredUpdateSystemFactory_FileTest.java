@@ -3,6 +3,7 @@ package de.idos.updates.configuration;
 import de.idos.updates.NumericVersion;
 import de.idos.updates.UpdateSystem;
 import de.idos.updates.Version;
+import de.idos.updates.VersionDiscovery;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -15,6 +16,7 @@ import java.io.File;
 import static de.idos.updates.NumericVersionMatchers.sameVersionAs;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.*;
 
 public class ConfiguredUpdateSystemFactory_FileTest {
     @Rule
@@ -38,9 +40,19 @@ public class ConfiguredUpdateSystemFactory_FileTest {
 
     @Test
     public void usesConfiguredFileRepository() throws Exception {
-        UpdateSystem updateSystem = new ConfiguredUpdateSystemFactory().create();
+        UpdateSystem updateSystem = ConfiguredUpdateSystem.loadProperties().create();
         Version latestVersion = updateSystem.checkForUpdates().getLatestVersion();
         assertThat(latestVersion, is(sameVersionAs(new NumericVersion(4, 2, 1))));
+    }
+
+    @Test
+    public void canChangeDiscovery() throws Exception {
+        VersionDiscovery discovery = mock(VersionDiscovery.class);
+        NumericVersion overriddenVersion = new NumericVersion(4, 2, 2);
+        when(discovery.getLatestVersion()).thenReturn(overriddenVersion);
+        UpdateSystem updateSystem = ConfiguredUpdateSystem.loadProperties().butUseDiscoveryMethod(discovery).create();
+        Version latestVersion = updateSystem.checkForUpdates().getLatestVersion();
+        assertThat(latestVersion, is(sameVersionAs(overriddenVersion)));
     }
 
     @After

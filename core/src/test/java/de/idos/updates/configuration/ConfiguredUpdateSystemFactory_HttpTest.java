@@ -40,14 +40,14 @@ public class ConfiguredUpdateSystemFactory_HttpTest {
 
     @Test
     public void usesConfiguredHttpRepository() throws Exception {
-        UpdateSystem updateSystem = new ConfiguredUpdateSystemFactory().create();
+        UpdateSystem updateSystem = ConfiguredUpdateSystem.loadProperties().create();
         Version latestVersion = updateSystem.checkForUpdates().getLatestVersion();
         assertThat(latestVersion, is(sameVersionAs(new NumericVersion(5, 0, 4))));
     }
 
     @Test
     public void storesInAppNameFolder() throws Exception {
-        UpdateSystem updateSystem = new ConfiguredUpdateSystemFactory().create();
+        UpdateSystem updateSystem = ConfiguredUpdateSystem.loadProperties().create();
         updateSystem.checkForUpdates().updateToLatestVersion();
         String userHome = System.getProperty("user.home");
         assertThat(new File(userHome, ".updateunittest/versions").exists(), is(true));

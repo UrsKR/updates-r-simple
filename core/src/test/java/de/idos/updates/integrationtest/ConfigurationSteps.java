@@ -6,7 +6,7 @@ import cucumber.annotation.en.Then;
 import cucumber.annotation.en.When;
 import de.idos.updates.*;
 import de.idos.updates.configuration.Configurator;
-import de.idos.updates.configuration.ConfiguredUpdateSystemFactory;
+import de.idos.updates.configuration.ConfiguredUpdateSystem;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -58,7 +58,7 @@ public class ConfigurationSteps {
 
     @When("^I start the update system$")
     public void I_start_the_update_system() throws Throwable {
-        updateSystem = new ConfiguredUpdateSystemFactory().create();
+        updateSystem = ConfiguredUpdateSystem.loadProperties().create();
     }
 
     @Then("^the system uses the file on the classpath to configure itself$")

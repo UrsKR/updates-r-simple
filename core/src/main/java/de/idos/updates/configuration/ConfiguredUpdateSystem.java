@@ -1,19 +1,36 @@
 package de.idos.updates.configuration;
 
 import de.idos.updates.*;
-import de.idos.updates.VersionStore;
 
 import java.io.File;
 import java.util.Properties;
 
-public class ConfiguredUpdateSystemFactory {
+public class ConfiguredUpdateSystem {
 
-    public UpdateSystem create() {
+    public static ConfiguredUpdateSystem loadProperties() {
+        return new ConfiguredUpdateSystem();
+    }
+
+    private final VersionStore store;
+    private VersionTransfer transfer;
+    private VersionDiscovery discovery;
+
+    private ConfiguredUpdateSystem() {
         Properties properties = new PropertiesLoader("update.properties").load();
         UpdateConfiguration configuration = new UpdateConfiguration(properties);
-        VersionStore store = createVersionStore(configuration);
         Repository repository = createRepository(configuration);
-        return new DefaultUpdateSystem(store, repository);
+        this.store = createVersionStore(configuration);
+        this.discovery = repository;
+        this.transfer = repository;
+    }
+
+    public ConfiguredUpdateSystem butUseDiscoveryMethod(VersionDiscovery discovery) {
+        this.discovery = discovery;
+        return this;
+    }
+
+    public UpdateSystem create() {
+        return new DefaultUpdateSystem(store, discovery, transfer);
     }
 
     private VersionStore createVersionStore(UpdateConfiguration configuration) {
