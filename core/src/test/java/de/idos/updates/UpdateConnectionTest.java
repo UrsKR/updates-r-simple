@@ -12,7 +12,7 @@ public class UpdateConnectionTest {
 
   VersionStore versionStore = mock(VersionStore.class);
   Repository versionRepository = mock(Repository.class);
-  UpdateConnection connection = new UpdateConnection(versionStore, versionRepository);
+  UpdateConnection connection = new DefaultUpdateConnection(versionStore, versionRepository);
 
   @Test
   public void returnsInstalledVersion() throws Exception {
@@ -33,14 +33,14 @@ public class UpdateConnectionTest {
   @Test
   public void returnsAvailableVersionFromDiscovery() throws Exception {
     VersionDiscovery discovery = mock(VersionDiscovery.class);
-    new UpdateConnection(versionStore, versionStore, discovery, versionRepository).getLatestAvailableVersion();
+    new DefaultUpdateConnection(versionStore, versionStore, discovery, versionRepository).getLatestAvailableVersion();
     verify(discovery).getLatestVersion();
   }
 
   @Test
   public void returnsInstalledVersionFromDiscovery() throws Exception {
     VersionDiscovery discovery = mock(VersionDiscovery.class);
-    new UpdateConnection(discovery, versionStore, versionRepository, versionRepository).getLatestInstalledVersion();
+    new DefaultUpdateConnection(discovery, versionStore, versionRepository, versionRepository).getLatestInstalledVersion();
     verify(discovery).getLatestVersion();
   }
 

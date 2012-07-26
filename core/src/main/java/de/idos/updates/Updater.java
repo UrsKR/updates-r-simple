@@ -1,13 +1,13 @@
 package de.idos.updates;
 
 public interface Updater {
-    UpdateAvailability hasUpdate();
+  UpdateAvailability hasUpdate();
 
-    Version getLatestVersion();
+  Version getLatestVersion();
 
-    void updateToLatestVersion();
+  void updateToLatestVersion();
 
-    Version getInstalledVersion();
+  Version getInstalledVersion();
 
   void runCheck();
 }

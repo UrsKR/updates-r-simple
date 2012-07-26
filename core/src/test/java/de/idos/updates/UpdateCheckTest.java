@@ -11,7 +11,7 @@ import static org.mockito.Mockito.when;
 public class UpdateCheckTest {
   Version currentVersion = new NumericVersion(1, 0, 0);
   Version latestVersion = new NumericVersion(0, 0, 0);
-  UpdateConnection connection = mock(UpdateConnection.class);
+  UpdateConnection connection = mock(DefaultUpdateConnection.class);
 
   @Before
   public void setCurrentVersion() throws Exception {

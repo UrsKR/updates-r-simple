@@ -46,7 +46,7 @@ public class UpdateCheck implements Updater {
   }
 
   @Override
-  public void runCheck() {
+  public synchronized void runCheck() {
     if (!checkHasRun) {
       this.currentVersion = updateConnection.getLatestInstalledVersion();
       this.latestVersion = updateConnection.getLatestAvailableVersion();
