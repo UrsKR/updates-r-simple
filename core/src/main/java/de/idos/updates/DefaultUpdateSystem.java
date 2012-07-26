@@ -6,52 +6,56 @@ import de.idos.updates.util.Announcer;
 import java.io.File;
 
 public class DefaultUpdateSystem implements UpdateSystem {
-    private final VersionStore versionStore;
-    private VersionDiscovery discovery;
-    private VersionTransfer transfer;
-    private final Announcer<ProgressReport> progressAnnouncer = Announcer.to(ProgressReport.class);
+  private VersionDiscovery availableDiscovery;
+  private VersionTransfer transfer;
+  private final Announcer<ProgressReport> progressAnnouncer = Announcer.to(ProgressReport.class);
+  private VersionReceptacle receptacle;
+  private VersionDiscovery installedDiscovery;
 
-    public DefaultUpdateSystem(VersionStore versionStore, Repository repository) {
-        this(versionStore, repository, repository);
-    }
+  public DefaultUpdateSystem(VersionStore versionStore, Repository repository) {
+    this(versionStore, versionStore, repository, repository);
+  }
 
-    public DefaultUpdateSystem(VersionStore versionStore, VersionDiscovery discovery, VersionTransfer transfer) {
-        this.versionStore = versionStore;
-        this.discovery = discovery;
-        this.transfer = transfer;
-        ProgressReport announcingReport = progressAnnouncer.announce();
-        versionStore.reportAllProgressTo(announcingReport);
-        discovery.reportAllProgressTo(announcingReport);
-        transfer.reportAllProgressTo(announcingReport);
-    }
+  public DefaultUpdateSystem(VersionDiscovery installedDiscovery, VersionReceptacle receptacle,
+                             VersionDiscovery availableDiscovery, VersionTransfer transfer) {
+    this.availableDiscovery = availableDiscovery;
+    this.transfer = transfer;
+    this.installedDiscovery = installedDiscovery;
+    this.receptacle = receptacle;
+    ProgressReport announcingReport = progressAnnouncer.announce();
+    installedDiscovery.reportAllProgressTo(announcingReport);
+    availableDiscovery.reportAllProgressTo(announcingReport);
+    transfer.reportAllProgressTo(announcingReport);
+    receptacle.reportAllProgressTo(announcingReport);
+  }
 
-    @Override
-    public Updater checkForUpdates() {
-        return new UpdateCheck(new UpdateConnection(versionStore, discovery, transfer));
-    }
+  @Override
+  public Updater checkForUpdates() {
+    return new UpdateCheck(new UpdateConnection(installedDiscovery, receptacle, availableDiscovery, transfer));
+  }
 
-    @Override
-    public void removeOldVersions() {
-        versionStore.removeOldVersions();
-    }
+  @Override
+  public void removeOldVersions() {
+    receptacle.removeOldVersions();
+  }
 
-    @Override
-    public void reportAllProgressTo(ProgressReport report) {
-        progressAnnouncer.addListener(report);
-    }
+  @Override
+  public void reportAllProgressTo(ProgressReport report) {
+    progressAnnouncer.addListener(report);
+  }
 
-    @Override
-    public File getFolderForVersionToRun() {
-        return versionStore.getFolderForVersionToRun();
-    }
+  @Override
+  public File getFolderForVersionToRun() {
+    return receptacle.getFolderForVersionToRun();
+  }
 
-    @Override
-    public Version getInstalledVersion() {
-        return versionStore.getLatestVersion();
-    }
+  @Override
+  public Version getInstalledVersion() {
+    return installedDiscovery.getLatestVersion();
+  }
 
-    @Override
-    public void stopReportingTo(ProgressReport report) {
-        progressAnnouncer.removeListener(report);
-    }
+  @Override
+  public void stopReportingTo(ProgressReport report) {
+    progressAnnouncer.removeListener(report);
+  }
 }

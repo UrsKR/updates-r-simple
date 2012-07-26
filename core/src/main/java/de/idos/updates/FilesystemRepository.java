@@ -28,7 +28,7 @@ public class FilesystemRepository implements Repository {
     }
 
     @Override
-    public void transferVersionTo(Version version, VersionStore store) {
+    public void transferVersionTo(Version version, VersionReceptacle store) {
         Installation installation = store.beginInstallation(version);
         FileInstaller fileInstaller = new FileInstaller(report, availableVersions, installation);
         new Installer<File>(fileInstaller, report).install(version);

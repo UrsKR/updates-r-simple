@@ -29,7 +29,7 @@ public class HttpRepository implements Repository {
     }
 
     @Override
-    public void transferVersionTo(Version version, VersionStore store) {
+    public void transferVersionTo(Version version, VersionReceptacle store) {
         Installation installation = store.beginInstallation(version);
         HttpInstaller httpInstaller = new HttpInstaller(report, baseUrl, installation);
         new Installer<String>(httpInstaller, report).install(version);

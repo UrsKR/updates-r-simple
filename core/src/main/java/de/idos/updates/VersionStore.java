@@ -5,10 +5,6 @@ import de.idos.updates.store.ProgressReport;
 
 import java.io.File;
 
-public interface VersionStore extends VersionDiscovery {
-    Installation beginInstallation(Version version);
-
-    void removeOldVersions();
-
-    File getFolderForVersionToRun();
+public interface VersionStore extends VersionDiscovery, VersionReceptacle {
+  //nothing to do
 }
