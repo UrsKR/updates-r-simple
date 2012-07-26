@@ -3,11 +3,17 @@ package de.idos.updates;
 public class UpdateConnection {
 
     private VersionStore versionStore;
-    private Repository versionRepository;
+    private VersionDiscovery discovery;
+    private VersionTransfer transfer;
 
     public UpdateConnection(VersionStore versionStore, Repository versionRepository) {
+        this(versionStore, versionRepository, versionRepository);
+    }
+
+    public UpdateConnection(VersionStore versionStore, VersionDiscovery discovery, VersionTransfer transfer) {
         this.versionStore = versionStore;
-        this.versionRepository = versionRepository;
+        this.discovery = discovery;
+        this.transfer = transfer;
     }
 
     public Version getLatestInstalledVersion() {
@@ -15,10 +21,10 @@ public class UpdateConnection {
     }
 
     public Version getLatestAvailableVersion() {
-        return versionRepository.getLatestVersion();
+        return discovery.getLatestVersion();
     }
 
     public void install(Version latestVersion) {
-        versionRepository.transferVersionTo(latestVersion, versionStore);
+        transfer.transferVersionTo(latestVersion, versionStore);
     }
 }

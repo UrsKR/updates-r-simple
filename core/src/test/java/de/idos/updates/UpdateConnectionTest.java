@@ -29,6 +29,13 @@ public class UpdateConnectionTest {
     }
 
     @Test
+    public void returnsAvailableVersionFromDiscovery() throws Exception {
+        VersionDiscovery discovery = mock(VersionDiscovery.class);
+        new UpdateConnection(versionStore, discovery, versionRepository).getLatestAvailableVersion();
+        verify(discovery).getLatestVersion();
+    }
+
+    @Test
     public void installsVersionFromRepositoryToStore() throws Exception {
         NumericVersion latestVersion = new NumericVersion(1, 0, 0);
         connection.install(latestVersion);

@@ -7,20 +7,27 @@ import java.io.File;
 
 public class DefaultUpdateSystem implements UpdateSystem {
     private final VersionStore versionStore;
-    private final Repository repository;
+    private VersionDiscovery discovery;
+    private VersionTransfer transfer;
     private final Announcer<ProgressReport> progressAnnouncer = Announcer.to(ProgressReport.class);
 
     public DefaultUpdateSystem(VersionStore versionStore, Repository repository) {
+        this(versionStore, repository, repository);
+    }
+
+    public DefaultUpdateSystem(VersionStore versionStore, VersionDiscovery discovery, VersionTransfer transfer) {
         this.versionStore = versionStore;
-        this.repository = repository;
+        this.discovery = discovery;
+        this.transfer = transfer;
         ProgressReport announcingReport = progressAnnouncer.announce();
         versionStore.reportAllProgressTo(announcingReport);
-        repository.reportAllProgressTo(announcingReport);
+        discovery.reportAllProgressTo(announcingReport);
+        transfer.reportAllProgressTo(announcingReport);
     }
 
     @Override
     public Updater checkForUpdates() {
-        return new UpdateCheck(new UpdateConnection(versionStore, repository));
+        return new UpdateCheck(new UpdateConnection(versionStore, discovery, transfer));
     }
 
     @Override

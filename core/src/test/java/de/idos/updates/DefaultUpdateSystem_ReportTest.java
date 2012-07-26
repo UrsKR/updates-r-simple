@@ -29,7 +29,21 @@ public class DefaultUpdateSystem_ReportTest {
 
     @Test
     public void installsReportOnRepository() throws Exception {
-        verify(repository).reportAllProgressTo(Mockito.isA(ProgressReport.class));
+        verify(repository, atLeastOnce()).reportAllProgressTo(Mockito.isA(ProgressReport.class));
+    }
+
+    @Test
+    public void installsReportOnTransfer() throws Exception {
+        VersionTransfer transfer = mock(VersionTransfer.class);
+        new DefaultUpdateSystem(versionStore, repository, transfer);
+        verify(transfer).reportAllProgressTo(Mockito.isA(ProgressReport.class));
+    }
+
+    @Test
+    public void installsReportOnDiscovery() throws Exception {
+        VersionDiscovery discovery = mock(VersionDiscovery.class);
+        new DefaultUpdateSystem(versionStore, discovery, repository);
+        verify(discovery).reportAllProgressTo(Mockito.isA(ProgressReport.class));
     }
 
     @Test
