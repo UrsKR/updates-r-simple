@@ -12,9 +12,64 @@ dependencies {
     }
 }
 
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url 'https://oss.sonatype.org/content/groups/public/' }
+    }
+    dependencies { classpath 'org.ajoberstar:gradle-git:0.2.0-SNAPSHOT' }
+}
+
+apply plugin: 'signing'
+
+task sourcesJar(type:Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
 uploadArchives {
     repositories.mavenDeployer {
-        name = 'updates-core'
+        name = 'Sonatype OSS'
+        repository(url:'https://oss.sonatype.org/service/local/staging/deploy/maven2') {
+            authentication(userName:sonatypeUserName, password:sonatypePassword)
+        }
+        snapshotRepository(url:'https://oss.sonatype.org/content/repositories/snapshots') {
+            authentication(userName:sonatypeUserName, password:sonatypePassword)
+        }
+
+        beforeDeployment { signing.signPom it }
+
+        pom.project {
+            name 'updates-core'
+            description 'An auto-update system for Java, free of frameworks and signatures'
+            url 'https://github.com/UrsKR/updates-r-simple'
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0'
+                }
+            }
+            developers {
+                developer {
+                    id 'urskr'
+                    name 'Urs Reupke'
+                    email 'ursreupke@gmail.com'
+                }
+            }
+            scm {
+                connection 'git://github.com/UrsKR/updates-r-simple.git'
+                developerConnection 'git://github.com/UrsKR/updates-r-simple.git'
+                url 'https://github.com/UrsKR/updates-r-simple'
+            }
+        }
     }
 }
 
