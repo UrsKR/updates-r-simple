@@ -1,6 +1,6 @@
 package de.idos.updates;
 
-import java.util.concurrent.CountDownLatch;
+import de.idos.updates.store.OngoingInstallation;
 
 public class ThreadTestUpdateConnection implements UpdateConnection {
   private Version v1;
@@ -23,7 +23,7 @@ public class ThreadTestUpdateConnection implements UpdateConnection {
   }
 
   @Override
-  public void install(Version latestVersion) {
+  public OngoingInstallation install(Version latestVersion) {
     throw new UnsupportedOperationException();
   }
 

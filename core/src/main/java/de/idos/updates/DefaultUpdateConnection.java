@@ -1,6 +1,7 @@
 package de.idos.updates;
 
 import de.idos.updates.repository.Repository;
+import de.idos.updates.store.OngoingInstallation;
 
 public class DefaultUpdateConnection implements UpdateConnection {
 
@@ -32,7 +33,7 @@ public class DefaultUpdateConnection implements UpdateConnection {
   }
 
   @Override
-  public void install(Version latestVersion) {
-    transfer.transferVersionTo(latestVersion, receptacle);
+  public OngoingInstallation install(Version latestVersion) {
+    return transfer.transferVersionTo(latestVersion, receptacle);
   }
 }

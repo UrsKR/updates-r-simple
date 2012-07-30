@@ -2,12 +2,13 @@ package de.idos.updates.repository;
 
 import de.idos.updates.Version;
 import de.idos.updates.VersionReceptacle;
-import de.idos.updates.install.DefaultInstaller;
 import de.idos.updates.install.InstallationStrategy;
+import de.idos.updates.install.ThreadedInstaller;
 import de.idos.updates.lookup.LookupStrategy;
 import de.idos.updates.lookup.VersionLookup;
 import de.idos.updates.store.Installation;
 import de.idos.updates.store.NullReport;
+import de.idos.updates.store.OngoingInstallation;
 import de.idos.updates.store.ProgressReport;
 
 public abstract class AbstractRepository<T> implements Repository {
@@ -20,10 +21,11 @@ public abstract class AbstractRepository<T> implements Repository {
   }
 
   @Override
-  public void transferVersionTo(Version version, VersionReceptacle store) {
+  public OngoingInstallation transferVersionTo(Version version, VersionReceptacle store) {
     Installation installation = store.beginInstallation(version);
     InstallationStrategy<T> strategy = createInstallationStrategy(installation);
-    new DefaultInstaller<T>(strategy, report).install(version);
+    ThreadedInstaller.PrepareInstallation(strategy, report).install(version);
+    return installation;
   }
 
   @Override

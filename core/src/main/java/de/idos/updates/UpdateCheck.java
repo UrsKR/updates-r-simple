@@ -1,5 +1,8 @@
 package de.idos.updates;
 
+import de.idos.updates.store.NullInstallation;
+import de.idos.updates.store.OngoingInstallation;
+
 import static de.idos.updates.UpdateAvailability.Available;
 import static de.idos.updates.UpdateAvailability.NotAvailable;
 
@@ -38,11 +41,12 @@ public class UpdateCheck implements Updater {
   }
 
   @Override
-  public void updateToLatestVersion() {
+  public OngoingInstallation updateToLatestVersion() {
     assertCheckHasRun();
     if (latestVersionIsNewerThanInstalledVersion()) {
-      updateConnection.install(latestVersion);
+      return updateConnection.install(latestVersion);
     }
+    return new NullInstallation();
   }
 
   @Override

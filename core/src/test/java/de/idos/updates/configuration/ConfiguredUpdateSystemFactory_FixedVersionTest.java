@@ -6,6 +6,7 @@ import de.idos.updates.UpdateSystem;
 import de.idos.updates.Updater;
 import de.idos.updates.Version;
 import de.idos.updates.repository.FilesystemRepository;
+import de.idos.updates.store.OngoingInstallation;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -48,11 +49,14 @@ public class ConfiguredUpdateSystemFactory_FixedVersionTest {
     assertThat(folder, is(fixedVersionFolder));
   }
 
-  @Test
+  @Test(timeout = 1000)
   public void canInstallUpdatesEvenWhenTheActualVersionIsFixed() throws Exception {
     UpdateSystem updateSystem = ConfiguredUpdateSystem.loadProperties().create();
     Updater updater = getUpdaterThatHasRun(updateSystem);
-    updater.updateToLatestVersion();
+    OngoingInstallation installation = updater.updateToLatestVersion();
+    while(installation.isRunning()){
+      //wait
+    }
     assertThat(getUpdaterThatHasRun(updateSystem).hasUpdate(), is(UpdateAvailability.NotAvailable));
   }
 

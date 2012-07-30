@@ -1,9 +1,12 @@
 package de.idos.updates;
 
+import de.idos.updates.store.NullInstallation;
+import de.idos.updates.store.OngoingInstallation;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -59,6 +62,25 @@ public class UpdateCheckTest {
   public void expectsCheckToBeRunBeforeQueryingInstalledVersion() throws Exception {
     UpdateCheck updateCheck = createUpdateCheck();
     updateCheck.getInstalledVersion();
+  }
+
+  @Test
+  public void handsOutInstallationFromConnectionWhenNewerIsAvailable() throws Exception {
+    NumericVersion newVersion = new NumericVersion(1, 1, 1);
+    when(connection.getLatestAvailableVersion()).thenReturn(newVersion);
+    OngoingInstallation installation = mock(OngoingInstallation.class);
+    when(connection.install(newVersion)).thenReturn(installation);
+    UpdateCheck check = createExecutedUpdateCheck();
+    OngoingInstallation actualInstallation = check.updateToLatestVersion();
+    assertThat(actualInstallation, is(installation));
+  }
+
+  @Test
+  public void returnsNullVersionOtherwise() throws Exception {
+    when(connection.getLatestAvailableVersion()).thenReturn(latestVersion);
+    UpdateCheck check = createExecutedUpdateCheck();
+    OngoingInstallation actualInstallation = check.updateToLatestVersion();
+    assertThat(actualInstallation, is(instanceOf(NullInstallation.class)));
   }
 
   private Version getLatestVersion() {

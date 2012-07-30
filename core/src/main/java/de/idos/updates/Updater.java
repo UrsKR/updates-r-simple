@@ -1,11 +1,13 @@
 package de.idos.updates;
 
+import de.idos.updates.store.OngoingInstallation;
+
 public interface Updater {
   UpdateAvailability hasUpdate();
 
   Version getLatestVersion();
 
-  void updateToLatestVersion();
+  OngoingInstallation updateToLatestVersion();
 
   Version getInstalledVersion();
 
