@@ -20,11 +20,11 @@ public class ConfiguredUpdateSystem {
     return new ConfiguredUpdateSystem();
   }
 
-  private Version fixedVersion;
   private VersionDiscovery availableDiscovery;
   private VersionTransfer transfer;
   private final VersionStore store;
   private final UpdateConfiguration configuration;
+  private Version installedVersionFallback;
 
   private ConfiguredUpdateSystem() {
     Properties properties = new PropertiesLoader("update.properties").load();
@@ -40,18 +40,17 @@ public class ConfiguredUpdateSystem {
     return this;
   }
 
-
-  public ConfiguredUpdateSystem andIfTheVersionIsFixedSetItTo(Version version) {
-    this.fixedVersion = version;
+  public ConfiguredUpdateSystem andIfTheInstalledVersionIsUnknownUse(Version version) {
+    this.installedVersionFallback = version;
     return this;
   }
 
   public UpdateSystem create() {
-    if (configuration.getStrategy() == UpdateStrategy.FixedVersion && fixedVersion != null) {
-      VersionDiscovery installedVersion = new FixedVersionDiscovery(fixedVersion);
-      return new DefaultUpdateSystem(installedVersion, store, availableDiscovery, transfer);
+    VersionDiscovery installedDiscovery = store;
+    if (installedVersionFallback != null) {
+      installedDiscovery = new FallbackVersionDiscovery(installedDiscovery, installedVersionFallback);
     }
-    return new DefaultUpdateSystem(store, store, availableDiscovery, transfer);
+    return new DefaultUpdateSystem(installedDiscovery, store, availableDiscovery, transfer);
   }
 
   private VersionStore createVersionStore() {

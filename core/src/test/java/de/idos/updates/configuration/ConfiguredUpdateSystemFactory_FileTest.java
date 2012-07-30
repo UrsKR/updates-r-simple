@@ -58,6 +58,15 @@ public class ConfiguredUpdateSystemFactory_FileTest {
     assertThat(latestVersion, is(sameVersionAs(overriddenVersion)));
   }
 
+  @Test
+  public void canOverrideUnknownInstalledVersion() throws Exception {
+    NumericVersion overriddenVersion = new NumericVersion(4, 2, 2);
+    UpdateSystem updateSystem = ConfiguredUpdateSystem.loadProperties().andIfTheInstalledVersionIsUnknownUse(overriddenVersion).create();
+    Updater updater = getUpdaterThatHasRun(updateSystem);
+    Version installedVersion = updater.getInstalledVersion();
+    assertThat(installedVersion, is(sameVersionAs(overriddenVersion)));
+  }
+
   @After
   public void deleteConfiguration() throws Exception {
     File configurationFile = new File(".", "update.properties");

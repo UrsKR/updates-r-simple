@@ -60,9 +60,9 @@ public class ConfiguredUpdateSystemFactory_FixedVersionTest {
   }
 
   @Test
-  public void canSetFixedVersionNumber() throws Exception {
+  public void canOverrideUnknownFixedVersionNumber() throws Exception {
     NumericVersion overriddenVersion = new NumericVersion(3, 3, 1);
-    UpdateSystem updateSystem = ConfiguredUpdateSystem.loadProperties().andIfTheVersionIsFixedSetItTo(overriddenVersion).create();
+    UpdateSystem updateSystem = ConfiguredUpdateSystem.loadProperties().andIfTheInstalledVersionIsUnknownUse(overriddenVersion).create();
     Version installedVersion = getUpdaterThatHasRun(updateSystem).getInstalledVersion();
     assertThat(installedVersion, is(sameVersionAs(overriddenVersion)));
   }
