@@ -15,7 +15,7 @@ public class UpdateCheck implements Updater {
 
   @Override
   public UpdateAvailability hasUpdate() {
-    runCheck();
+    assertCheckHasRun();
     if (latestVersion.isGreaterThan(currentVersion)) {
       return Available;
     }
@@ -24,13 +24,13 @@ public class UpdateCheck implements Updater {
 
   @Override
   public Version getInstalledVersion() {
-    runCheck();
+    assertCheckHasRun();
     return currentVersion;
   }
 
   @Override
   public Version getLatestVersion() {
-    runCheck();
+    assertCheckHasRun();
     if (!latestVersionIsNewerThanInstalledVersion()) {
       return currentVersion;
     }
@@ -39,7 +39,7 @@ public class UpdateCheck implements Updater {
 
   @Override
   public void updateToLatestVersion() {
-    runCheck();
+    assertCheckHasRun();
     if (latestVersionIsNewerThanInstalledVersion()) {
       updateConnection.install(latestVersion);
     }
@@ -56,5 +56,11 @@ public class UpdateCheck implements Updater {
 
   private boolean latestVersionIsNewerThanInstalledVersion() {
     return hasUpdate() == Available;
+  }
+
+  private void assertCheckHasRun() {
+    if (!checkHasRun) {
+      throw new IllegalStateException("The check for updates has not yet run. Please execute it by calling 'runCheck()' before calling other methods.");
+    }
   }
 }

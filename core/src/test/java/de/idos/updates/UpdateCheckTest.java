@@ -34,12 +34,42 @@ public class UpdateCheckTest {
 
   @Test
   public void publishesCurrentlyInstalledVersion() throws Exception {
-    assertThat(createUpdateCheck().getInstalledVersion(), is(currentVersion));
+    assertThat(createExecutedUpdateCheck().getInstalledVersion(), is(currentVersion));
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void expectsCheckToBeRunBeforeQueryingAvailability() throws Exception {
+    UpdateCheck updateCheck = createUpdateCheck();
+    updateCheck.hasUpdate();
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void expectsCheckToBeRunBeforeInstallingUpdates() throws Exception {
+    UpdateCheck updateCheck = createUpdateCheck();
+    updateCheck.updateToLatestVersion();
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void expectsCheckToBeRunBeforeQueryingLatestVersion() throws Exception {
+    UpdateCheck updateCheck = createUpdateCheck();
+    updateCheck.getLatestVersion();
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void expectsCheckToBeRunBeforeQueryingInstalledVersion() throws Exception {
+    UpdateCheck updateCheck = createUpdateCheck();
+    updateCheck.getInstalledVersion();
   }
 
   private Version getLatestVersion() {
-    UpdateCheck updateCheck = createUpdateCheck();
+    UpdateCheck updateCheck = createExecutedUpdateCheck();
     return updateCheck.getLatestVersion();
+  }
+
+  private UpdateCheck createExecutedUpdateCheck() {
+    UpdateCheck updateCheck = createUpdateCheck();
+    updateCheck.runCheck();
+    return updateCheck;
   }
 
   private UpdateCheck createUpdateCheck() {
