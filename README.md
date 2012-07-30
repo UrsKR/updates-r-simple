@@ -27,3 +27,5 @@ Integrating the library into a suitable application to see it in action.
     File versionFolder = updateSystem.getFolderForVersionToRun();
     new ApplicationLauncher(versionFolder).launch(mainClass, mainMethod);
 ```
+
+For a more complex example that can also cope with IDEs, please refer to the demo module.

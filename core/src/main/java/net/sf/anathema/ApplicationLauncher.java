@@ -4,17 +4,28 @@ import java.io.File;
 import java.lang.reflect.Method;
 
 public class ApplicationLauncher {
-    private File classPathFolder;
+  public static ApplicationLauncher loadFromFolder(File classPathFolder) throws Exception {
+    return new ApplicationLauncher(classPathFolder);
+  }
 
-    public ApplicationLauncher(File classPathFolder) {
-        this.classPathFolder = classPathFolder;
-    }
+  public static ApplicationLauncher loadFromSystemClasspath() throws Exception {
+    return new ApplicationLauncher(ClassLoader.getSystemClassLoader());
+  }
 
-    public void launch(String mainClass, String mainMethod) throws Exception {
-        EasyLoader loader = new EasyLoader(classPathFolder);
-        Class<?> aClass = loader.loadClass(mainClass);
-        Object instance = aClass.newInstance();
-        Method method = aClass.getMethod(mainMethod);
-        method.invoke(instance);
-    }
+  private ClassLoader loader;
+
+  private ApplicationLauncher(File classPathFolder) throws Exception {
+    this(new EasyLoader(classPathFolder));
+  }
+
+  public ApplicationLauncher(ClassLoader loader) {
+    this.loader = loader;
+  }
+
+  public void launch(String mainClass, String mainMethod) throws Exception {
+    Class<?> aClass = loader.loadClass(mainClass);
+    Object instance = aClass.newInstance();
+    Method method = aClass.getMethod(mainMethod);
+    method.invoke(instance);
+  }
 }
