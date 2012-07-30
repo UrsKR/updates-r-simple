@@ -33,4 +33,9 @@ public class SlowInstallation implements Installation {
     public void finish() {
         installation.finish();
     }
+
+  @Override
+  public boolean isRunning() {
+    return installation.isRunning();
+  }
 }

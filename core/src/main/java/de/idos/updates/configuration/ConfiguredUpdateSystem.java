@@ -1,15 +1,15 @@
 package de.idos.updates.configuration;
 
 import de.idos.updates.DefaultUpdateSystem;
-import de.idos.updates.FilesystemRepository;
-import de.idos.updates.HttpRepository;
-import de.idos.updates.Repository;
 import de.idos.updates.UpdateSystem;
 import de.idos.updates.Version;
 import de.idos.updates.VersionDiscovery;
 import de.idos.updates.VersionStore;
 import de.idos.updates.VersionStoreBuilder;
 import de.idos.updates.VersionTransfer;
+import de.idos.updates.repository.FilesystemRepository;
+import de.idos.updates.repository.HttpRepository;
+import de.idos.updates.repository.Repository;
 
 import java.io.File;
 import java.util.Properties;

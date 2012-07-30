@@ -1,5 +1,6 @@
 package de.idos.updates;
 
+import de.idos.updates.repository.Repository;
 import org.junit.Test;
 
 import java.io.File;

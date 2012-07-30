@@ -1,5 +1,6 @@
 package de.idos.updates;
 
+import de.idos.updates.repository.Repository;
 import de.idos.updates.store.ProgressReport;
 import de.idos.updates.util.Announcer;
 

@@ -1,5 +1,6 @@
 package de.idos.updates;
 
+import de.idos.updates.repository.FilesystemRepository;
 import de.idos.updates.store.FileDataInVersion;
 import de.idos.updates.store.Installation;
 import org.junit.Before;
@@ -13,7 +14,9 @@ import java.io.IOException;
 import static de.idos.updates.NumericVersionMatchers.sameVersionAs;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class FilesystemRepositoryTest {
 

@@ -1,5 +1,7 @@
 package de.idos.updates;
 
+import de.idos.updates.repository.FilesystemRepository;
+import de.idos.updates.repository.Repository;
 import de.idos.updates.store.ProgressReport;
 import org.junit.Before;
 import org.junit.Rule;

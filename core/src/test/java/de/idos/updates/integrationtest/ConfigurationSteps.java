@@ -4,9 +4,12 @@ import cucumber.annotation.After;
 import cucumber.annotation.en.Given;
 import cucumber.annotation.en.Then;
 import cucumber.annotation.en.When;
-import de.idos.updates.*;
+import de.idos.updates.NumericVersion;
+import de.idos.updates.UpdateSystem;
+import de.idos.updates.Version;
 import de.idos.updates.configuration.Configurator;
 import de.idos.updates.configuration.ConfiguredUpdateSystem;
+import de.idos.updates.repository.FilesystemRepository;
 
 import java.io.File;
 import java.io.FileInputStream;

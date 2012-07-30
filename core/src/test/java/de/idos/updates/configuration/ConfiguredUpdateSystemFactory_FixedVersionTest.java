@@ -1,11 +1,11 @@
 package de.idos.updates.configuration;
 
-import de.idos.updates.FilesystemRepository;
 import de.idos.updates.NumericVersion;
 import de.idos.updates.UpdateAvailability;
 import de.idos.updates.UpdateSystem;
 import de.idos.updates.Updater;
 import de.idos.updates.Version;
+import de.idos.updates.repository.FilesystemRepository;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -14,7 +14,6 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
-import java.util.Properties;
 
 import static de.idos.updates.NumericVersionMatchers.sameVersionAs;
 import static org.hamcrest.CoreMatchers.is;
@@ -24,8 +23,7 @@ public class ConfiguredUpdateSystemFactory_FixedVersionTest {
 
   @Rule
   public TemporaryFolder folder = new TemporaryFolder();
-  private final Properties properties = new Properties();
-  private File configuration;
+  private File configuration = new File(".", "update.properties");
   private File fixedVersionFolder;
 
   @Before

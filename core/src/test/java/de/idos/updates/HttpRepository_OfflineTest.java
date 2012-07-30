@@ -1,5 +1,6 @@
 package de.idos.updates;
 
+import de.idos.updates.repository.HttpRepository;
 import de.idos.updates.store.Installation;
 import org.junit.Rule;
 import org.junit.Test;

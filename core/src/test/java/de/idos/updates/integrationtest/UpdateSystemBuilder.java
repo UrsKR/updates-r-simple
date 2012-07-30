@@ -1,8 +1,8 @@
 package de.idos.updates.integrationtest;
 
-import de.idos.updates.Repository;
 import de.idos.updates.DefaultUpdateSystem;
 import de.idos.updates.VersionStore;
+import de.idos.updates.repository.Repository;
 import de.idos.updates.store.NullReport;
 import de.idos.updates.store.ProgressReport;
 

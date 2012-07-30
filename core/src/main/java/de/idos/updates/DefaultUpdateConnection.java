@@ -1,5 +1,7 @@
 package de.idos.updates;
 
+import de.idos.updates.repository.Repository;
+
 public class DefaultUpdateConnection implements UpdateConnection {
 
   private VersionTransfer transfer;

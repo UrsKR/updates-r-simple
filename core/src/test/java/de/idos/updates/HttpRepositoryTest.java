@@ -1,5 +1,6 @@
 package de.idos.updates;
 
+import de.idos.updates.repository.HttpRepository;
 import de.idos.updates.server.FileServer;
 import de.idos.updates.store.FilesystemVersionStore;
 import de.idos.updates.store.Installation;
@@ -16,7 +17,10 @@ import java.io.File;
 import static de.idos.updates.NumericVersionMatchers.sameVersionAs;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class HttpRepositoryTest {
     private static FileServer fileServer;
