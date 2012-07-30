@@ -48,7 +48,11 @@ public class ConfiguredUpdateSystem {
   public UpdateSystem create() {
     VersionDiscovery installedDiscovery = store;
     if (installedVersionFallback != null) {
-      installedDiscovery = new FallbackVersionDiscovery(installedDiscovery, installedVersionFallback);
+      if (configuration.getStrategy() == UpdateStrategy.LatestVersion) {
+        installedDiscovery = new FallbackVersionDiscovery(installedDiscovery, installedVersionFallback);
+      } else {
+        installedDiscovery = new FixedVersionDiscovery(installedVersionFallback);
+      }
     }
     return new DefaultUpdateSystem(installedDiscovery, store, availableDiscovery, transfer);
   }

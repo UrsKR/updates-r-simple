@@ -1,17 +1,18 @@
 package de.idos.updates.configuration;
 
-import org.apache.commons.io.IOUtils;
-
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import static de.idos.updates.configuration.UpdateConfiguration.*;
+import static de.idos.updates.configuration.UpdateConfiguration.UPDATE_APPLICATION_NAME;
+import static de.idos.updates.configuration.UpdateConfiguration.UPDATE_FIXED_VERSION_LOCATION;
+import static de.idos.updates.configuration.UpdateConfiguration.UPDATE_LATEST_VERSION_REPOSITORY_LOCATION;
+import static de.idos.updates.configuration.UpdateConfiguration.UPDATE_LATEST_VERSION_REPOSITORY_TYPE;
+import static de.idos.updates.configuration.UpdateConfiguration.UPDATE_STRATEGY;
 import static de.idos.updates.configuration.UpdateStrategy.FixedVersion;
 import static de.idos.updates.configuration.UpdateStrategy.LatestVersion;
 
 public class Configurator {
+  private final PropertiesSaver saver = new PropertiesSaver("update.properties");
     private Properties properties;
 
     public Configurator() {
@@ -23,18 +24,7 @@ public class Configurator {
     }
 
     public void saveConfiguration() throws IOException {
-        File file = new File(".", "update.properties");
-        saveConfigurationTo(file);
-    }
-
-    private void saveConfigurationTo(File file) throws IOException {
-        FileOutputStream stream = null;
-        try {
-            stream = new FileOutputStream(file);
-            properties.store(stream, "");
-        } finally {
-            IOUtils.closeQuietly(stream);
-        }
+      saver.save(properties);
     }
 
     public void setApplicationNameTo(String name) {

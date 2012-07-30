@@ -11,3 +11,15 @@ dependencies {
         exclude group: 'org.eclipse.jetty.orbit'
     }
 }
+
+uploadArchives {
+    repositories.mavenDeployer {
+        name = 'updates-core'
+    }
+}
+
+configure(install.repositories.mavenInstaller) {
+    pom.project {
+        artifactId 'updates-core'
+    }
+}

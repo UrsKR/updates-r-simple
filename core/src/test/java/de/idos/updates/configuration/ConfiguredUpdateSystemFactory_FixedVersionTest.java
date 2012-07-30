@@ -14,7 +14,6 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.util.Properties;
 
 import static de.idos.updates.NumericVersionMatchers.sameVersionAs;
@@ -35,13 +34,13 @@ public class ConfiguredUpdateSystemFactory_FixedVersionTest {
     File available_versions = new File(repository, FilesystemRepository.AVAILABLE_VERSIONS);
     new File(available_versions, "4.2.1").mkdirs();
     fixedVersionFolder = folder.newFile("fixedVersion");
-    configuration = new File(".", "update.properties");
-    properties.put("update.applicationName", "updateunittest");
-    properties.put("update.strategy", "FixedVersion");
-    properties.put("update.FixedVersion.location", fixedVersionFolder.getAbsolutePath());
-    properties.put("update.LatestVersion.repository.type", "File");
-    properties.put("update.LatestVersion.repository.location", repository.getAbsolutePath());
-    properties.store(new FileOutputStream(configuration), "");
+    Configurator configurator = new Configurator();
+    configurator.setApplicationNameTo("updateunittest");
+    configurator.toggleFixedVersion();
+    configurator.changeFixedVersionLocationTo(fixedVersionFolder.getAbsolutePath());
+    configurator.toggleFileRepositoryForLatestVersion();
+    configurator.setRepositoryLocationForLatestVersionTo(repository.getAbsolutePath());
+    configurator.saveConfiguration();
   }
 
   @Test
@@ -67,6 +66,16 @@ public class ConfiguredUpdateSystemFactory_FixedVersionTest {
     assertThat(installedVersion, is(sameVersionAs(overriddenVersion)));
   }
 
+  @Test
+  public void returnsFixedVersionNumberEvenIfALaterVersionIsInstalled() throws Exception {
+    File versionsFolder = new File(getVersionParent(), "versions");
+    new File(versionsFolder, "4.0.0").mkdirs();
+    NumericVersion overriddenVersion = new NumericVersion(3, 3, 1);
+    UpdateSystem updateSystem = ConfiguredUpdateSystem.loadProperties().andIfTheInstalledVersionIsUnknownUse(overriddenVersion).create();
+    Version installedVersion = getUpdaterThatHasRun(updateSystem).getInstalledVersion();
+    assertThat(installedVersion, is(sameVersionAs(overriddenVersion)));
+  }
+
   @After
   public void deleteConfiguration() throws Exception {
     FileUtils.deleteQuietly(configuration);
@@ -74,8 +83,13 @@ public class ConfiguredUpdateSystemFactory_FixedVersionTest {
 
   @After
   public void deleteInstalledUpdates() throws Exception {
+    File versionStorageParent = getVersionParent();
+    FileUtils.deleteQuietly(versionStorageParent);
+  }
+
+  private File getVersionParent() {
     String userHome = System.getProperty("user.home");
-    FileUtils.deleteQuietly(new File(userHome, ".updateunittest"));
+    return new File(userHome, ".updateunittest");
   }
 
   private Updater getUpdaterThatHasRun(UpdateSystem updateSystem) {
