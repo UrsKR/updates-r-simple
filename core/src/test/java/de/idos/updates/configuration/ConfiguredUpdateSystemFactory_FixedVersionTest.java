@@ -4,6 +4,7 @@ import de.idos.updates.FilesystemRepository;
 import de.idos.updates.NumericVersion;
 import de.idos.updates.UpdateAvailability;
 import de.idos.updates.UpdateSystem;
+import de.idos.updates.Updater;
 import de.idos.updates.Version;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -53,15 +54,16 @@ public class ConfiguredUpdateSystemFactory_FixedVersionTest {
   @Test
   public void canInstallUpdatesEvenWhenTheActualVersionIsFixed() throws Exception {
     UpdateSystem updateSystem = ConfiguredUpdateSystem.loadProperties().create();
-    updateSystem.checkForUpdates().updateToLatestVersion();
-    assertThat(updateSystem.checkForUpdates().hasUpdate(), is(UpdateAvailability.NotAvailable));
+    Updater updater = getUpdaterThatHasRun(updateSystem);
+    updater.updateToLatestVersion();
+    assertThat(getUpdaterThatHasRun(updateSystem).hasUpdate(), is(UpdateAvailability.NotAvailable));
   }
 
   @Test
   public void canSetFixedVersionNumber() throws Exception {
     NumericVersion overriddenVersion = new NumericVersion(3, 3, 1);
     UpdateSystem updateSystem = ConfiguredUpdateSystem.loadProperties().andIfTheVersionIsFixedSetItTo(overriddenVersion).create();
-    Version installedVersion = updateSystem.checkForUpdates().getInstalledVersion();
+    Version installedVersion = getUpdaterThatHasRun(updateSystem).getInstalledVersion();
     assertThat(installedVersion, is(sameVersionAs(overriddenVersion)));
   }
 
@@ -74,5 +76,11 @@ public class ConfiguredUpdateSystemFactory_FixedVersionTest {
   public void deleteInstalledUpdates() throws Exception {
     String userHome = System.getProperty("user.home");
     FileUtils.deleteQuietly(new File(userHome, ".updateunittest"));
+  }
+
+  private Updater getUpdaterThatHasRun(UpdateSystem updateSystem) {
+    Updater updater = updateSystem.checkForUpdates();
+    updater.runCheck();
+    return updater;
   }
 }

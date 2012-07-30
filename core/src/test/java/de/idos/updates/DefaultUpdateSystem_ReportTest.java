@@ -73,7 +73,8 @@ public class DefaultUpdateSystem_ReportTest {
     ProgressReport secondReport = mock(ProgressReport.class);
     updateSystem.reportAllProgressTo(firstReport);
     updateSystem.reportAllProgressTo(secondReport);
-    updateSystem.checkForUpdates();
+    Updater updater = updateSystem.checkForUpdates();
+    updater.runCheck();
     verify(firstReport).lookingUpLatestAvailableVersion();
     verify(secondReport).lookingUpLatestAvailableVersion();
   }

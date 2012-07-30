@@ -2,6 +2,7 @@ package de.idos.updates.configuration;
 
 import de.idos.updates.NumericVersion;
 import de.idos.updates.UpdateSystem;
+import de.idos.updates.Updater;
 import de.idos.updates.Version;
 import de.idos.updates.VersionDiscovery;
 import org.apache.commons.io.FileUtils;
@@ -42,7 +43,7 @@ public class ConfiguredUpdateSystemFactory_FileTest {
   @Test
   public void usesConfiguredFileRepository() throws Exception {
     UpdateSystem updateSystem = ConfiguredUpdateSystem.loadProperties().create();
-    Version latestVersion = updateSystem.checkForUpdates().getLatestVersion();
+    Version latestVersion = getUpdaterThatHasRun(updateSystem).getLatestVersion();
     assertThat(latestVersion, is(sameVersionAs(new NumericVersion(4, 2, 1))));
   }
 
@@ -52,7 +53,8 @@ public class ConfiguredUpdateSystemFactory_FileTest {
     NumericVersion overriddenVersion = new NumericVersion(4, 2, 2);
     when(discovery.getLatestVersion()).thenReturn(overriddenVersion);
     UpdateSystem updateSystem = ConfiguredUpdateSystem.loadProperties().butDiscoverAvailableVersionThrough(discovery).create();
-    Version latestVersion = updateSystem.checkForUpdates().getLatestVersion();
+    Updater updater = getUpdaterThatHasRun(updateSystem);
+    Version latestVersion = updater.getLatestVersion();
     assertThat(latestVersion, is(sameVersionAs(overriddenVersion)));
   }
 
@@ -66,5 +68,11 @@ public class ConfiguredUpdateSystemFactory_FileTest {
   public void deleteInstalledUpdates() throws Exception {
     String userHome = System.getProperty("user.home");
     FileUtils.deleteQuietly(new File(userHome, ".updateunittest"));
+  }
+
+  private Updater getUpdaterThatHasRun(UpdateSystem updateSystem) {
+    Updater updater = updateSystem.checkForUpdates();
+    updater.runCheck();
+    return updater;
   }
 }
