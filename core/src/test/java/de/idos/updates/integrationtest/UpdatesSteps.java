@@ -30,6 +30,7 @@ import static de.idos.updates.repository.FilesystemRepository.AVAILABLE_VERSIONS
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -37,6 +38,7 @@ import static org.mockito.Mockito.verify;
 public class UpdatesSteps {
 
   private static final NumericVersion currentVersion = new NumericVersion(4, 2, 0);
+  public static final String DESCRIPTION_FOR_NEW_VERSION = "Description for 4.2.1";
   private TemporaryFolder folder = new TemporaryFolder();
   private DefaultUpdateSystem updateSystem;
   private NumericVersion latestVersion;
@@ -48,6 +50,7 @@ public class UpdatesSteps {
   private CountDownLatch slowThreadStartSignal;
   private OngoingInstallation ongoingInstallation = null;
   private final FileServer fileServer = new FileServer();
+  private Updater updater;
 
   @Before
   public void initializeVersionRepository() throws Throwable {
@@ -112,13 +115,13 @@ public class UpdatesSteps {
 
   @When("^the application checks for updates$")
   public void the_application_checks_for_updates() throws Throwable {
-    getUpdateSystem().checkForUpdates();
+    this.updater = getUpdateSystem().checkForUpdates();
+    this.updater.runCheck();
   }
 
   @When("^the application requests an update$")
   public void the_application_requests_an_update() throws Throwable {
-    Updater updater = getUpdateSystem().checkForUpdates();
-    updater.runCheck();
+    the_application_checks_for_updates();
     ongoingInstallation = updater.updateToLatestVersion();
   }
 
@@ -166,8 +169,6 @@ public class UpdatesSteps {
 
   @Then("^the library reports an update$")
   public void the_library_reports_an_update() throws Throwable {
-    Updater updater = getUpdateSystem().checkForUpdates();
-    updater.runCheck();
     assertThat(updater.hasUpdate(), is(UpdateAvailability.Available));
   }
 
@@ -183,8 +184,6 @@ public class UpdatesSteps {
 
   @Then("^the library does not indicate a new version$")
   public void the_library_does_not_indicate_a_new_version() throws Throwable {
-    Updater updater = getUpdateSystem().checkForUpdates();
-    updater.runCheck();
     assertThat(updater.hasUpdate(), is(UpdateAvailability.NotAvailable));
   }
 
@@ -210,7 +209,7 @@ public class UpdatesSteps {
 
   @Then("^the library reports the download's progress to the client$")
   public void the_library_reports_the_download_s_progress_to_the_client() throws Throwable {
-    verify(verifiableReport).expectedSize(anyInt());
+    verify(verifiableReport, atLeastOnce()).expectedSize(anyInt());
   }
 
   @Then("^the second update does not interfere$")
@@ -229,8 +228,6 @@ public class UpdatesSteps {
   }
 
   private void assertLatestReportedVersionIsLatestExpectedVersion() {
-    Updater updater = getUpdateSystem().checkForUpdates();
-    updater.runCheck();
     Version latestReportedVersion = updater.getLatestVersion();
     assertThat(latestReportedVersion, is(sameVersionAs(latestVersion)));
   }

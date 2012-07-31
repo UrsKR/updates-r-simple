@@ -41,7 +41,7 @@ Feature: Updates-R-Simple discovers and downloads updates
         And the application concurrently request a second update
         Then the second update does not interfere
 
-     Scenario: Updates can be aborted
+    Scenario: Updates can be aborted
         Given the repository contains a new version
         When the application requests an update that takes a while to complete
         And the application asks the library to abort the update
