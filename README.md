@@ -1,5 +1,7 @@
 This is an **auto-update system for Java** that hopes to be **simple to integrate** and use.
 The library is designed to be **thread-safe** and should even handle multiple VMs updating simultaneously.
+It **uses threads internally** to provide a more capable API,
+ and you should watch for bad access if you use it in a GUI framework.
 
 It is licensed under the Apache License v2.0.
 
