@@ -20,7 +20,7 @@ public class UpdateSystemBuilder {
     }
 
     public DefaultUpdateSystem create() {
-        DefaultUpdateSystem updateSystem = new DefaultUpdateSystem(versionStore, repository);
+        DefaultUpdateSystem updateSystem = new DefaultUpdateSystem(versionStore, versionStore, repository, repository);
         updateSystem.reportAllProgressTo(report);
         return updateSystem;
     }

@@ -19,7 +19,7 @@ public class DefaultUpdateSystemTest {
   Version latestVersion = new NumericVersion(5, 3, 2);
   Repository repository = mock(Repository.class);
   VersionStore versionStore = mock(VersionStore.class);
-  DefaultUpdateSystem updateSystem = new DefaultUpdateSystem(versionStore, repository);
+  DefaultUpdateSystem updateSystem = new DefaultUpdateSystem(versionStore, versionStore, repository, repository);
 
   @Test
   public void hasNoUpdateIfThereIsNoNewVersion() throws Exception {
