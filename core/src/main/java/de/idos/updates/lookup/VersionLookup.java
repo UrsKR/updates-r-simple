@@ -16,7 +16,7 @@ public class VersionLookup {
     public Version lookUpLatestVersion() {
         report.lookingUpLatestAvailableVersion();
         try {
-            Version latestVersion = strategy.findLatestVersion();
+            Version latestVersion = strategy.findLatestUpdate().getVersion();
             report.latestAvailableVersionIs(latestVersion);
             return latestVersion;
         } catch (Exception e) {

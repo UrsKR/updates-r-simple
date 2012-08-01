@@ -1,9 +1,10 @@
 package de.idos.updates.lookup;
 
-import de.idos.updates.Version;
+import de.idos.updates.Update;
 
 import java.io.IOException;
 
 public interface LookupStrategy {
-    Version findLatestVersion() throws IOException;
+
+  Update findLatestUpdate() throws IOException;
 }
