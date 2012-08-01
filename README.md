@@ -9,7 +9,10 @@ Work so far was sponsored by **[IDOS AE GmbH](http://www.idos.de)**.
 When setting out, my goal was to create an auto-updater that did not not force me to depend on a major framework, or required my dependencies to be signed.
 
 #### Current Topic of Interest
-Promoting the library to Maven Central
+Including a changelog for new versions
+
+## Maven Coordinates
+The project is in Maven Central at ``de.idos.updates:updates-core:1.0.0``
 
 ## To Build
 * You need JDK 6
