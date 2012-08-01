@@ -14,7 +14,7 @@ import static org.mockito.Mockito.when;
 public class UpdateCheckTest {
   Version currentVersion = new NumericVersion(1, 0, 0);
   Version latestVersion = new NumericVersion(0, 0, 0);
-  Update update = mock(Update.class);
+  InstallableUpdate update = mock(InstallableUpdate.class);
   UpdateConnection connection = mock(DefaultUpdateConnection.class);
 
   @Before
@@ -33,7 +33,7 @@ public class UpdateCheckTest {
   public void doesNotChangeStateIfNewerVersionBecomesAvailableLater() throws Exception {
     when(connection.getLatestAvailableUpdate()).thenReturn(update);
     when(update.getVersion()).thenReturn(latestVersion);
-    Update newUpdate = mock(Update.class);
+    InstallableUpdate newUpdate = mock(InstallableUpdate.class);
     when(newUpdate.getVersion()).thenReturn(new NumericVersion(1, 1, 0));
     when(connection.getLatestAvailableUpdate()).thenReturn(update, newUpdate);
     Version version = getLatestVersion();
@@ -71,7 +71,7 @@ public class UpdateCheckTest {
 
   @Test
   public void handsOutInstallationFromConnectionWhenNewerIsAvailable() throws Exception {
-    Update update = mock(Update.class);
+    InstallableUpdate update = mock(InstallableUpdate.class);
     when(update.isUpdateFrom(currentVersion)).thenReturn(UpdateAvailability.Available);
     when(connection.getLatestAvailableUpdate()).thenReturn(update);
     OngoingInstallation installation = mock(OngoingInstallation.class);

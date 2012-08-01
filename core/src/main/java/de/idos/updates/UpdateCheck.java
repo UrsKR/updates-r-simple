@@ -9,7 +9,7 @@ public class UpdateCheck implements Updater {
   private final UpdateConnection updateConnection;
   private boolean checkHasRun = false;
   private Version currentVersion;
-  private Update latestUpdate;
+  private InstallableUpdate latestUpdate;
 
   public UpdateCheck(UpdateConnection updateConnection) {
     this.updateConnection = updateConnection;

@@ -19,7 +19,7 @@ public class DefaultUpdateConnection implements UpdateConnection {
   }
 
   @Override
-  public Update getLatestAvailableUpdate() {
+  public InstallableUpdate getLatestAvailableUpdate() {
     Version availableVersion = availableDiscovery.getLatestVersion();
     return new DefaultUpdate(availableVersion, installer);
   }

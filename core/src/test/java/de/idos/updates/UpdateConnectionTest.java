@@ -27,7 +27,7 @@ public class UpdateConnectionTest {
   public void returnsUpdateToAvailableVersion() throws Exception {
     Version latestVersion = new NumericVersion(1, 0, 1);
     when(availableDiscovery.getLatestVersion()).thenReturn(latestVersion);
-    Update update = connection.getLatestAvailableUpdate();
+    InstallableUpdate update = connection.getLatestAvailableUpdate();
     assertThat(update.getVersion(), is(latestVersion));
   }
 
@@ -35,7 +35,7 @@ public class UpdateConnectionTest {
   public void updateWillInstallViaInstaller() throws Exception {
     Version latestVersion = new NumericVersion(1, 0, 1);
     when(availableDiscovery.getLatestVersion()).thenReturn(latestVersion);
-    Update update = connection.getLatestAvailableUpdate();
+    InstallableUpdate update = connection.getLatestAvailableUpdate();
     update.install();
     verify(versionInstaller).install(latestVersion);
   }

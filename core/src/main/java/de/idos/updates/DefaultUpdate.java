@@ -5,7 +5,7 @@ import de.idos.updates.store.OngoingInstallation;
 import static de.idos.updates.UpdateAvailability.Available;
 import static de.idos.updates.UpdateAvailability.NotAvailable;
 
-public class DefaultUpdate implements Update {
+public class DefaultUpdate implements InstallableUpdate {
   private final Version version;
   private final VersionInstaller installer;
 
