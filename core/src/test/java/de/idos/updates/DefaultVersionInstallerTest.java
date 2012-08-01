@@ -9,18 +9,18 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class DefaultUpdateConnectionTest {
+public class DefaultVersionInstallerTest {
+
+  VersionTransfer transfer = mock(VersionTransfer.class);
+  VersionReceptacle receptacle = mock(VersionReceptacle.class);
+  DefaultVersionInstaller installer = new DefaultVersionInstaller(transfer, receptacle);
 
   @Test
   public void handsOutInstallationFromTransfer() throws Exception {
-    VersionDiscovery installedDiscovery = null;
-    VersionReceptacle receptacle = null;
-    VersionDiscovery availableDiscovery = null;
-    VersionTransfer transfer = mock(VersionTransfer.class);
     OngoingInstallation installation = mock(Installation.class);
     Version version = mock(Version.class);
     when(transfer.transferVersionTo(version, receptacle)).thenReturn(installation);
-    OngoingInstallation install = new DefaultUpdateConnection(installedDiscovery, receptacle, availableDiscovery, transfer).install(version);
+    OngoingInstallation install = installer.install(version);
     assertThat(install, is(installation));
   }
 }

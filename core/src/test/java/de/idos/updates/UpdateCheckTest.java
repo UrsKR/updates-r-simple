@@ -14,6 +14,7 @@ import static org.mockito.Mockito.when;
 public class UpdateCheckTest {
   Version currentVersion = new NumericVersion(1, 0, 0);
   Version latestVersion = new NumericVersion(0, 0, 0);
+  Update update = mock(Update.class);
   UpdateConnection connection = mock(DefaultUpdateConnection.class);
 
   @Before
@@ -23,14 +24,18 @@ public class UpdateCheckTest {
 
   @Test
   public void returnsCurrentVersionIfNoNewerIsAvailable() throws Exception {
-    when(connection.getLatestAvailableVersion()).thenReturn(latestVersion);
+    when(connection.getLatestAvailableUpdate()).thenReturn(update);
     Version version = getLatestVersion();
     assertThat(version, is(currentVersion));
   }
 
   @Test
   public void doesNotChangeStateIfNewerVersionBecomesAvailableLater() throws Exception {
-    when(connection.getLatestAvailableVersion()).thenReturn(latestVersion, new NumericVersion(1, 1, 0));
+    when(connection.getLatestAvailableUpdate()).thenReturn(update);
+    when(update.getVersion()).thenReturn(latestVersion);
+    Update newUpdate = mock(Update.class);
+    when(newUpdate.getVersion()).thenReturn(new NumericVersion(1, 1, 0));
+    when(connection.getLatestAvailableUpdate()).thenReturn(update, newUpdate);
     Version version = getLatestVersion();
     assertThat(version, is(currentVersion));
   }
@@ -66,10 +71,11 @@ public class UpdateCheckTest {
 
   @Test
   public void handsOutInstallationFromConnectionWhenNewerIsAvailable() throws Exception {
-    NumericVersion newVersion = new NumericVersion(1, 1, 1);
-    when(connection.getLatestAvailableVersion()).thenReturn(newVersion);
+    Update update = mock(Update.class);
+    when(update.isUpdateFrom(currentVersion)).thenReturn(UpdateAvailability.Available);
+    when(connection.getLatestAvailableUpdate()).thenReturn(update);
     OngoingInstallation installation = mock(OngoingInstallation.class);
-    when(connection.install(newVersion)).thenReturn(installation);
+    when(update.install()).thenReturn(installation);
     UpdateCheck check = createExecutedUpdateCheck();
     OngoingInstallation actualInstallation = check.updateToLatestVersion();
     assertThat(actualInstallation, is(installation));
@@ -77,7 +83,7 @@ public class UpdateCheckTest {
 
   @Test
   public void returnsNullVersionOtherwise() throws Exception {
-    when(connection.getLatestAvailableVersion()).thenReturn(latestVersion);
+    when(connection.getLatestAvailableUpdate()).thenReturn(update);
     UpdateCheck check = createExecutedUpdateCheck();
     OngoingInstallation actualInstallation = check.updateToLatestVersion();
     assertThat(actualInstallation, is(instanceOf(NullInstallation.class)));

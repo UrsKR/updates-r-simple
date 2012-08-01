@@ -4,13 +4,12 @@ import de.idos.updates.store.NullInstallation;
 import de.idos.updates.store.OngoingInstallation;
 
 import static de.idos.updates.UpdateAvailability.Available;
-import static de.idos.updates.UpdateAvailability.NotAvailable;
 
 public class UpdateCheck implements Updater {
+  private final UpdateConnection updateConnection;
   private boolean checkHasRun = false;
   private Version currentVersion;
-  private Version latestVersion;
-  private final UpdateConnection updateConnection;
+  private Update latestUpdate;
 
   public UpdateCheck(UpdateConnection updateConnection) {
     this.updateConnection = updateConnection;
@@ -19,10 +18,7 @@ public class UpdateCheck implements Updater {
   @Override
   public UpdateAvailability hasUpdate() {
     assertCheckHasRun();
-    if (latestVersion.isGreaterThan(currentVersion)) {
-      return Available;
-    }
-    return NotAvailable;
+    return latestUpdate.isUpdateFrom(currentVersion);
   }
 
   @Override
@@ -37,14 +33,14 @@ public class UpdateCheck implements Updater {
     if (!latestVersionIsNewerThanInstalledVersion()) {
       return currentVersion;
     }
-    return latestVersion;
+    return latestUpdate.getVersion();
   }
 
   @Override
   public OngoingInstallation updateToLatestVersion() {
     assertCheckHasRun();
     if (latestVersionIsNewerThanInstalledVersion()) {
-      return updateConnection.install(latestVersion);
+      return latestUpdate.install();
     }
     return new NullInstallation();
   }
@@ -53,7 +49,7 @@ public class UpdateCheck implements Updater {
   public synchronized void runCheck() {
     if (!checkHasRun) {
       this.currentVersion = updateConnection.getLatestInstalledVersion();
-      this.latestVersion = updateConnection.getLatestAvailableVersion();
+      this.latestUpdate = updateConnection.getLatestAvailableUpdate();
       this.checkHasRun = true;
     }
   }

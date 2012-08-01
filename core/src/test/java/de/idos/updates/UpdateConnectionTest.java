@@ -44,11 +44,4 @@ public class UpdateConnectionTest {
     new DefaultUpdateConnection(discovery, versionStore, versionRepository, versionRepository).getLatestInstalledVersion();
     verify(discovery).getLatestVersion();
   }
-
-  @Test
-  public void installsVersionFromRepositoryToStore() throws Exception {
-    NumericVersion latestVersion = new NumericVersion(1, 0, 0);
-    connection.install(latestVersion);
-    verify(versionRepository).transferVersionTo(latestVersion, versionStore);
-  }
 }

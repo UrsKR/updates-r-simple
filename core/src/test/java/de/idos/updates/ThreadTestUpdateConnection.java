@@ -1,7 +1,5 @@
 package de.idos.updates;
 
-import de.idos.updates.store.OngoingInstallation;
-
 public class ThreadTestUpdateConnection implements UpdateConnection {
   private Version v1;
   private Version v2;
@@ -23,8 +21,8 @@ public class ThreadTestUpdateConnection implements UpdateConnection {
   }
 
   @Override
-  public OngoingInstallation install(Version latestVersion) {
-    throw new UnsupportedOperationException();
+  public Update getLatestAvailableUpdate() {
+    return new DefaultUpdate(getLatestAvailableVersion(), new NullVersionInstaller());
   }
 
   private Version getVersionOrWait() {
