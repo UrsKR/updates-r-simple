@@ -18,7 +18,7 @@ import static de.idos.updates.NumericVersionMatchers.sameVersionAs;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class ConfiguredUpdateSystemFactory_HttpTest {
+public class ConfiguredUpdateSystem_HttpTest {
   private FileServer fileServer;
   private File configuration;
   Properties properties = new Properties();

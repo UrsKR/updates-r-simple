@@ -20,7 +20,7 @@ import static de.idos.updates.NumericVersionMatchers.sameVersionAs;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class ConfiguredUpdateSystemFactory_FixedVersionTest {
+public class ConfiguredUpdateSystem_FixedVersionTest {
 
   @Rule
   public TemporaryFolder folder = new TemporaryFolder();
