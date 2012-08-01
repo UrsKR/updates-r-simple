@@ -16,13 +16,8 @@ public class ThreadTestUpdateConnection implements UpdateConnection {
   }
 
   @Override
-  public Version getLatestAvailableVersion() {
-    return getVersionOrWait();
-  }
-
-  @Override
   public Update getLatestAvailableUpdate() {
-    return new DefaultUpdate(getLatestAvailableVersion(), new NullVersionInstaller());
+    return new DefaultUpdate(getVersionOrWait(), new NullVersionInstaller());
   }
 
   private Version getVersionOrWait() {

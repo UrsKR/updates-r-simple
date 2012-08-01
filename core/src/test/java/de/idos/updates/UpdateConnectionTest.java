@@ -24,24 +24,24 @@ public class UpdateConnectionTest {
   }
 
   @Test
-  public void returnsAvailableVersion() throws Exception {
+  public void returnsUpdateToAvailableVersion() throws Exception {
     Version latestVersion = new NumericVersion(1, 0, 1);
     when(versionRepository.getLatestVersion()).thenReturn(latestVersion);
-    Version version = connection.getLatestAvailableVersion();
-    assertThat(version, is(latestVersion));
+    Update update = connection.getLatestAvailableUpdate();
+    assertThat(update.getVersion(), is(latestVersion));
   }
 
   @Test
   public void returnsAvailableVersionFromDiscovery() throws Exception {
     VersionDiscovery discovery = mock(VersionDiscovery.class);
-    new DefaultUpdateConnection(versionStore, versionStore, discovery, versionRepository).getLatestAvailableVersion();
+    new DefaultUpdateConnection(versionStore, discovery, new DefaultVersionInstaller(versionRepository, versionStore)).getLatestAvailableUpdate();
     verify(discovery).getLatestVersion();
   }
 
   @Test
   public void returnsInstalledVersionFromDiscovery() throws Exception {
     VersionDiscovery discovery = mock(VersionDiscovery.class);
-    new DefaultUpdateConnection(discovery, versionStore, versionRepository, versionRepository).getLatestInstalledVersion();
+    new DefaultUpdateConnection(discovery, versionRepository, new DefaultVersionInstaller(versionRepository, versionStore)).getLatestInstalledVersion();
     verify(discovery).getLatestVersion();
   }
 }

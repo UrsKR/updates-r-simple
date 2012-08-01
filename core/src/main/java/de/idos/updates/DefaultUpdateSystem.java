@@ -32,7 +32,7 @@ public class DefaultUpdateSystem implements UpdateSystem {
 
   @Override
   public Updater checkForUpdates() {
-    return new UpdateCheck(new DefaultUpdateConnection(installedDiscovery, receptacle, availableDiscovery, transfer));
+    return new UpdateCheck(new DefaultUpdateConnection(installedDiscovery, availableDiscovery, new DefaultVersionInstaller(transfer, receptacle)));
   }
 
   @Override

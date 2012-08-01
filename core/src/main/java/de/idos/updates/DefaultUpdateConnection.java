@@ -9,14 +9,14 @@ public class DefaultUpdateConnection implements UpdateConnection {
   private final VersionDiscovery availableDiscovery;
 
   public DefaultUpdateConnection(VersionStore versionStore, Repository versionRepository) {
-    this(versionStore, versionStore, versionRepository, versionRepository);
+    this(versionStore, versionRepository, new DefaultVersionInstaller(versionRepository, versionStore));
   }
 
-  public DefaultUpdateConnection(VersionDiscovery installedDiscovery, VersionReceptacle receptacle,
-                                 VersionDiscovery availableDiscovery, VersionTransfer transfer) {
+  public DefaultUpdateConnection(VersionDiscovery installedDiscovery,
+                                 VersionDiscovery availableDiscovery, DefaultVersionInstaller versionInstaller) {
     this.installedDiscovery = installedDiscovery;
     this.availableDiscovery = availableDiscovery;
-    this.installer = new DefaultVersionInstaller(transfer, receptacle);
+    this.installer = versionInstaller;
   }
 
   @Override
@@ -25,12 +25,8 @@ public class DefaultUpdateConnection implements UpdateConnection {
   }
 
   @Override
-  public Version getLatestAvailableVersion() {
-    return availableDiscovery.getLatestVersion();
-  }
-
-  @Override
   public Update getLatestAvailableUpdate() {
-    return new DefaultUpdate(getLatestAvailableVersion(), installer);
+    Version availableVersion = availableDiscovery.getLatestVersion();
+    return new DefaultUpdate(availableVersion, installer);
   }
 }
