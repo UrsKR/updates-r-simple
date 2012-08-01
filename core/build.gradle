@@ -54,7 +54,7 @@ uploadArchives {
 
         pom.artifactId = 'updates-core'
         pom.project {
-            name 'updates-core'
+            name 'Updates-R-Simple'
             description 'An auto-update system for Java, free of frameworks and signatures'
             url 'https://github.com/UrsKR/updates-r-simple'
             licenses {
