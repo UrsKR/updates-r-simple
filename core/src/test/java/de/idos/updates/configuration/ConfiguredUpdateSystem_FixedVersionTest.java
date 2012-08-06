@@ -49,7 +49,7 @@ public class ConfiguredUpdateSystem_FixedVersionTest {
     assertThat(folder, is(fixedVersionFolder));
   }
 
-  @Test(timeout = 1000)
+  @Test(timeout = 1500)
   public void canInstallUpdatesEvenWhenTheActualVersionIsFixed() throws Exception {
     UpdateSystem updateSystem = ConfiguredUpdateSystem.loadProperties().create();
     Updater updater = getUpdaterThatHasRun(updateSystem);
@@ -57,6 +57,7 @@ public class ConfiguredUpdateSystem_FixedVersionTest {
     while(installation.isRunning()){
       //wait
     }
+    Thread.sleep(500);
     assertThat(getUpdaterThatHasRun(updateSystem).hasUpdate(), is(UpdateAvailability.NotAvailable));
   }
 

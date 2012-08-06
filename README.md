@@ -34,3 +34,15 @@ The project is in Maven Central at ``de.idos.updates:updates-core:1.0.0``
 ```
 
 For a more complex example that can also cope with IDEs, please refer to the demo module.
+
+## Changelog
+
+#### v1.0.1
+* Java 6 required 
+
+#### v1.0.0
+* Initial Release
+* Discovers new versions
+* Downloads and installs updates
+* Dynamic classloading
+* Java 7 required
