@@ -12,7 +12,7 @@ When setting out, my goal was to create an auto-updater that did not not force m
 Including a changelog for new versions
 
 ## Maven Coordinates
-The project is in Maven Central at ``de.idos.updates:updates-core:1.0.0``
+The project is in Maven Central at ``de.idos.updates:updates-core:1.0.1``
 
 ## To Build
 * You need JDK 6
