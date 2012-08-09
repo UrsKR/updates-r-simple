@@ -10,6 +10,8 @@ allprojects {
         mavenLocal()
         mavenCentral()
     }
+	
+	sourceCompatibility = 1.6
 }
 
 idea.project.languageLevel = '1.6'
