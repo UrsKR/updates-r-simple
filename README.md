@@ -6,7 +6,7 @@ It **uses threads internally** to provide a more capable API,
 It is licensed under the Apache License v2.0.
 
 Work so far was sponsored by **[IDOS AE GmbH](http://www.idos.de)**.
-When setting out, my goal was to create an auto-updater that did not not force me to depend on a major framework, or required my dependencies to be signed.
+When setting out, my goal was to create an auto-updater that did not force me to depend on a major framework, or required my dependencies to be signed.
 
 #### Current Topic of Interest
 Including a changelog for new versions
