@@ -36,8 +36,13 @@ Feature: Updates-R-Simple discovers and downloads updates
         Then the library reports an update
 
     Scenario: Updates-R-Simple is thread-safe
-        Given an HTTP-server with new versions
-        And a repository for that server
+        Given the repository contains a new version
         When the application requests an update that takes a while to complete
         And the application concurrently request a second update
         Then the second update does not interfere
+
+    Scenario: Updates can be aborted
+        Given the repository contains a new version
+        When the application requests an update that takes a while to complete
+        And the application asks the library to abort the update
+        Then no trace of the update remains

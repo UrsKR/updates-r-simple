@@ -12,38 +12,42 @@ import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import java.io.File;
 
 public class FileServer {
-    Server server = new Server(8080);
+  Server server = new Server(8080);
 
-    public void start() throws Exception {
-        SelectChannelConnector connector = new SelectChannelConnector();
-        connector.setPort(8080);
-        server.addConnector(connector);
-        ContextHandler updateContext = createUpdateContext();
-        ContextHandler rootContext = createRootContext();
-        ContextHandlerCollection handlers = new ContextHandlerCollection();
-        handlers.setHandlers(new Handler[]{updateContext, rootContext});
-        server.setHandler(handlers);
-        server.start();
-    }
+  public static void main(String[] args) throws Exception {
+    new FileServer().start();
+  }
 
-    private ContextHandler createUpdateContext() {
-        ResourceHandler resource_handler = new ResourceHandler();
-        resource_handler.setDirectoriesListed(true);
-        File rootFolder = new RootFolderSelector().getRootFolder();
-        resource_handler.setResourceBase(new File(rootFolder, "src/test/resources/httpUpdateServerBase").getAbsolutePath());
-        ContextHandler contextHandler = new ContextHandler();
-        contextHandler.setHandler(resource_handler);
-        contextHandler.setContextPath("/updates");
-        return contextHandler;
-    }
+  public void start() throws Exception {
+    SelectChannelConnector connector = new SelectChannelConnector();
+    connector.setPort(8080);
+    server.addConnector(connector);
+    ContextHandler updateContext = createUpdateContext();
+    ContextHandler rootContext = createRootContext();
+    ContextHandlerCollection handlers = new ContextHandlerCollection();
+    handlers.setHandlers(new Handler[]{updateContext, rootContext});
+    server.setHandler(handlers);
+    server.start();
+  }
 
-    private ContextHandler createRootContext() {
-        ContextHandler rootContext = new ContextHandler("/");
-        rootContext.setHandler(new DefaultHandler());
-        return rootContext;
-    }
+  private ContextHandler createUpdateContext() {
+    ResourceHandler resource_handler = new ResourceHandler();
+    resource_handler.setDirectoriesListed(true);
+    File rootFolder = new RootFolderSelector().getRootFolder();
+    resource_handler.setResourceBase(new File(rootFolder, "src/test/resources/httpUpdateServerBase").getAbsolutePath());
+    ContextHandler contextHandler = new ContextHandler();
+    contextHandler.setHandler(resource_handler);
+    contextHandler.setContextPath("/updates");
+    return contextHandler;
+  }
 
-    public void stop() throws Exception {
-        server.stop();
-    }
+  private ContextHandler createRootContext() {
+    ContextHandler rootContext = new ContextHandler("/");
+    rootContext.setHandler(new DefaultHandler());
+    return rootContext;
+  }
+
+  public void stop() throws Exception {
+    server.stop();
+  }
 }

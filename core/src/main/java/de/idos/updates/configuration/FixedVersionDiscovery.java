@@ -6,7 +6,6 @@ import de.idos.updates.store.ProgressReport;
 
 public class FixedVersionDiscovery implements VersionDiscovery {
   private Version version;
-  private ProgressReport report;
 
   public FixedVersionDiscovery(Version version) {
     this.version = version;
@@ -19,6 +18,6 @@ public class FixedVersionDiscovery implements VersionDiscovery {
 
   @Override
   public void reportAllProgressTo(ProgressReport report) {
-    this.report = report;
+    //nothing to report
   }
 }

@@ -38,6 +38,7 @@ public class UpdateCheck_ThreadTest {
 
     @Override
     public void run() {
+      updateCheck.runCheck();
       setVersion(updateCheck.getLatestVersion());
       assertionLatch.countDown();
     }

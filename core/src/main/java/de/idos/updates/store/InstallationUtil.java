@@ -17,7 +17,7 @@ public class InstallationUtil {
         getMarkerFile(parent).delete();
     }
 
-    private static File getMarkerFile(File parent) {
+    public static File getMarkerFile(File parent) {
         return new File(parent, "installation.running");
     }
 }

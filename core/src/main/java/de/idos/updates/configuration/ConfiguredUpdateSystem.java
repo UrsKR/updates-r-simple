@@ -1,15 +1,15 @@
 package de.idos.updates.configuration;
 
 import de.idos.updates.DefaultUpdateSystem;
-import de.idos.updates.FilesystemRepository;
-import de.idos.updates.HttpRepository;
-import de.idos.updates.Repository;
 import de.idos.updates.UpdateSystem;
 import de.idos.updates.Version;
 import de.idos.updates.VersionDiscovery;
 import de.idos.updates.VersionStore;
 import de.idos.updates.VersionStoreBuilder;
 import de.idos.updates.VersionTransfer;
+import de.idos.updates.repository.FilesystemRepository;
+import de.idos.updates.repository.HttpRepository;
+import de.idos.updates.repository.Repository;
 
 import java.io.File;
 import java.util.Properties;
@@ -20,11 +20,11 @@ public class ConfiguredUpdateSystem {
     return new ConfiguredUpdateSystem();
   }
 
-  private Version fixedVersion;
   private VersionDiscovery availableDiscovery;
   private VersionTransfer transfer;
   private final VersionStore store;
   private final UpdateConfiguration configuration;
+  private Version installedVersionFallback;
 
   private ConfiguredUpdateSystem() {
     Properties properties = new PropertiesLoader("update.properties").load();
@@ -40,18 +40,21 @@ public class ConfiguredUpdateSystem {
     return this;
   }
 
-
-  public ConfiguredUpdateSystem andIfTheVersionIsFixedSetItTo(Version version) {
-    this.fixedVersion = version;
+  public ConfiguredUpdateSystem andIfTheInstalledVersionIsUnknownUse(Version version) {
+    this.installedVersionFallback = version;
     return this;
   }
 
   public UpdateSystem create() {
-    if (configuration.getStrategy() == UpdateStrategy.FixedVersion && fixedVersion != null) {
-      VersionDiscovery installedVersion = new FixedVersionDiscovery(fixedVersion);
-      return new DefaultUpdateSystem(installedVersion, store, availableDiscovery, transfer);
+    VersionDiscovery installedDiscovery = store;
+    if (installedVersionFallback != null) {
+      if (configuration.getStrategy() == UpdateStrategy.LatestVersion) {
+        installedDiscovery = new FallbackVersionDiscovery(installedDiscovery, installedVersionFallback);
+      } else {
+        installedDiscovery = new FixedVersionDiscovery(installedVersionFallback);
+      }
     }
-    return new DefaultUpdateSystem(store, store, availableDiscovery, transfer);
+    return new DefaultUpdateSystem(installedDiscovery, store, availableDiscovery, transfer);
   }
 
   private VersionStore createVersionStore() {

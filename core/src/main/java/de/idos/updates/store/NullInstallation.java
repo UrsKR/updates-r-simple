@@ -15,4 +15,9 @@ public class NullInstallation implements Installation {
     public void finish() {
         //nothing to do
     }
+
+  @Override
+  public boolean isRunning() {
+    return false;
+  }
 }

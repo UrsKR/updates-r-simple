@@ -4,12 +4,14 @@ allprojects {
     apply plugin: 'idea'
 
     group = 'de.idos.updates'
-    version = '1.0.0-SNAPSHOT'
+    version = '1.0.2-SNAPSHOT'
 
     repositories {
         mavenLocal()
         mavenCentral()
     }
+	
+	sourceCompatibility = 1.6
 }
 
 idea.project.languageLevel = '1.6'

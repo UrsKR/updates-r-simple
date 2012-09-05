@@ -6,21 +6,17 @@ import de.idos.updates.util.Announcer;
 import java.io.File;
 
 public class DefaultUpdateSystem implements UpdateSystem {
-  private VersionDiscovery availableDiscovery;
-  private VersionTransfer transfer;
   private final Announcer<ProgressReport> progressAnnouncer = Announcer.to(ProgressReport.class);
-  private VersionReceptacle receptacle;
-  private VersionDiscovery installedDiscovery;
-
-  public DefaultUpdateSystem(VersionStore versionStore, Repository repository) {
-    this(versionStore, versionStore, repository, repository);
-  }
+  private final VersionDiscovery availableDiscovery;
+  private final VersionDiscovery installedDiscovery;
+  private final VersionTransfer transfer;
+  private final VersionReceptacle receptacle;
 
   public DefaultUpdateSystem(VersionDiscovery installedDiscovery, VersionReceptacle receptacle,
                              VersionDiscovery availableDiscovery, VersionTransfer transfer) {
     this.availableDiscovery = availableDiscovery;
-    this.transfer = transfer;
     this.installedDiscovery = installedDiscovery;
+    this.transfer = transfer;
     this.receptacle = receptacle;
     ProgressReport announcingReport = progressAnnouncer.announce();
     installedDiscovery.reportAllProgressTo(announcingReport);
@@ -31,7 +27,7 @@ public class DefaultUpdateSystem implements UpdateSystem {
 
   @Override
   public Updater checkForUpdates() {
-    return new UpdateCheck(new DefaultUpdateConnection(installedDiscovery, receptacle, availableDiscovery, transfer));
+    return new UpdateCheck(new DefaultUpdateConnection(installedDiscovery, availableDiscovery, new DefaultVersionInstaller(transfer, receptacle)));
   }
 
   @Override

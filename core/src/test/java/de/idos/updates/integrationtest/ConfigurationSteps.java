@@ -4,9 +4,13 @@ import cucumber.annotation.After;
 import cucumber.annotation.en.Given;
 import cucumber.annotation.en.Then;
 import cucumber.annotation.en.When;
-import de.idos.updates.*;
+import de.idos.updates.NumericVersion;
+import de.idos.updates.UpdateSystem;
+import de.idos.updates.Updater;
+import de.idos.updates.Version;
 import de.idos.updates.configuration.Configurator;
 import de.idos.updates.configuration.ConfiguredUpdateSystem;
+import de.idos.updates.repository.FilesystemRepository;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -63,13 +67,17 @@ public class ConfigurationSteps {
 
     @Then("^the system uses the file on the classpath to configure itself$")
     public void the_system_uses_the_file_on_the_classpath_to_configure_itself() throws Throwable {
-        Version latestVersion = updateSystem.checkForUpdates().getLatestVersion();
+      Updater updater = updateSystem.checkForUpdates();
+      updater.runCheck();
+      Version latestVersion = updater.getLatestVersion();
         assertThat(latestVersion, is(sameVersionAs(new NumericVersion(1, 0, 1))));
     }
 
     @Then("^the system uses the file in the working directory to configure itself$")
     public void the_system_uses_the_file_in_the_working_directory_to_configure_itself() throws Throwable {
-        Version latestVersion = updateSystem.checkForUpdates().getLatestVersion();
+      Updater updater = updateSystem.checkForUpdates();
+      updater.runCheck();
+      Version latestVersion = updater.getLatestVersion();
         assertThat(latestVersion, is(sameVersionAs(new NumericVersion(1, 0, 2))));
     }
 

@@ -2,21 +2,15 @@ package de.idos.updates;
 
 public class DefaultUpdateConnection implements UpdateConnection {
 
-  private VersionTransfer transfer;
-  private VersionDiscovery installedDiscovery;
-  private VersionReceptacle receptacle;
-  private VersionDiscovery availableDiscovery;
+  private final VersionInstaller installer;
+  private final VersionDiscovery installedDiscovery;
+  private final VersionDiscovery availableDiscovery;
 
-  public DefaultUpdateConnection(VersionStore versionStore, Repository versionRepository) {
-    this(versionStore, versionStore, versionRepository, versionRepository);
-  }
-
-  public DefaultUpdateConnection(VersionDiscovery installedDiscovery, VersionReceptacle receptacle,
-                                 VersionDiscovery availableDiscovery, VersionTransfer transfer) {
+  public DefaultUpdateConnection(VersionDiscovery installedDiscovery,
+                                 VersionDiscovery availableDiscovery, VersionInstaller versionInstaller) {
     this.installedDiscovery = installedDiscovery;
-    this.receptacle = receptacle;
     this.availableDiscovery = availableDiscovery;
-    this.transfer = transfer;
+    this.installer = versionInstaller;
   }
 
   @Override
@@ -25,12 +19,8 @@ public class DefaultUpdateConnection implements UpdateConnection {
   }
 
   @Override
-  public Version getLatestAvailableVersion() {
-    return availableDiscovery.getLatestVersion();
-  }
-
-  @Override
-  public void install(Version latestVersion) {
-    transfer.transferVersionTo(latestVersion, receptacle);
+  public InstallableUpdate getLatestAvailableUpdate() {
+    Version availableVersion = availableDiscovery.getLatestVersion();
+    return new DefaultUpdate(availableVersion, installer);
   }
 }

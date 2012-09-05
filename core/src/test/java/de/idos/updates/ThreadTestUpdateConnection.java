@@ -1,7 +1,5 @@
 package de.idos.updates;
 
-import java.util.concurrent.CountDownLatch;
-
 public class ThreadTestUpdateConnection implements UpdateConnection {
   private Version v1;
   private Version v2;
@@ -18,13 +16,8 @@ public class ThreadTestUpdateConnection implements UpdateConnection {
   }
 
   @Override
-  public Version getLatestAvailableVersion() {
-    return getVersionOrWait();
-  }
-
-  @Override
-  public void install(Version latestVersion) {
-    throw new UnsupportedOperationException();
+  public InstallableUpdate getLatestAvailableUpdate() {
+    return new DefaultUpdate(getVersionOrWait(), new NullVersionInstaller());
   }
 
   private Version getVersionOrWait() {

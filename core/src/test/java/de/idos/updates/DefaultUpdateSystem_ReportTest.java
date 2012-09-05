@@ -1,5 +1,7 @@
 package de.idos.updates;
 
+import de.idos.updates.repository.FilesystemRepository;
+import de.idos.updates.repository.Repository;
 import de.idos.updates.store.ProgressReport;
 import org.junit.Before;
 import org.junit.Rule;
@@ -21,24 +23,19 @@ public class DefaultUpdateSystem_ReportTest {
   Repository repository;
   VersionStore versionStore = mock(VersionStore.class);
   DefaultUpdateSystem updateSystem;
+  VersionTransfer transfer = mock(VersionTransfer.class);
 
   @Before
   public void setUp() throws Exception {
     repository = spy(new FilesystemRepository(folder.getRoot()));
     folder.newFolder(FilesystemRepository.AVAILABLE_VERSIONS, "5.3.2");
-    updateSystem = new DefaultUpdateSystem(versionStore, repository);
-  }
-
-  @Test
-  public void installsReportOnRepository() throws Exception {
-    verify(repository, atLeastOnce()).reportAllProgressTo(Mockito.isA(ProgressReport.class));
+    updateSystem = new DefaultUpdateSystem(versionStore, versionStore, repository, transfer);
   }
 
   @Test
   public void installsReportOnTransfer() throws Exception {
-    VersionTransfer transfer = mock(VersionTransfer.class);
     new DefaultUpdateSystem(versionStore, versionStore, repository, transfer);
-    verify(transfer).reportAllProgressTo(Mockito.isA(ProgressReport.class));
+    verify(transfer, atLeastOnce()).reportAllProgressTo(Mockito.isA(ProgressReport.class));
   }
 
   @Test
@@ -73,7 +70,8 @@ public class DefaultUpdateSystem_ReportTest {
     ProgressReport secondReport = mock(ProgressReport.class);
     updateSystem.reportAllProgressTo(firstReport);
     updateSystem.reportAllProgressTo(secondReport);
-    updateSystem.checkForUpdates();
+    Updater updater = updateSystem.checkForUpdates();
+    updater.runCheck();
     verify(firstReport).lookingUpLatestAvailableVersion();
     verify(secondReport).lookingUpLatestAvailableVersion();
   }

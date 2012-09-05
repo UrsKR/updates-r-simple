@@ -1,9 +1,7 @@
 package de.idos.updates.store;
 
-public interface Installation {
-    void addContent(DataInVersion dataInVersion);
+public interface Installation extends OngoingInstallation {
+  void addContent(DataInVersion dataInVersion);
 
-    void abort();
-
-    void finish();
+  void finish();
 }
