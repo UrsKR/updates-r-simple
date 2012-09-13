@@ -46,13 +46,6 @@ public class ZipInstallation implements Installation {
         return wrapped.isRunning();
     }
 
-    private File createTemporaryFolder(String remark) throws IOException {
-        File temporaryFolder = File.createTempFile("updates-r-us", remark);
-        temporaryFolder.delete();
-        temporaryFolder.mkdir();
-        return temporaryFolder;
-    }
-
     private void installNonArchivesFrom(File temporaryFolder) {
         for (File file : temporaryFolder.listFiles(new NoZips())) {
             wrapped.addContent(new FileDataInVersion(file));
@@ -63,6 +56,13 @@ public class ZipInstallation implements Installation {
         File stagingDirectory = createTemporaryFolder("unpack");
         new Unzipper(wrapped).unzipAllArchivesInDirectory(sourceDirectory, stagingDirectory);
         FileUtils.deleteDirectory(stagingDirectory);
+    }
+
+    private File createTemporaryFolder(String remark) throws IOException {
+        File temporaryFolder = File.createTempFile("updates-r-us", remark);
+        temporaryFolder.delete();
+        temporaryFolder.mkdir();
+        return temporaryFolder;
     }
 
     private static class NoZips implements FilenameFilter {
