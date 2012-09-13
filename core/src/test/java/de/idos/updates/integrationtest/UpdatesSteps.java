@@ -16,6 +16,7 @@ import de.idos.updates.repository.HttpRepository;
 import de.idos.updates.repository.Repository;
 import de.idos.updates.server.FileServer;
 import de.idos.updates.store.FileDataInVersion;
+import de.idos.updates.store.FilesystemInstallationStarter;
 import de.idos.updates.store.FilesystemVersionStore;
 import de.idos.updates.store.Installation;
 import de.idos.updates.store.OngoingInstallation;
@@ -58,7 +59,7 @@ public class UpdatesSteps {
     this.repositoryFolder = folder.newFolder("repository");
     this.versionStoreFolder = folder.newFolder("versions");
     Repository repository = new FilesystemRepository(repositoryFolder);
-    versionStore = new FilesystemVersionStore(versionStoreFolder);
+    versionStore = new FilesystemVersionStore(versionStoreFolder, new FilesystemInstallationStarter());
     updateSystemBuilder.useStore(versionStore);
     updateSystemBuilder.useRepository(repository);
     Installation installation = versionStore.beginInstallation(currentVersion);

@@ -5,39 +5,43 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.mockito.Matchers;
 
 import java.io.File;
 
 import static de.idos.updates.NumericVersionMatchers.sameVersionAs;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 public class FilesystemVersionStoreTest {
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
     private FilesystemVersionStore versionStore;
-    private NumericVersion newVersion = new NumericVersion(1, 0, 0);
+    private final NumericVersion newVersion = new NumericVersion(1, 0, 0);
+    private final InstallationStarter starter = spy(new FilesystemInstallationStarter());
 
     @Before
     public void setUp() throws Exception {
-        versionStore = new FilesystemVersionStore(folder.getRoot());
+        versionStore = new FilesystemVersionStore(folder.getRoot(), starter);
     }
 
     @Test
-       public void createsVersionFolderWhenInstallationStarts() throws Exception {
+    public void startsInstallationViaInstallationStarter() throws Exception {
         versionStore.beginInstallation(newVersion);
-        assertThat(getVersionFolder().exists(), is(true));
+        verify(starter).start(eq(getVersionFolder()), Matchers.isA(NullReport.class));
     }
 
     @Test
-    public void addsContentToVersionFolder() throws Exception {
-        File contentFile = folder.newFile("ContentFile");
-        Installation installation = versionStore.beginInstallation(newVersion);
-        installation.addContent(new FileDataInVersion(contentFile));
-        File versionFolder = getVersionFolder();
-        File versionContentFile = new File(versionFolder, contentFile.getName());
-        assertThat(versionContentFile.exists(), is(true));
+    public void reportsProgressToGivenReport() throws Exception {
+        ProgressReport report = mock(ProgressReport.class);
+        versionStore.reportAllProgressTo(report);
+        versionStore.beginInstallation(newVersion);
+        verify(starter).start(getVersionFolder(), report);
     }
 
     @Test

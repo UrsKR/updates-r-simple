@@ -1,6 +1,11 @@
 package de.idos.updates.store;
 
-import de.idos.updates.*;
+import de.idos.updates.CleanupFailedException;
+import de.idos.updates.Version;
+import de.idos.updates.VersionStore;
+import de.idos.updates.VersionedFile;
+import de.idos.updates.VersionedFileFactory;
+import de.idos.updates.VersionedFileFinder;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -10,17 +15,19 @@ import java.util.List;
 public class FilesystemVersionStore implements VersionStore {
 
     private File folder;
-    private ProgressReport report;
+    private ProgressReport report = new NullReport();
+    private InstallationStarter installationStarter;
 
-    public FilesystemVersionStore(File folder) {
+    public FilesystemVersionStore(File folder, InstallationStarter installationStarter) {
         this.folder = folder;
         folder.mkdirs();
+        this.installationStarter = installationStarter;
     }
 
     @Override
     public Installation beginInstallation(Version version) {
-        File file = getVersionFolder(version);
-        return FilesystemInstallation.create(file, report);
+        File targetFolder = getVersionFolder(version);
+        return installationStarter.start(targetFolder, report);
     }
 
     @Override

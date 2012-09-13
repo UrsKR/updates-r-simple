@@ -1,5 +1,6 @@
 package de.idos.updates;
 
+import de.idos.updates.store.FilesystemInstallationStarter;
 import de.idos.updates.store.FilesystemVersionStore;
 
 import java.io.File;
@@ -17,6 +18,6 @@ public class VersionStoreBuilder {
     }
 
     public VersionStore create() {
-        return new FilesystemVersionStore(versionStore);
+        return new FilesystemVersionStore(versionStore, new FilesystemInstallationStarter());
     }
 }
