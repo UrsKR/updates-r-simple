@@ -17,6 +17,7 @@ The project is in Maven Central at ``de.idos.updates:updates-core:1.0.1``
 ## To Build
 * You need JDK 6
 * Run ``gradlew build``
+* Distribute through ``gradlew uploadArchives`` (Sonatype registration required)
 
 ## To Use
 1. Instantiate a ``Configurator`` and use its API to create a configuration file.
