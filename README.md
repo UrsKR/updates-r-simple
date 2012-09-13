@@ -40,6 +40,7 @@ For a more complex example that can also cope with IDEs, please refer to the dem
 
 #### v1.1.0
 * Unpacks zipped archives in the update fileset automatically
+* Uses HEAD requests to get the file size, saving bandwidth and server load.
 
 #### v1.0.1
 * Java 6 required 

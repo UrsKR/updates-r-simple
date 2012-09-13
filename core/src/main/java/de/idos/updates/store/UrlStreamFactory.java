@@ -2,9 +2,10 @@ package de.idos.updates.store;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class UrlStreamFactory implements InputStreamFactory{
+public class UrlStreamFactory implements InputStreamFactory {
     private URL url;
 
     public UrlStreamFactory(URL url) {
@@ -18,6 +19,22 @@ public class UrlStreamFactory implements InputStreamFactory{
 
     @Override
     public long getExpectedSize() throws IOException {
-        return url.openConnection().getContentLength();
+        if (!url.getProtocol().equals("http")){
+            return url.openConnection().getContentLengthLong();
+        }
+        return getSizeOfHttpResource();
+    }
+
+    private long getSizeOfHttpResource() throws IOException {
+        HttpURLConnection connection = null;
+        try {
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("HEAD");
+            return connection.getContentLengthLong();
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
     }
 }
