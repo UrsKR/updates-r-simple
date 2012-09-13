@@ -22,7 +22,8 @@ public class ZipInstallation_NonZipTest {
     public TemporaryFolder stagingFolder = new TemporaryFolder();
 
     private Installation wrapped = mock(Installation.class);
-    private ZipInstallation installation = new ZipInstallation(wrapped);
+    private ProgressReport report = mock(ProgressReport.class);
+    private ZipInstallation installation = new ZipInstallation(wrapped, report);
     private DataInVersion dataInVersion = mock(DataInVersion.class);
 
     @Test

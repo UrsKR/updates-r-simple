@@ -9,21 +9,25 @@ import java.io.IOException;
 public class ZipInstallation implements Installation {
 
     private Installation wrapped;
+    private ProgressReport report;
 
-    public ZipInstallation(Installation wrapped) {
+    public ZipInstallation(Installation wrapped, ProgressReport report) {
         this.wrapped = wrapped;
+        this.report = report;
     }
 
     @Override
     public void addContent(DataInVersion dataInVersion) {
+        File downloadDirectory = null;
         try {
-            File downloadDirectory = createTemporaryFolder("Download");
+            downloadDirectory = createTemporaryFolder("download");
             dataInVersion.storeIn(downloadDirectory);
             installNonArchivesFrom(downloadDirectory);
             installArchiveContentsFrom(downloadDirectory);
             FileUtils.deleteDirectory(downloadDirectory);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            report.installationFailed(e);
+            FileUtils.deleteQuietly(downloadDirectory);
         }
     }
 
@@ -56,7 +60,7 @@ public class ZipInstallation implements Installation {
     }
 
     private void installArchiveContentsFrom(File sourceDirectory) throws IOException {
-        File stagingDirectory = createTemporaryFolder("Unpack");
+        File stagingDirectory = createTemporaryFolder("unpack");
         new Unzipper(wrapped).unzipAllArchivesInDirectory(sourceDirectory, stagingDirectory);
         FileUtils.deleteDirectory(stagingDirectory);
     }

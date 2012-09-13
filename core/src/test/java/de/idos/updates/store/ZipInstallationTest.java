@@ -18,6 +18,7 @@ import java.util.zip.ZipOutputStream;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -26,7 +27,8 @@ public class ZipInstallationTest {
     public TemporaryFolder stagingFolder = new TemporaryFolder();
 
     private Installation wrapped = mock(Installation.class);
-    private ZipInstallation installation = new ZipInstallation(wrapped);
+    private ProgressReport report = mock(ProgressReport.class);
+    private ZipInstallation installation = new ZipInstallation(wrapped, report);
     private DataInVersion dataInVersion = mock(DataInVersion.class);
 
     @Test
@@ -38,6 +40,10 @@ public class ZipInstallationTest {
     @Test
     public void deletesAllTemporaryFiles() throws Exception {
         installFromZip();
+        assertThatNoTemporariesRemain();
+    }
+
+    private void assertThatNoTemporariesRemain() {
         String[] temporaryDirectories = stagingFolder.getRoot().getParentFile().list(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
@@ -46,6 +52,23 @@ public class ZipInstallationTest {
         });
         assertThat(temporaryDirectories.length, is(0));
     }
+
+    @Test
+    public void reportsErrorsToReport() throws Exception {
+        RuntimeException exception = new RuntimeException();
+        Mockito.doThrow(exception).when(dataInVersion).storeIn(isA(File.class));
+        installation.addContent(dataInVersion);
+        verify(report).installationFailed(exception);
+    }
+
+    @Test
+    public void deletesTemporaryFilesEvenWhenAnErrorOccurs() throws Exception {
+        RuntimeException exception = new RuntimeException();
+        Mockito.doThrow(exception).when(dataInVersion).storeIn(isA(File.class));
+        installation.addContent(dataInVersion);
+        assertThatNoTemporariesRemain();
+    }
+
 
     private File createContentFileForZip() throws IOException {
         File file = stagingFolder.newFile();

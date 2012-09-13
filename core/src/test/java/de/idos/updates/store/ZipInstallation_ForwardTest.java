@@ -11,7 +11,8 @@ import static org.mockito.Mockito.when;
 public class ZipInstallation_ForwardTest {
 
     private Installation wrapped = mock(Installation.class);
-    private ZipInstallation installation = new ZipInstallation(wrapped);
+    private ProgressReport report = mock(ProgressReport.class);
+    private ZipInstallation installation = new ZipInstallation(wrapped, report);
 
     @Test
     public void isRunningWhenWrappedIsRunning() throws Exception {
