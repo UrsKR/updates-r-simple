@@ -24,6 +24,11 @@ Feature: Updates-R-Simple discovers and downloads updates
         When the application requests an update
         Then the library downloads and stores the required files
 
+    Scenario: Updates-R-Simple unpacks zipped archives and installs their content
+        Given the repository contains a new version packed as zip
+        When the application requests an update
+        Then the library downloads the zip and stores its content
+
     Scenario: Updates-R-Simple deletes old versions
         Given the application was updated
         When I instruct the library to clean up
