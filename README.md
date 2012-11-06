@@ -12,7 +12,7 @@ When setting out, my goal was to create an auto-updater that did not force me to
 Testing the new zip support in a real-life application.
 
 ## Maven Coordinates
-The project is in Maven Central at ``de.idos.updates:updates-core:1.1.0``
+The project is in Maven Central at ``de.idos.updates:updates-core:1.1.1``
 
 ## To Build
 * You need JDK 6
@@ -37,6 +37,9 @@ The project is in Maven Central at ``de.idos.updates:updates-core:1.1.0``
 For a more complex example that can also cope with IDEs, please refer to the demo module.
 
 ## Changelog
+
+#### v1.1.1
+* Uses the full base-URL to retrieve the list of available updates, if it ends in a slash "/".
 
 #### v1.1.0
 * Unpacks zipped archives in the update fileset automatically
