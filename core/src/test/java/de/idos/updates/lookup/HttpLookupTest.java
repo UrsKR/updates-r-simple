@@ -18,7 +18,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class HttpLookupTest {
 
-
   private static FileServer fileServer;
 
   @BeforeClass
@@ -36,7 +35,7 @@ public class HttpLookupTest {
 
   @Before
   public void createLookup() throws MalformedURLException {
-    lookup = new HttpLookup(new URL("http://localhost:8080/updates"));
+    lookup = new HttpLookup(new URL("http://localhost:8080/updates/"));
   }
 
   @Test

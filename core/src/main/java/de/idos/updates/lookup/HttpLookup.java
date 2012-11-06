@@ -26,7 +26,7 @@ public class HttpLookup implements LookupStrategy {
   }
 
   private Version findLatestVersion() throws IOException {
-    URL versionList = new URL(baseUrl, "updates/availableVersions");
+    URL versionList = new URL(baseUrl, "availableVersions");
     InputStream input = versionList.openStream();
     List<String> strings = IOUtils.readLines(input);
     List<Version> versions = new VersionFactory().createVersionsFromStrings(strings);
