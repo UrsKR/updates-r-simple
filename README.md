@@ -38,8 +38,9 @@ For a more complex example that can also cope with IDEs, please refer to the dem
 
 ## Changelog
 
-#### v1.1.1 (unreleased)
-* Uses the full base-URL to retrieve the list of available updates, if it ends in a slash "/".
+#### v1.2.0 (unreleased)
+* No longer expects updates to reside at "./updates".
+* Uses the full base-URL to discover and download updates.
 * Java 6 required (once again)
 
 #### v1.1.0
