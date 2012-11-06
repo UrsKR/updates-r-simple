@@ -33,7 +33,7 @@ public class FilesystemInstallationTest {
     versionFolder.mkdir();
     contentFile.createNewFile();
     contentFile.setReadOnly();
-    File newFile = folder.newFile("ContentFile");
+    File newFile = new File(folder.newFolder("sourceFolder"), "ContentFile");
     installation.addContent(new FileDataInVersion(newFile));
   }
 
