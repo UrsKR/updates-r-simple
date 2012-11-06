@@ -39,7 +39,6 @@ import static org.mockito.Mockito.verify;
 
 @SuppressWarnings("UnusedDeclaration")
 public class UpdatesSteps {
-
   private static final NumericVersion currentVersion = new NumericVersion(4, 2, 0);
   public static final String DESCRIPTION_FOR_NEW_VERSION = "Description for 4.2.1";
   private TemporaryFolder folder = new TemporaryFolder();
@@ -61,7 +60,8 @@ public class UpdatesSteps {
     this.repositoryFolder = folder.newFolder("repository");
     this.versionStoreFolder = folder.newFolder("versions");
     Repository repository = new FilesystemRepository(repositoryFolder);
-    versionStore = new FilesystemVersionStore(versionStoreFolder, new ZipInstallationStarter(new FilesystemInstallationStarter()));
+    versionStore = new FilesystemVersionStore(versionStoreFolder,
+            new ZipInstallationStarter(new FilesystemInstallationStarter()));
     updateSystemBuilder.useStore(versionStore);
     updateSystemBuilder.useRepository(repository);
     Installation installation = versionStore.beginInstallation(currentVersion);
@@ -94,13 +94,13 @@ public class UpdatesSteps {
 
   @Given("^the repository contains a new version packed as zip$")
   public void the_repository_contains_a_new_version_packed_as_zip() throws Throwable {
-      File versionsFolder = new File(repositoryFolder, AVAILABLE_VERSIONS);
-      File latestVersionFolder = new File(versionsFolder, "4.2.1");
-      latestVersionFolder.mkdir();
-      File staging = folder.newFolder("staging");
-      File content = ZipFileMother.createContentFileForZip(staging, "contentFromZip");
-      ZipFileMother.createZipFileInTemporaryFolder(latestVersionFolder, "v4.2.1.zip", content);
-      this.latestVersion = new NumericVersion(4, 2, 1);
+    File versionsFolder = new File(repositoryFolder, AVAILABLE_VERSIONS);
+    File latestVersionFolder = new File(versionsFolder, "4.2.1");
+    latestVersionFolder.mkdir();
+    File staging = folder.newFolder("staging");
+    File content = ZipFileMother.createContentFileForZip(staging, "contentFromZip");
+    ZipFileMother.createZipFileInTemporaryFolder(latestVersionFolder, "v4.2.1.zip", content);
+    this.latestVersion = new NumericVersion(4, 2, 1);
   }
 
   @Given("^the application was updated$")
@@ -170,7 +170,7 @@ public class UpdatesSteps {
   @When("^the application asks the library to abort the update$")
   public void the_application_asks_the_library_to_abort_the_update() throws Throwable {
     while (ongoingInstallation == null) {
-      //wait
+      Thread.sleep(500);
     }
     ongoingInstallation.abort();
   }
@@ -179,7 +179,6 @@ public class UpdatesSteps {
   public void no_trace_of_the_update_remains() throws Throwable {
     assertThat(new File(versionStoreFolder, "4.2.1").exists(), is(false));
   }
-
 
   @Then("^the library reports an update$")
   public void the_library_reports_an_update() throws Throwable {
@@ -209,7 +208,7 @@ public class UpdatesSteps {
   @Then("^the library downloads and stores the required files$")
   public void the_library_downloads_and_stores_the_required_files() throws Throwable {
     while (ongoingInstallation.isRunning()) {
-      //wait
+      Thread.sleep(500);
     }
     File versionFolder = new File(versionStoreFolder, "4.2.1");
     assertThat(new File(versionFolder, "content").exists(), is(true));
@@ -217,11 +216,11 @@ public class UpdatesSteps {
 
   @Then("^the library downloads the zip and stores its content$")
   public void the_library_downloads_the_zip_and_stores_the_content() throws Throwable {
-      while (ongoingInstallation.isRunning()) {
-          //wait
-      }
-      File versionFolder = new File(versionStoreFolder, "4.2.1");
-      assertThat(new File(versionFolder, "contentFromZip").exists(), is(true));
+    while (ongoingInstallation.isRunning()) {
+      Thread.sleep(500);
+    }
+    File versionFolder = new File(versionStoreFolder, "4.2.1");
+    assertThat(new File(versionFolder, "contentFromZip").exists(), is(true));
   }
 
   @Then("^the library deletes all version but current one$")
@@ -232,7 +231,7 @@ public class UpdatesSteps {
 
   @Then("^the library reports the download's progress to the client$")
   public void the_library_reports_the_download_s_progress_to_the_client() throws Throwable {
-    verify(verifiableReport, atLeastOnce()).expectedSize(anyInt());
+    verify(verifiableReport, atLeastOnce()).finishedFile();
   }
 
   @Then("^the second update does not interfere$")

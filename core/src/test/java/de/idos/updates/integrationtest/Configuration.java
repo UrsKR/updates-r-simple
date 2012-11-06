@@ -18,5 +18,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(Cucumber.class)
+@Cucumber.Options(name={"Updates-R-Simple is easily configured"})
 public class Configuration {
 }
