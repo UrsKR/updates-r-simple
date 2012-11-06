@@ -30,7 +30,7 @@ public class UrlStreamFactory implements InputStreamFactory {
         try {
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("HEAD");
-            return connection.getContentLengthLong();
+            return connection.getContentLength();
         } finally {
             if (connection != null) {
                 connection.disconnect();
