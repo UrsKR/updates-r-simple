@@ -12,7 +12,7 @@ When setting out, my goal was to create an auto-updater that did not force me to
 Testing the new zip support in a real-life application.
 
 ## Maven Coordinates
-The project is in Maven Central at ``de.idos.updates:updates-core:1.1.0``
+The project is in Maven Central at ``de.idos.updates:updates-core:1.2.0``
 
 ## To Build
 * You need JDK 6
@@ -38,9 +38,9 @@ For a more complex example that can also cope with IDEs, please refer to the dem
 
 ## Changelog
 
-#### v1.2.0 (unreleased)
+#### v1.2.0
+* API-CHANGE: Uses the full base-URL to discover and download updates.
 * No longer expects updates to reside at "./updates".
-* Uses the full base-URL to discover and download updates.
 * Java 6 required (once again)
 
 #### v1.1.0
