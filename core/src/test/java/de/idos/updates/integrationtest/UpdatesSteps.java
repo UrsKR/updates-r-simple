@@ -118,7 +118,7 @@ public class UpdatesSteps {
 
   @Given("^a repository for that server$")
   public void an_HTTP_Repository_for_that_server() throws Throwable {
-    Repository repository = new HttpRepository("http://localhost:8080/updates");
+    Repository repository = new HttpRepository("http://localhost:8080/updates/");
     updateSystemBuilder.useRepository(repository);
   }
 
