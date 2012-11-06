@@ -20,7 +20,7 @@ public class UrlStreamFactory implements InputStreamFactory {
     @Override
     public long getExpectedSize() throws IOException {
         if (!url.getProtocol().equals("http")){
-            return url.openConnection().getContentLengthLong();
+            return url.openConnection().getContentLength();
         }
         return getSizeOfHttpResource();
     }
