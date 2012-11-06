@@ -9,14 +9,15 @@ Work so far was sponsored by **[IDOS AE GmbH](http://www.idos.de)**.
 When setting out, my goal was to create an auto-updater that did not force me to depend on a major framework, or required my dependencies to be signed.
 
 #### Current Topic of Interest
-Including a changelog for new versions
+Testing the new zip support in a real-life application.
 
 ## Maven Coordinates
-The project is in Maven Central at ``de.idos.updates:updates-core:1.0.1``
+The project is in Maven Central at ``de.idos.updates:updates-core:1.1.0``
 
 ## To Build
 * You need JDK 6
 * Run ``gradlew build``
+* Distribute through ``gradlew uploadArchives`` (Sonatype registration required)
 
 ## To Use
 1. Instantiate a ``Configurator`` and use its API to create a configuration file.
@@ -36,6 +37,10 @@ The project is in Maven Central at ``de.idos.updates:updates-core:1.0.1``
 For a more complex example that can also cope with IDEs, please refer to the demo module.
 
 ## Changelog
+
+#### v1.1.0
+* Unpacks zipped archives in the update fileset automatically
+* Uses HEAD requests to get the file size, saving bandwidth and server load.
 
 #### v1.0.1
 * Java 6 required 

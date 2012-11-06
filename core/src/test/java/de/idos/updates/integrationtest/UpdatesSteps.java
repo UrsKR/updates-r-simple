@@ -16,10 +16,13 @@ import de.idos.updates.repository.HttpRepository;
 import de.idos.updates.repository.Repository;
 import de.idos.updates.server.FileServer;
 import de.idos.updates.store.FileDataInVersion;
+import de.idos.updates.store.FilesystemInstallationStarter;
 import de.idos.updates.store.FilesystemVersionStore;
 import de.idos.updates.store.Installation;
 import de.idos.updates.store.OngoingInstallation;
 import de.idos.updates.store.ProgressReport;
+import de.idos.updates.store.ZipFileMother;
+import de.idos.updates.store.ZipInstallationStarter;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
@@ -58,7 +61,7 @@ public class UpdatesSteps {
     this.repositoryFolder = folder.newFolder("repository");
     this.versionStoreFolder = folder.newFolder("versions");
     Repository repository = new FilesystemRepository(repositoryFolder);
-    versionStore = new FilesystemVersionStore(versionStoreFolder);
+    versionStore = new FilesystemVersionStore(versionStoreFolder, new ZipInstallationStarter(new FilesystemInstallationStarter()));
     updateSystemBuilder.useStore(versionStore);
     updateSystemBuilder.useRepository(repository);
     Installation installation = versionStore.beginInstallation(currentVersion);
@@ -87,6 +90,17 @@ public class UpdatesSteps {
   @Given("^the repository does not contain a new version$")
   public void the_repository_does_not_contain_a_new_version() throws Throwable {
     this.latestVersion = currentVersion;
+  }
+
+  @Given("^the repository contains a new version packed as zip$")
+  public void the_repository_contains_a_new_version_packed_as_zip() throws Throwable {
+      File versionsFolder = new File(repositoryFolder, AVAILABLE_VERSIONS);
+      File latestVersionFolder = new File(versionsFolder, "4.2.1");
+      latestVersionFolder.mkdir();
+      File staging = folder.newFolder("staging");
+      File content = ZipFileMother.createContentFileForZip(staging, "contentFromZip");
+      ZipFileMother.createZipFileInTemporaryFolder(latestVersionFolder, "v4.2.1.zip", content);
+      this.latestVersion = new NumericVersion(4, 2, 1);
   }
 
   @Given("^the application was updated$")
@@ -199,6 +213,15 @@ public class UpdatesSteps {
     }
     File versionFolder = new File(versionStoreFolder, "4.2.1");
     assertThat(new File(versionFolder, "content").exists(), is(true));
+  }
+
+  @Then("^the library downloads the zip and stores its content$")
+  public void the_library_downloads_the_zip_and_stores_the_content() throws Throwable {
+      while (ongoingInstallation.isRunning()) {
+          //wait
+      }
+      File versionFolder = new File(versionStoreFolder, "4.2.1");
+      assertThat(new File(versionFolder, "contentFromZip").exists(), is(true));
   }
 
   @Then("^the library deletes all version but current one$")

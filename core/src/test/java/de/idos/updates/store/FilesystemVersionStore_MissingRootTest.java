@@ -1,8 +1,6 @@
 package de.idos.updates.store;
 
-import de.idos.updates.NumericVersion;
 import de.idos.updates.VersionFinder;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -20,7 +18,7 @@ public class FilesystemVersionStore_MissingRootTest {
     public void createsRootFolderIfItDoesNotExist() throws Exception {
         File root = folder.newFolder();
         root.delete();
-        FilesystemVersionStore store = new FilesystemVersionStore(root);
+        FilesystemVersionStore store = new FilesystemVersionStore(root, new FilesystemInstallationStarter());
         assertThat(store.getLatestVersion(), is(VersionFinder.BASE_VERSION));
     }
 }

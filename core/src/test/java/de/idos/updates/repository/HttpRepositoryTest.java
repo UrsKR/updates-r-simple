@@ -4,6 +4,7 @@ import de.idos.updates.NumericVersion;
 import de.idos.updates.Version;
 import de.idos.updates.install.InstallationStrategy;
 import de.idos.updates.server.FileServer;
+import de.idos.updates.store.FilesystemInstallationStarter;
 import de.idos.updates.store.FilesystemVersionStore;
 import de.idos.updates.store.Installation;
 import de.idos.updates.store.UrlDataInVersion;
@@ -63,7 +64,7 @@ public class HttpRepositoryTest {
 
   @Test
   public void worksIfNoReporterIsRegistered() throws Exception {
-    repository.transferVersionTo(new NumericVersion(5, 0, 4), new FilesystemVersionStore(folder.getRoot()));
+    repository.transferVersionTo(new NumericVersion(5, 0, 4), new FilesystemVersionStore(folder.getRoot(), new FilesystemInstallationStarter()));
     assertThat(new File(folder.getRoot(), "5.0.4").exists(), is(true));
   }
 }
