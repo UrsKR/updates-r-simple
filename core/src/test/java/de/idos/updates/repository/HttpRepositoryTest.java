@@ -29,7 +29,7 @@ public class HttpRepositoryTest {
   @Rule
   public TemporaryFolder folder = new TemporaryFolder();
 
-  HttpRepository repository = new HttpRepository("http://localhost:8080/");
+  HttpRepository repository = new HttpRepository("http://localhost:8080/updates/");
 
   @BeforeClass
   public static void setUp() throws Exception {
