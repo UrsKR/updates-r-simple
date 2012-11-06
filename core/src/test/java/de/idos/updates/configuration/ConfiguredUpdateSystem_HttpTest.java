@@ -34,7 +34,7 @@ public class ConfiguredUpdateSystem_HttpTest {
     configuration = new File(".", "update.properties");
     properties.put("update.applicationName", "updateunittest");
     properties.put("update.LatestVersion.repository.type", "HTTP");
-    properties.put("update.LatestVersion.repository.location", "http://localhost:8080");
+    properties.put("update.LatestVersion.repository.location", "http://localhost:8080/updates/");
     properties.put("update.strategy", "LatestVersion");
     properties.store(new FileOutputStream(configuration), "");
   }
