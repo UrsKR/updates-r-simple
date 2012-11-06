@@ -231,6 +231,9 @@ public class UpdatesSteps {
 
   @Then("^the library reports the download's progress to the client$")
   public void the_library_reports_the_download_s_progress_to_the_client() throws Throwable {
+    while (ongoingInstallation.isRunning()) {
+      Thread.sleep(500);
+    }
     verify(verifiableReport, atLeastOnce()).expectedSize(anyInt());
   }
 
