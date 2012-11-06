@@ -231,7 +231,7 @@ public class UpdatesSteps {
 
   @Then("^the library reports the download's progress to the client$")
   public void the_library_reports_the_download_s_progress_to_the_client() throws Throwable {
-    verify(verifiableReport, atLeastOnce()).finishedFile();
+    verify(verifiableReport, atLeastOnce()).expectedSize(anyInt());
   }
 
   @Then("^the second update does not interfere$")
